@@ -1,9 +1,11 @@
 .cta {
   /* === EDIT: CTA background color === */
   background: linear-gradient(135deg, #1A56DB 0%, #1347C0 60%, #0F3DAA 100%);
-  padding: 72px 0;
+  padding: 72px 0 80px;
   position: relative;
   overflow: hidden;
+  /* Hard bottom edge so footer doesn't visually bleed in */
+  border-bottom: 5px solid rgba(0, 0, 0, 0.22);
 }
 .cta__inner {
   display: flex;
@@ -32,7 +34,7 @@
   font-size: 1rem;
 }
 
-/* Decorative circles */
+/* Decorative circles — kept well away from bottom edge */
 .cta__blob {
   position: absolute;
   border-radius: 50%;
@@ -40,11 +42,11 @@
   pointer-events: none;
 }
 .cta__blob--1 { width: 280px; height: 280px; top: -80px; right: -40px; }
-.cta__blob--2 { width: 180px; height: 180px; bottom: -60px; left: 20%; }
+.cta__blob--2 { width: 180px; height: 180px; bottom: -40px; left: 20%; }
 
 /* Responsive */
 @media (max-width: 640px) {
-  .cta { padding: 56px 0; }
+  .cta { padding: 56px 0 64px; }
   .cta__inner { flex-direction: column; text-align: center; }
   .cta__sub { margin: 0 auto; }
   .cta__btn { width: 100%; justify-content: center; }

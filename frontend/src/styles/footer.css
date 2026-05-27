@@ -93,3 +93,15 @@
 @media (max-width: 360px) {
   .footer__inner { grid-template-columns: 1fr; }
 }
+/* styles/footer.css — global override kept in sync with Footer.css */
+.footer {
+  background: #0a1628;
+  color: rgba(255,255,255,0.75);
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+.footer__inner {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+  gap: 32px;
+  padding: 60px 20px 40px;
+}

@@ -1,6 +1,8 @@
 .footer {
-  background: var(--color-navy);
+  background: #0a1628;   /* slightly darker than --color-navy (#0F1C3F) for clear separation */
   color: rgba(255,255,255,0.75);
+  /* Thin top highlight line so the eye registers the boundary */
+  border-top: 1px solid rgba(255,255,255,0.07);
 }
 .footer__inner {
   display: grid;
