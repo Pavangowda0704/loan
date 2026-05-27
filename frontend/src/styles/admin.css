@@ -1,0 +1,398 @@
+/* ============================================================
+   styles/adminDashboard.css — Admin Dashboard styles
+   ============================================================ */
+
+.admin-page { padding-top: 105px; }
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ---- Stats row ---- */
+.admin-stats {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 110px;
+  background: #f8fbff;
+  border: 1px solid #e6edff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.stat-card h2 {
+  font-size: 28px;
+  color: #071b46;
+  margin: 0 0 4px;
+}
+
+.stat-card p {
+  font-size: 12px;
+  color: #66738d;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.stat-card.personal h2 { color: #1455d9; }
+.stat-card.vehicle  h2 { color: #7c3aed; }
+.stat-card.approved h2 { color: #059669; }
+.stat-card.pending  h2 { color: #d97706; }
+
+/* ---- Tabs ---- */
+.admin-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e6edff;
+  padding-bottom: 0;
+}
+
+.admin-tab {
+  border: none;
+  background: transparent;
+  padding: 10px 16px 12px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #66738d;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  border-radius: 0;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-tab:hover { color: #1455d9; }
+
+.admin-tab.active {
+  color: #1455d9;
+  border-bottom-color: #1455d9;
+}
+
+.tab-count {
+  background: #eef4ff;
+  color: #1455d9;
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* ---- Table ---- */
+.admin-table-wrap {
+  overflow-x: auto;
+  border-radius: 16px;
+  border: 1px solid #e6edff;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 860px;
+}
+
+.admin-table thead tr {
+  background: #f0f5ff;
+}
+
+.admin-table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 800;
+  color: #66738d;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.admin-table td {
+  padding: 14px 16px;
+  border-top: 1px solid #f0f4ff;
+  font-size: 13.5px;
+  color: #071b46;
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:hover { background: #f8fbff; }
+
+.app-id-chip {
+  font-family: monospace;
+  font-size: 12px;
+  background: #f0f5ff;
+  color: #1455d9;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 700;
+}
+
+.loan-type-chip {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.loan-type-chip.personal { background: #eef4ff; color: #1455d9; }
+.loan-type-chip.vehicle  { background: #f5f0ff; color: #7c3aed; }
+
+.admin-status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-action-btn {
+  background: #1455d9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.admin-action-btn:hover { background: #0f42b0; }
+
+/* ---- Modal ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 27, 70, 0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-box {
+  background: white;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 30px 80px rgba(13, 43, 91, 0.25);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 26px 18px;
+  border-bottom: 1px solid #e6edff;
+  position: sticky;
+  top: 0;
+  background: white;
+  border-radius: 24px 24px 0 0;
+}
+
+.modal-header h2 {
+  color: #071b46;
+  font-size: 18px;
+  margin: 0;
+}
+
+.modal-close {
+  background: #f0f4ff;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  color: #66738d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-body { padding: 22px 26px 26px; }
+
+.modal-detail-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 24px;
+}
+
+.modal-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid #f0f4ff;
+}
+
+.modal-detail-row:last-child { border: none; }
+
+.modal-label {
+  font-size: 13px;
+  color: #66738d;
+  font-weight: 600;
+}
+
+.modal-val {
+  font-size: 13.5px;
+  color: #071b46;
+  font-weight: 700;
+  text-align: right;
+}
+
+.modal-update-section {
+  background: #f8fbff;
+  border: 1px solid #e6edff;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-update-section h3 {
+  color: #071b46;
+  font-size: 14px;
+  margin: 0;
+}
+
+.modal-update-section select,
+.modal-update-section textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #c9d8ff;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #071b46;
+  background: white;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.modal-update-section select:focus,
+.modal-update-section textarea:focus {
+  outline: none;
+  border-color: #1455d9;
+}
+
+/* ---- TrackApplication extras ---- */
+.track-loading {
+  text-align: center;
+  padding: 48px;
+  color: #66738d;
+}
+
+.track-summary {
+  background: #f8fbff;
+  border: 1px solid #e6edff;
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.track-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid #f0f4ff;
+}
+
+.track-row:last-child { border: none; }
+
+.track-row span {
+  font-size: 13px;
+  color: #66738d;
+  font-weight: 600;
+}
+
+.track-row strong {
+  font-size: 14px;
+  color: #071b46;
+}
+
+.timeline { display: flex; flex-direction: column; gap: 0; }
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 14px 0;
+  border-left: 3px solid #e6edff;
+  padding-left: 20px;
+  margin-left: 18px;
+  position: relative;
+}
+
+.timeline-circle {
+  position: absolute;
+  left: -18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e6edff;
+  color: #8ba3d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  border: 2px solid #e6edff;
+}
+
+.timeline-item.done { border-left-color: #1455d9; }
+
+.timeline-item.done .timeline-circle {
+  background: #1455d9;
+  color: white;
+  border-color: #1455d9;
+}
+
+.timeline-item.rejected-step { border-left-color: #ef4444; }
+
+.timeline-item.rejected-step .timeline-circle {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+.timeline-item h4 { color: #071b46; margin: 0 0 2px; font-size: 14px; }
+.timeline-item p  { color: #66738d; margin: 0; font-size: 13px; }
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .admin-stats { gap: 8px; }
+  .stat-card { min-width: 80px; padding: 14px 12px; }
+  .stat-card h2 { font-size: 22px; }
+  .admin-tabs { gap: 4px; }
+  .admin-tab { padding: 8px 10px; font-size: 12px; }
+  .modal-box { border-radius: 16px; }
+  .modal-header, .modal-body { padding: 16px; }
+}

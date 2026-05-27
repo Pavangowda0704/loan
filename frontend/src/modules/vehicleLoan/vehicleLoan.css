@@ -1,0 +1,229 @@
+/* ============================================================
+   styles/vehicleLoan.css — Vehicle Loan specific styles
+   Uses LoanEase design tokens (navy / royal blue / white)
+   ============================================================ */
+
+/* ---- Product grid ---- */
+.vl-products-section {
+  max-width: 1180px;
+  margin: 56px auto 0;
+}
+
+.vl-products-section h2 {
+  color: #071b46;
+  font-size: clamp(22px, 3vw, 32px);
+  margin-bottom: 28px;
+}
+
+.vl-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 20px;
+}
+
+.vl-product-card {
+  background: white;
+  border: 1px solid #e6edff;
+  border-radius: 20px;
+  padding: 26px 22px;
+  box-shadow: 0 8px 28px rgba(13, 43, 91, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.vl-product-card:hover {
+  box-shadow: 0 16px 42px rgba(13, 43, 91, 0.13);
+  transform: translateY(-3px);
+}
+
+.vl-product-icon {
+  font-size: 36px;
+}
+
+.vl-product-card h3 {
+  color: #071b46;
+  font-size: 16px;
+  margin: 0;
+}
+
+.vl-product-card p {
+  color: #66738d;
+  font-size: 13.5px;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.vl-product-card .pl-primary-btn {
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-top: 4px;
+}
+
+/* ---- Step bar ---- */
+.vl-step-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 28px 0 32px;
+  position: relative;
+}
+
+.vl-step-bar::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background: #e6edff;
+  z-index: 0;
+}
+
+.vl-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+  flex: 1;
+}
+
+.vl-step-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e6edff;
+  color: #8ba3d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  border: 2px solid #e6edff;
+  transition: all 0.2s;
+}
+
+.vl-step-item span:last-child {
+  font-size: 12px;
+  color: #8ba3d4;
+  font-weight: 600;
+  text-align: center;
+}
+
+.vl-step-item.active .vl-step-circle {
+  background: #1455d9;
+  color: white;
+  border-color: #1455d9;
+  box-shadow: 0 0 0 4px #c7d9ff;
+}
+
+.vl-step-item.active span:last-child { color: #1455d9; }
+
+.vl-step-item.done .vl-step-circle {
+  background: #10b981;
+  color: white;
+  border-color: #10b981;
+}
+
+.vl-step-item.done span:last-child { color: #10b981; }
+
+/* ---- Eligibility result note ---- */
+.vl-result-note {
+  font-size: 13px;
+  color: #8ba3d4;
+  margin-top: 6px;
+}
+
+/* ---- Success note ---- */
+.vl-success-note {
+  background: #f0f7ff;
+  border: 1px solid #c7d9ff;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 13.5px;
+  color: #1455d9;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* ---- Review rows ---- */
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f4ff;
+}
+
+.review-row:last-child { border-bottom: none; }
+
+.review-label {
+  color: #66738d;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.review-val {
+  color: #071b46;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: right;
+}
+
+/* ---- Success detail rows ---- */
+.success-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f4ff;
+}
+
+.success-detail-row:last-child { border-bottom: none; }
+
+.success-detail-row span {
+  color: #66738d;
+  font-size: 14px;
+}
+
+.success-detail-row strong {
+  color: #071b46;
+  font-size: 14px;
+}
+
+/* ---- Status badges ---- */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.status-badge.pending { background: #fef3c7; color: #92400e; }
+
+/* ---- Mobile ---- */
+@media (max-width: 640px) {
+  .vl-product-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .vl-step-bar {
+    gap: 4px;
+  }
+
+  .vl-step-item span:last-child {
+    font-size: 10px;
+  }
+
+  .vl-step-bar::before { display: none; }
+}
+
+@media (max-width: 420px) {
+  .vl-product-grid {
+    grid-template-columns: 1fr;
+  }
+}

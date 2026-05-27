@@ -1,0 +1,90 @@
+.loans {
+  padding: var(--section-padding);
+  background: var(--color-bg);
+}
+.loans__header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.loans__header .section-subtitle {
+  margin: 8px auto 0;
+}
+
+/* Grid: 4 cols on desktop, scroll on mobile */
+.loans__scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+}
+.loans__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  min-width: 700px; /* ensures cards don't squish before scroll kicks in */
+}
+
+/* Loan Card */
+.loan-card {
+  padding: 28px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.loan-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  margin-bottom: 4px;
+}
+.loan-card__icon svg { width: 100%; height: 100%; }
+
+.loan-card__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-navy);
+}
+.loan-card__desc {
+  font-size: 0.88rem;
+  color: var(--color-muted);
+  line-height: 1.6;
+  flex-grow: 1;
+}
+.loan-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+.loan-card__rate {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+.loan-card__cta {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  transition: gap 0.15s;
+}
+.loan-card__cta:hover { opacity: 0.75; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .loans__grid { grid-template-columns: repeat(4, 220px); }
+}
+@media (max-width: 600px) {
+  .loans { padding: 48px 0; }
+  .loans__scroll-wrapper { margin: 0 -20px; padding: 0 20px 12px; }
+  .loans__grid { grid-template-columns: repeat(4, 200px); gap: 14px; }
+}
+
+.loan-card__cta{background:none;border:none;cursor:pointer;font-family:var(--font-display)}

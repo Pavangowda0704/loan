@@ -1,0 +1,6 @@
+/* home.css — Home page layout wrapper styles */
+/* Component-specific styles live in their own .css files alongside the component */
+
+.home-page {
+  overflow-x: hidden;
+}

@@ -1,0 +1,121 @@
+.how {
+  padding: var(--section-padding);
+  background: var(--color-white);
+}
+.how__header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.how__header .section-subtitle { margin: 8px auto 0; }
+
+/* Steps row */
+.how__steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  position: relative;
+}
+
+.how-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding: 0 16px;
+}
+
+/* Horizontal connector between steps */
+.how-step__connector {
+  position: absolute;
+  top: 36px;
+  left: calc(50% + 36px);
+  width: calc(100% - 72px);
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), #93C5FD);
+  border-radius: 2px;
+  display: block;
+}
+
+/* Circle bubble */
+.how-step__bubble {
+  width: 72px;
+  height: 72px;
+  background: var(--color-primary-light);
+  border: 3px solid var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.how-step:hover .how-step__bubble {
+  background: var(--color-primary);
+  box-shadow: 0 0 0 8px rgba(26, 86, 219, 0.1);
+}
+.how-step__icon {
+  width: 32px;
+  height: 32px;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+.how-step:hover .how-step__icon { color: white; }
+.how-step__icon svg { width: 100%; height: 100%; }
+
+/* Step body */
+.how-step__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--color-primary);
+  margin-bottom: 6px;
+}
+.how-step__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 8px;
+}
+.how-step__desc {
+  font-size: 0.88rem;
+  color: var(--color-muted);
+  line-height: 1.6;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .how__steps {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .how-step {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    padding: 0 0 32px;
+    gap: 18px;
+  }
+  .how-step__connector {
+    left: 34px;
+    top: 72px;
+    width: 2px;
+    height: calc(100% - 72px);
+    background: linear-gradient(180deg, var(--color-primary), #93C5FD);
+  }
+  .how-step__bubble { flex-shrink: 0; margin-bottom: 0; }
+  .how-step__desc { max-width: none; }
+  .how-step:last-child { padding-bottom: 0; }
+}

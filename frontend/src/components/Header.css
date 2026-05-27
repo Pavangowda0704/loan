@@ -1,0 +1,110 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.header--scrolled {
+  border-color: var(--color-border);
+  box-shadow: 0 2px 16px rgba(15, 28, 63, 0.07);
+}
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+  gap: 24px;
+}
+
+/* Logo */
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-navy);
+  letter-spacing: -0.01em;
+}
+
+/* Desktop Nav */
+.header__nav { display: flex; }
+.header__nav-list {
+  display: flex;
+  gap: 4px;
+}
+.header__nav-link {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-body);
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+.header__nav-link:hover {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+/* CTA */
+.header__cta { padding: 10px 22px; font-size: 0.9rem; }
+
+/* Hamburger */
+.header__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  border-radius: 8px;
+}
+.ham-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--color-navy);
+  border-radius: 2px;
+  transition: transform 0.25s, opacity 0.25s;
+  transform-origin: center;
+}
+.ham-bar.open:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.ham-bar.open:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.ham-bar.open:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile Menu */
+.header__mobile-menu {
+  display: none;
+  background: var(--color-white);
+  border-top: 1px solid var(--color-border);
+  padding: 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.header__mobile-menu--open {
+  max-height: 400px;
+}
+.mobile-link {
+  display: block;
+  padding: 14px 0;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header__nav { display: none; }
+  .header__cta { display: none; }
+  .header__hamburger { display: flex; }
+  .header__mobile-menu { display: block; }
+}

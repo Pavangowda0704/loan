@@ -1,0 +1,51 @@
+.cta {
+  /* === EDIT: CTA background color === */
+  background: linear-gradient(135deg, #1A56DB 0%, #1347C0 60%, #0F3DAA 100%);
+  padding: 72px 0;
+  position: relative;
+  overflow: hidden;
+}
+.cta__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  position: relative;
+  z-index: 1;
+}
+.cta__heading {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  color: white;
+  margin-bottom: 10px;
+}
+.cta__sub {
+  color: rgba(255,255,255,0.82);
+  font-size: 1rem;
+  max-width: 420px;
+  line-height: 1.6;
+}
+.cta__btn {
+  flex-shrink: 0;
+  padding: 16px 36px;
+  font-size: 1rem;
+}
+
+/* Decorative circles */
+.cta__blob {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  pointer-events: none;
+}
+.cta__blob--1 { width: 280px; height: 280px; top: -80px; right: -40px; }
+.cta__blob--2 { width: 180px; height: 180px; bottom: -60px; left: 20%; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .cta { padding: 56px 0; }
+  .cta__inner { flex-direction: column; text-align: center; }
+  .cta__sub { margin: 0 auto; }
+  .cta__btn { width: 100%; justify-content: center; }
+}
