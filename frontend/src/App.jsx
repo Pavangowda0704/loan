@@ -11,10 +11,14 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 
 // Personal Loan flow (module-based)
-import PersonalLoan        from "./modules/personalLoan/pages/PersonalLoan";
-import PersonalEligibility from "./modules/personalLoan/pages/PersonalEligibility";
-import PersonalApply       from "./modules/personalLoan/pages/PersonalApply";
-import PersonalDocuments   from "./modules/personalLoan/pages/PersonalDocuments";
+import PersonalLoan            from "./modules/personalLoan/pages/PersonalLoan";
+import PersonalEligibility     from "./modules/personalLoan/pages/PersonalEligibility";
+import PersonalApply           from "./modules/personalLoan/pages/PersonalApply";
+import PersonalDocuments       from "./modules/personalLoan/pages/PersonalDocuments";
+import SalariedPersonalLoan    from "./modules/personalLoan/pages/SalariedPersonalLoan";
+import SelfEmployedPersonalLoan from "./modules/personalLoan/pages/SelfEmployedPersonalLoan";
+import SalariedApply           from "./modules/personalLoan/pages/SalariedApply";
+import SelfEmployedApply       from "./modules/personalLoan/pages/SelfEmployedApply";
 
 // Vehicle Loan flow (module-based)
 import VehicleLoan        from "./modules/vehicleLoan/pages/VehicleLoan";
@@ -43,9 +47,13 @@ function App() {
         <Route path="/" element={<Home />} />
 
         {/* ---- Personal Loan ---- */}
-        <Route path="/personal-loan"             element={<PersonalLoan />} />
-        <Route path="/personal-loan/eligibility" element={<PersonalEligibility />} />
-        <Route path="/personal-loan/apply"       element={<PersonalApply />} />
+        <Route path="/personal-loan"                       element={<PersonalLoan />} />
+        <Route path="/personal-loan/eligibility"           element={<PersonalEligibility />} />
+        <Route path="/personal-loan/apply"                 element={<PersonalApply />} />
+        <Route path="/personal-loan/salaried"              element={<SalariedPersonalLoan />} />
+        <Route path="/personal-loan/self-employed"         element={<SelfEmployedPersonalLoan />} />
+        <Route path="/personal-loan/salaried/apply"        element={<SalariedApply />} />
+        <Route path="/personal-loan/self-employed/apply"   element={<SelfEmployedApply />} />
 
         {/* Legacy /loans/personal paths kept for backward compat */}
         <Route path="/loans/personal"                        element={<PersonalLoan />} />
