@@ -1,6 +1,6 @@
 /* ============================================================
    styles/vehicleLoan.css — Vehicle Loan specific styles
-   Uses LoanEase design tokens (navy / royal blue / white)
+   Uses Plumzo Capital Services design tokens (navy / royal blue / white)
    ============================================================ */
 
 /* ---- Product grid ---- */
@@ -114,13 +114,13 @@
 }
 
 .vl-step-item.active .vl-step-circle {
-  background: #1455d9;
+  background: #003087;
   color: white;
-  border-color: #1455d9;
+  border-color: #003087;
   box-shadow: 0 0 0 4px #c7d9ff;
 }
 
-.vl-step-item.active span:last-child { color: #1455d9; }
+.vl-step-item.active span:last-child { color: #003087; }
 
 .vl-step-item.done .vl-step-circle {
   background: #10b981;
@@ -144,7 +144,7 @@
   border-radius: 12px;
   padding: 14px 18px;
   font-size: 13.5px;
-  color: #1455d9;
+  color: #003087;
   text-align: center;
   margin: 20px 0;
 }

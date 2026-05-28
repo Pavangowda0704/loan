@@ -1,18 +1,10 @@
 // ============================================================
-//  MegaLoanMenu.jsx
-//  Tata Capital-style mega dropdown:
-//    Left  — vertical sidebar list of loan categories
-//    Right — selected category detail panel
-//
-//  Props:
-//    visible        {boolean}  — whether dropdown is shown
-//    onClose        {function} — called to close dropdown
+//  MegaLoanMenu.jsx — Tata Capital-style mega dropdown
 // ============================================================
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { LOAN_CATEGORIES } from '../data/loanCategories'
 
-// ── Small reusable SVG icon ──────────────────────────────────
 function Icon({ pathData, size = 18, color = 'currentColor' }) {
   return (
     <svg
@@ -27,12 +19,32 @@ function Icon({ pathData, size = 18, color = 'currentColor' }) {
   )
 }
 
-// ── Right-side detail panel for one category ────────────────
+// ── Map category id → its main landing route ────────────────
 function loanPath(catId) {
-  return catId === 'vehicle' ? '/loans/vehicle' : '/loans/personal'
+  const map = {
+    home:     '/#loans',
+    business: '/#loans',
+    personal: '/personal-loan',
+    vehicle:  '/vehicle-loan',
+  }
+  return map[catId] || '/'
 }
 
 function CategoryPanel({ cat, onClose }) {
+  const navigate = useNavigate()
+
+  const handleKnowMore = () => {
+    onClose()
+    navigate(loanPath(cat.id))
+  }
+
+  const handleApply = () => {
+    onClose()
+    if (cat.id === 'vehicle')  navigate('/vehicle-loan/apply')
+    else if (cat.id === 'personal') navigate('/personal-loan/salaried/apply')
+    else navigate(loanPath(cat.id))
+  }
+
   return (
     <div className="mlm-panel" key={cat.id}>
 
@@ -50,7 +62,7 @@ function CategoryPanel({ cat, onClose }) {
         </div>
       </div>
 
-      {/* ── Bullet features ── */}
+      {/* ── Bullets ── */}
       <ul className="mlm-panel__bullets" aria-label="Key features">
         {cat.bullets.map((b) => (
           <li key={b}>
@@ -62,26 +74,36 @@ function CategoryPanel({ cat, onClose }) {
 
       {/* ── Action buttons ── */}
       <div className="mlm-panel__actions">
-        <Link to={loanPath(cat.id)} onClick={onClose} className="mlm-btn mlm-btn--ghost" style={{ color: cat.color, borderColor: cat.color + '55' }}>
+        <button onClick={handleKnowMore} className="mlm-btn mlm-btn--ghost" style={{ color: cat.color, borderColor: cat.color + '55' }}>
           Know More
-        </Link>
-        <Link to={loanPath(cat.id)} onClick={onClose} className="mlm-btn mlm-btn--primary" style={{ background: cat.color }}>
+        </button>
+        <button onClick={handleApply} className="mlm-btn mlm-btn--primary" style={{ background: cat.color }}>
           Apply Now
-        </Link>
+        </button>
       </div>
 
-      {/* ── Sub-loans grid ── */}
+      {/* ── Sub-loans ── */}
       <div className="mlm-panel__section-label">Loan Options</div>
       <ul className="mlm-panel__subloans" role="list">
         {cat.subLoans.map((s) => (
           <li key={s.label}>
-            <Link to={loanPath(cat.id)} onClick={onClose} className="mlm-subloan-link" style={{ '--accent': cat.color }}>
-              <span className="mlm-subloan-link__arrow" aria-hidden="true">→</span>
-              <span className="mlm-subloan-link__text">
-                <span className="mlm-subloan-link__label">{s.label}</span>
-                {s.desc && <span className="mlm-subloan-link__desc">{s.desc}</span>}
-              </span>
-            </Link>
+            {s.href && s.href !== '#' ? (
+              <Link to={s.href} onClick={onClose} className="mlm-subloan-link" style={{ '--accent': cat.color }}>
+                <span className="mlm-subloan-link__arrow" aria-hidden="true">→</span>
+                <span className="mlm-subloan-link__text">
+                  <span className="mlm-subloan-link__label">{s.label}</span>
+                  {s.desc && <span className="mlm-subloan-link__desc">{s.desc}</span>}
+                </span>
+              </Link>
+            ) : (
+              <button onClick={onClose} className="mlm-subloan-link" style={{ '--accent': cat.color, background:'none', border:'none', cursor:'pointer', width:'100%', textAlign:'left' }}>
+                <span className="mlm-subloan-link__arrow" aria-hidden="true">→</span>
+                <span className="mlm-subloan-link__text">
+                  <span className="mlm-subloan-link__label">{s.label}</span>
+                  {s.desc && <span className="mlm-subloan-link__desc">{s.desc}</span>}
+                </span>
+              </button>
+            )}
           </li>
         ))}
       </ul>
@@ -93,15 +115,21 @@ function CategoryPanel({ cat, onClose }) {
           <ul className="mlm-panel__calcs" role="list">
             {cat.calculators.map((c) => (
               <li key={c.label}>
-                <a href={c.href} className="mlm-calc-link" style={{ '--accent': cat.color }}>
-                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                    <rect x="4" y="2" width="16" height="20" rx="2"/>
-                    <line x1="8" y1="6" x2="16" y2="6"/>
-                    <line x1="8" y1="10" x2="16" y2="10"/>
-                    <line x1="8" y1="14" x2="12" y2="14"/>
-                  </svg>
-                  {c.label}
-                </a>
+                {c.href?.startsWith('/') ? (
+                  <Link to={c.href} onClick={onClose} className="mlm-calc-link" style={{ '--accent': cat.color }}>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                      <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/>
+                    </svg>
+                    {c.label}
+                  </Link>
+                ) : (
+                  <a href={c.href} className="mlm-calc-link" style={{ '--accent': cat.color }}>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                      <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/>
+                    </svg>
+                    {c.label}
+                  </a>
+                )}
               </li>
             ))}
           </ul>
@@ -111,12 +139,9 @@ function CategoryPanel({ cat, onClose }) {
   )
 }
 
-// ── Main Mega Menu ───────────────────────────────────────────
 export default function MegaLoanMenu({ visible, onClose }) {
-  // Default to first category on open
   const [activeId, setActiveId] = useState(LOAN_CATEGORIES[0].id)
 
-  // Reset active to first whenever menu opens
   useEffect(() => {
     if (visible) setActiveId(LOAN_CATEGORIES[0].id)
   }, [visible])
@@ -124,7 +149,6 @@ export default function MegaLoanMenu({ visible, onClose }) {
   const activeCategory = LOAN_CATEGORIES.find((c) => c.id === activeId) || LOAN_CATEGORIES[0]
 
   return (
-    // Wrapper handles visibility — pointer-events off when hidden
     <div
       className={`mlm-wrapper${visible ? ' mlm-wrapper--open' : ''}`}
       role="dialog"
@@ -134,7 +158,7 @@ export default function MegaLoanMenu({ visible, onClose }) {
     >
       <div className="mlm-box">
 
-        {/* ════ LEFT SIDEBAR ════ */}
+        {/* LEFT SIDEBAR */}
         <nav className="mlm-sidebar" aria-label="Loan category list">
           <p className="mlm-sidebar__heading">All Loans</p>
           <ul role="list">
@@ -150,21 +174,11 @@ export default function MegaLoanMenu({ visible, onClose }) {
                     aria-pressed={isActive}
                     aria-label={`Show ${cat.title} options`}
                   >
-                    {/* Icon chip */}
-                    <span
-                      className="mlm-sidebar__icon"
-                      style={
-                        isActive
-                          ? { background: cat.bgColor, color: cat.color }
-                          : { background: '#F3F4F6', color: '#6B7280' }
-                      }
-                    >
+                    <span className="mlm-sidebar__icon"
+                      style={isActive ? { background: cat.bgColor, color: cat.color } : { background: '#F3F4F6', color: '#6B7280' }}>
                       <Icon pathData={cat.iconPath} size={15} />
                     </span>
-
                     <span className="mlm-sidebar__label">{cat.title}</span>
-
-                    {/* Active indicator arrow */}
                     <span className="mlm-sidebar__arrow" aria-hidden="true">
                       <svg viewBox="0 0 16 16" width="14" height="14" fill="none">
                         <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -175,8 +189,6 @@ export default function MegaLoanMenu({ visible, onClose }) {
               )
             })}
           </ul>
-
-          {/* Sidebar bottom note */}
           <div className="mlm-sidebar__footer">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -185,13 +197,13 @@ export default function MegaLoanMenu({ visible, onClose }) {
           </div>
         </nav>
 
-        {/* ════ RIGHT CONTENT PANEL ════ */}
+        {/* RIGHT CONTENT PANEL */}
         <div className="mlm-content" aria-live="polite" aria-atomic="true">
           <CategoryPanel cat={activeCategory} onClose={onClose} />
         </div>
       </div>
 
-      {/* ════ BOTTOM CTA STRIP ════ */}
+      {/* BOTTOM CTA STRIP */}
       <div className="mlm-footer">
         <div className="mlm-footer__left">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1A56DB" strokeWidth="2" strokeLinecap="round" aria-hidden="true">

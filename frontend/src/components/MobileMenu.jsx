@@ -5,9 +5,15 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { LOAN_CATEGORIES, NAV_LINKS } from '../data/loanCategories'
 
-// Single accordion for one loan category
+// ── Map category id → correct route ─────────────────────────
 function loanPath(catId) {
-  return catId === 'vehicle' ? '/loans/vehicle' : '/loans/personal'
+  const map = {
+    home:     '/',
+    business: '/',
+    personal: '/personal-loan',
+    vehicle:  '/vehicle-loan',
+  }
+  return map[catId] || '/'
 }
 
 function AccordionItem({ cat, onClose }) {
@@ -34,12 +40,33 @@ function AccordionItem({ cat, onClose }) {
       </button>
       <div className="mob-acc__panel">
         <ul>
+          {/* Category landing link */}
+          <li>
+            <Link
+              to={loanPath(cat.id)}
+              onClick={onClose}
+              className="mob-acc__link"
+              style={{ '--dot': cat.color, fontWeight: 700 }}
+            >
+              <span className="mob-acc__dot" style={{ background: cat.color }} aria-hidden="true" />
+              All {cat.title}
+            </Link>
+          </li>
+          {/* Individual sub-loans */}
           {cat.subLoans.map((s) => (
             <li key={s.label}>
-              <Link to={loanPath(cat.id)} onClick={onClose} className="mob-acc__link" style={{ '--dot': cat.color }}>
-                <span className="mob-acc__dot" style={{ background: cat.color }} aria-hidden="true" />
-                {s.label}
-              </Link>
+              {s.href && s.href !== '#' ? (
+                <Link to={s.href} onClick={onClose} className="mob-acc__link" style={{ '--dot': cat.color }}>
+                  <span className="mob-acc__dot" style={{ background: cat.color }} aria-hidden="true" />
+                  {s.label}
+                </Link>
+              ) : (
+                <button onClick={onClose} className="mob-acc__link"
+                  style={{ '--dot': cat.color, background:'none', border:'none', cursor:'pointer', width:'100%', textAlign:'left', padding:0 }}>
+                  <span className="mob-acc__dot" style={{ background: cat.color }} aria-hidden="true" />
+                  {s.label}
+                </button>
+              )}
             </li>
           ))}
         </ul>
@@ -89,8 +116,7 @@ export default function MobileMenu({ isOpen, onClose }) {
           </Link>
           <button className="mob-menu__close" onClick={onClose} aria-label="Close menu">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
           </button>
         </div>
@@ -146,9 +172,7 @@ export default function MobileMenu({ isOpen, onClose }) {
             <li>
               <button type="button" className="mob-menu__link" onClick={() => goToSection('about')}>
                 <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"/>
-                  <line x1="12" y1="8" x2="12" y2="12"/>
-                  <line x1="12" y1="16" x2="12.01" y2="16"/>
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
                 About Us
               </button>
@@ -166,7 +190,7 @@ export default function MobileMenu({ isOpen, onClose }) {
 
         {/* Footer CTA */}
         <div className="mob-menu__ft">
-          <Link to="/loans/personal" className="mob-menu__cta" onClick={onClose}>
+          <Link to="/personal-loan/salaried/apply" className="mob-menu__cta" onClick={onClose}>
             Apply for a Loan →
           </Link>
           <p className="mob-menu__note">Mon–Sat · 9 AM – 7 PM · +91 98765 43210</p>

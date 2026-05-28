@@ -1,25 +1,21 @@
 // ============================================================
-//  routes/vehicleLoanRoutes.js — Vehicle Loan API Routes
-//
-//  Mounted at: /api/vehicle-loans  (see server.js)
-//
-//  Endpoint summary:
-//    POST   /               → Submit new vehicle loan application
-//    GET    /               → Get all vehicle loan applications (admin)
-//    GET    /:applicationId → Get single application by ID (track)
-//    PUT    /:applicationId/status → Update status (admin)
+//  vehicleLoan.routes.js  —  Mounted at /api/vehicle-loans
 // ============================================================
-
 import express from 'express'
 import {
   createVehicleLoan,
   getVehicleLoans,
+  getVehicleLoanStats,
   getVehicleLoanById,
   updateVehicleLoanStatus,
 } from './vehicleLoan.controller.js'
 
 const router = express.Router()
 
+// Stats (must be before /:id to avoid param collision)
+router.get('/stats',                   getVehicleLoanStats)
+
+// CRUD
 router.post('/',                       createVehicleLoan)
 router.get('/',                        getVehicleLoans)
 router.get('/:applicationId',          getVehicleLoanById)

@@ -1,7 +1,5 @@
 // ============================================================
-//  loanCategories.js — LoanEase
-//  Only 4 main sidebar categories. LAP & Mortgage are
-//  sub-options inside Home Loans — NOT separate sidebar items.
+//  loanCategories.js — Plumzo Capital Services
 // ============================================================
 
 export const LOAN_CATEGORIES = [
@@ -31,7 +29,7 @@ export const LOAN_CATEGORIES = [
       { label: 'Home Loan Eligibility Calculator', href: '#emi' },
       { label: 'Balance Transfer Calculator',      href: '#emi' },
     ],
-    color: '#1A56DB',
+    color: '#003087',
     bgColor: '#EEF3FF',
     iconPath: `<path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><polyline points="9 22 9 12 15 12 15 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
   },
@@ -70,8 +68,8 @@ export const LOAN_CATEGORIES = [
       'For travel, education, medical & more',
     ],
     subLoans: [
-      { label: 'Salaried Personal Loan',      href: '/personal-loan/eligibility?type=salaried', desc: 'For working professionals' },
-      { label: 'Self-Employed Personal Loan', href: '/personal-loan/eligibility?type=self-employed', desc: 'For business owners' },
+      { label: 'Salaried Personal Loan',      href: '/personal-loan/salaried',      desc: 'For working professionals' },
+      { label: 'Self-Employed Personal Loan', href: '/personal-loan/self-employed',  desc: 'For business owners' },
     ],
     calculators: [
       { label: 'Personal Loan EMI Calculator',         href: '#emi' },
@@ -84,7 +82,7 @@ export const LOAN_CATEGORIES = [
   {
     id: 'vehicle',
     title: 'Vehicle Loans',
-    rate: '9.0% p.a.',
+    rate: '8.49% p.a.',
     tagline: 'Drive home your dream vehicle today',
     bullets: [
       'New & used cars, bikes and commercial',
@@ -92,15 +90,16 @@ export const LOAN_CATEGORIES = [
       'Quick approval with doorstep service',
     ],
     subLoans: [
-      { label: 'New Car Purchase Loan',      href: '/vehicle-loan/eligibility?type=new-car', desc: 'Drive home a new car' },
-      { label: 'Used Car Loan',              href: '/vehicle-loan/eligibility?type=used-car', desc: 'Smart pre-owned finance' },
-      { label: 'Used Bike Loan',             href: '/vehicle-loan/eligibility?type=used-bike', desc: 'Affordable two-wheeler' },
-      { label: 'Commercial Vehicle Loan',    href: '/vehicle-loan/eligibility?type=commercial', desc: 'Trucks, vans & more' },
-      { label: 'Agriculture Equipment Loan', href: '/vehicle-loan/eligibility?type=agriculture', desc: 'Farm equipment finance' },
+      { label: 'New Car Loan',             href: '/vehicle-loan/new-car',               desc: 'Drive home a brand new car' },
+      { label: 'Used Car Loan',            href: '/vehicle-loan/used-car',              desc: 'Smart pre-owned finance' },
+      { label: 'Two-Wheeler Loan',         href: '/vehicle-loan/two-wheeler',           desc: 'Bikes & scooters' },
+      { label: 'Used Bike Loan',           href: '/vehicle-loan/used-bike',             desc: 'Pre-owned two-wheelers' },
+      { label: 'Commercial Vehicle Loan',  href: '/vehicle-loan/commercial',            desc: 'Trucks, buses & vans' },
+      { label: 'Agriculture Equipment Loan', href: '/vehicle-loan/agriculture-equipment', desc: 'Tractors & agri-machinery' },
     ],
     calculators: [
       { label: 'Vehicle Loan EMI Calculator',         href: '#emi' },
-      { label: 'Vehicle Loan Eligibility Calculator', href: '#emi' },
+      { label: 'Vehicle Loan Eligibility Calculator', href: '/vehicle-loan/eligibility' },
     ],
     color: '#16A34A',
     bgColor: '#F0FDF4',
@@ -108,7 +107,6 @@ export const LOAN_CATEGORIES = [
   },
 ]
 
-// === EDIT: top-level navbar links ===
 export const NAV_LINKS = [
   { label: 'Home',           href: '#',        hasDropdown: false },
   { label: 'Loans',          href: '#loans',   hasDropdown: true  },

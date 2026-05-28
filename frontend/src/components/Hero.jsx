@@ -46,7 +46,7 @@ export default function Hero() {
         {/* Left: Text content */}
         <div className="hero__content">
           {/* === EDIT: eyebrow label === */}
-          <span className="section-label">Welcome to LoanEase</span>
+          <span className="section-label">Welcome to Plumzo Capital</span>
 
           {/* === EDIT: main heading === */}
           <h1 className="hero__heading">
@@ -90,10 +90,10 @@ export default function Hero() {
               {/* House body */}
               <rect x="95" y="160" width="230" height="160" rx="6" fill="#fff" stroke="#D1D9F0" strokeWidth="2"/>
               {/* Roof */}
-              <polygon points="75,165 210,60 345,165" fill="#1A56DB"/>
+              <polygon points="75,165 210,60 345,165" fill="#003087"/>
               <polygon points="90,165 210,72 330,165" fill="#2563EB"/>
               {/* Door */}
-              <rect x="178" y="245" width="64" height="75" rx="4" fill="#1A56DB"/>
+              <rect x="178" y="245" width="64" height="75" rx="4" fill="#003087"/>
               <circle cx="234" cy="283" r="4" fill="#fff"/>
               {/* Windows */}
               <rect x="108" y="185" width="58" height="48" rx="4" fill="#C7D9FF" stroke="#A5C0FF" strokeWidth="1.5"/>
@@ -111,15 +111,15 @@ export default function Hero() {
               <rect x="352" y="275" width="10" height="45" rx="3" fill="#A5C0FF"/>
               <ellipse cx="357" cy="262" rx="22" ry="26" fill="#34D399" opacity="0.7"/>
               {/* Badge: Approved */}
-              <rect x="292" y="68" width="110" height="40" rx="12" fill="#1A56DB" filter="url(#shadow)"/>
+              <rect x="292" y="68" width="110" height="40" rx="12" fill="#003087" filter="url(#shadow)"/>
               <text x="347" y="93" textAnchor="middle" fill="#fff" fontFamily="Sora,sans-serif" fontWeight="700" fontSize="13">✓ Approved!</text>
               {/* Badge: Low Rate */}
               <rect x="16" y="145" width="108" height="40" rx="12" fill="#fff" stroke="#D1D9F0" strokeWidth="1.5"/>
-              <text x="70" y="163" textAnchor="middle" fill="#1A56DB" fontFamily="Sora,sans-serif" fontWeight="700" fontSize="11">Low Rate</text>
+              <text x="70" y="163" textAnchor="middle" fill="#003087" fontFamily="Sora,sans-serif" fontWeight="700" fontSize="11">Low Rate</text>
               <text x="70" y="178" textAnchor="middle" fill="#374151" fontFamily="Nunito,sans-serif" fontSize="11">from 8.5% p.a.</text>
               <defs>
                 <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#1A56DB" floodOpacity="0.25"/>
+                  <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#003087" floodOpacity="0.25"/>
                 </filter>
               </defs>
             </svg>

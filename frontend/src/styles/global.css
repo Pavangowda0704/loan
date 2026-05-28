@@ -1,13 +1,13 @@
 /* =========================================
-   LoanEase — Global Styles
+   Plumzo Capital Services — Global Styles
    Color variables: change here to retheme
    ========================================= */
 
 :root {
   /* === BRAND COLORS — edit these to retheme === */
-  --color-primary: #1A56DB;        /* Royal blue — buttons, accents */
-  --color-primary-dark: #1347C0;   /* Hover state */
-  --color-primary-light: #EEF3FF;  /* Soft blue backgrounds */
+  --color-primary: #003087;        /* Royal blue — buttons, accents */
+  --color-primary-dark: #002070;   /* Hover state */
+  --color-primary-light: #E6F4ED;  /* Soft blue backgrounds */
   --color-navy: #0F1C3F;           /* Dark navy headings */
   --color-body: #374151;           /* Body text */
   --color-muted: #6B7280;          /* Secondary/muted text */
@@ -25,7 +25,7 @@
   --radius-card: 16px;
   --radius-btn: 10px;
   --shadow-card: 0 2px 16px rgba(15, 28, 63, 0.08);
-  --shadow-hover: 0 6px 28px rgba(26, 86, 219, 0.15);
+  --shadow-hover: 0 6px 28px rgba(0, 176, 80, 0.15);
 }
 
 /* ========== RESET ========== */

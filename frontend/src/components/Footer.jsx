@@ -27,8 +27,8 @@ const FOOTER_LINKS = [
   {
     heading: 'Support',
     links: [
-      { label: '+91 98765 43210', href: 'tel:+919876543210' },
-      { label: 'support@loanease.com', href: 'mailto:support@loanease.com' },
+      { label: '+91 6360357896', href: 'tel:+916360357896' },
+      { label: 'support@plumzo.com', href: 'mailto:support@plumzo.com' },
       { label: 'Mon–Sat: 9 AM – 7 PM', href: '#contact' },
     ],
   },
@@ -68,16 +68,12 @@ export default function Footer() {
 
         {/* Brand column */}
         <div className="footer__brand">
-          <a href="#" className="footer__logo" aria-label="LoanEase home">
-            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-              <rect width="32" height="32" rx="8" fill="#1A56DB"/>
-              <path d="M16 6L7 13v13h6v-8h6v8h6V13L16 6z" fill="white"/>
-            </svg>
-            <span>LoanEase</span>
-          </a>
+         <a href="#" className="footer__logo" aria-label="Plumzo Capital Services home">
+  <img src="/plumzo_logo.jpg" alt="Plumzo Capital Services" height="36" style={{height:'36px', width:'auto'}} />
+</a>
           {/* === EDIT: brand tagline === */}
           <p className="footer__tagline">
-            Quick loans with a simple process and trusted support. Easy Loans. Better Life.
+            Quick loans with a simple process and trusted support. Capital. Simplified.
           </p>
           <div className="footer__social" aria-label="Social media links">
             {SOCIAL_LINKS.map(s => (
@@ -107,7 +103,7 @@ export default function Footer() {
       <div className="footer__bottom">
         <div className="container">
           {/* === EDIT: copyright year & company name === */}
-          <p>© 2024 LoanEase. All Rights Reserved.</p>
+          <p>© 2025 Plumzo Capital Services. All Rights Reserved.</p>
           <p>Made with ❤️ for Indian borrowers</p>
         </div>
       </div>

@@ -1,5 +1,5 @@
 // ============================================================
-//  Navbar.jsx — LoanEase
+//  Navbar.jsx — Plumzo Capital Services
 //  Sticky navbar with Tata Capital-style mega dropdown
 //  React Router based navigation
 // ============================================================
@@ -79,18 +79,9 @@ export default function Navbar() {
     <>
       <header ref={navbarRef} className={`navbar${scrolled ? ' navbar--scrolled' : ''}`} role="banner">
         <div className="navbar__container">
-          <Link to="/" className="navbar__logo" aria-label="LoanEase — home" onClick={() => setDropdownOpen(false)}>
-            <span className="navbar__logo-icon" aria-hidden="true">
-              <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
-                <rect width="34" height="34" rx="9" fill="#1A56DB" />
-                <path d="M17 5L6 13.5V29H13V20H21V29H28V13.5L17 5Z" fill="white" />
-              </svg>
-            </span>
-            <span className="navbar__logo-text">
-              LoanEase
-              <span className="navbar__logo-tagline">Easy Loans. Better Life.</span>
-            </span>
-          </Link>
+          <Link to="/" className="navbar__logo" aria-label="Plumzo Capital Services — home" onClick={() => setDropdownOpen(false)}>
+  <img src="/plumzo_logo.jpg" alt="Plumzo Capital Services" height="44" style={{height:'44px', width:'auto'}} />
+</Link>
 
           <nav className="navbar__nav" aria-label="Main navigation">
             <ul className="navbar__nav-list" role="list">

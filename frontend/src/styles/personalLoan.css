@@ -36,7 +36,7 @@
   padding: 8px 14px;
   border-radius: 999px;
   background: #eef4ff;
-  color: #1455d9;
+  color: #003087;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -88,13 +88,13 @@
 
 .pl-primary-btn,
 .pl-card a {
-  background: #1455d9;
+  background: #003087;
   color: white;
 }
 
 .pl-secondary-btn {
   background: white;
-  color: #1455d9;
+  color: #003087;
   border: 1px solid #c9d8ff;
 }
 
@@ -119,7 +119,7 @@
 }
 
 .pl-card span {
-  color: #1455d9;
+  color: #003087;
   font-weight: 800;
   font-size: 13px;
 }
@@ -221,7 +221,7 @@
 }
 
 .stepper-item.active span {
-  background: #1455d9;
+  background: #003087;
   color: white;
 }
 
@@ -271,7 +271,7 @@
 
 .upload-btn {
   background: #eef4ff;
-  color: #1455d9;
+  color: #003087;
   padding: 10px 14px;
   border-radius: 10px;
   font-weight: 800;
@@ -343,7 +343,7 @@
 }
 
 .timeline-item.done span {
-  background: #1455d9;
+  background: #003087;
   color: white;
 }
 
@@ -584,7 +584,7 @@
 .pl-form-grid input:focus,
 .pl-form-grid select:focus {
   outline: none;
-  border-color: #1455d9;
+  border-color: #003087;
 }
 
 .pl-form-grid {
@@ -610,7 +610,7 @@
 
 .pl-benefit {
   background: #f0f7ff;
-  color: #1455d9;
+  color: #003087;
   padding: 12px 16px;
   border-radius: 10px;
   font-weight: 700;

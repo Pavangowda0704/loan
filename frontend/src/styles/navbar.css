@@ -1,5 +1,5 @@
 /* ============================================================
-   navbar.css — LoanEase
+   navbar.css — Plumzo Capital Services
    Tata Capital-style mega-menu navbar
    Edit :root variables to retheme colors / sizes
    ============================================================ */
@@ -275,7 +275,7 @@
 }
 .mlm-sidebar__item--active {
   background: var(--sidebar-bg, #EEF3FF);
-  color: var(--sidebar-accent, #1A56DB);
+  color: var(--sidebar-accent, #003087);
 }
 
 .mlm-sidebar__icon {
