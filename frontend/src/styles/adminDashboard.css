@@ -104,7 +104,7 @@
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 860px;
+  min-width: 960px;
 }
 
 .admin-table thead tr {
@@ -177,6 +177,39 @@
 
 .admin-action-btn:hover { background: #0f42b0; }
 
+/* ---- Document action buttons ---- */
+.doc-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  border-radius: 7px;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.doc-action-btn.view {
+  background: #eef4ff;
+  color: #1455d9;
+}
+
+.doc-action-btn.view:hover {
+  background: #dbeafe;
+}
+
+.doc-action-btn.download {
+  background: #f0fdf4;
+  color: #065f46;
+}
+
+.doc-action-btn.download:hover {
+  background: #d1fae5;
+}
+
 /* ---- Modal ---- */
 .modal-overlay {
   position: fixed;
@@ -193,7 +226,7 @@
   background: white;
   border-radius: 24px;
   width: 100%;
-  max-width: 580px;
+  max-width: 860px;
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 30px 80px rgba(13, 43, 91, 0.25);
@@ -209,6 +242,7 @@
   top: 0;
   background: white;
   border-radius: 24px 24px 0 0;
+  z-index: 1;
 }
 
 .modal-header h2 {

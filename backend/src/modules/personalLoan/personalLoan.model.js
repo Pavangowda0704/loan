@@ -28,8 +28,6 @@ export const createApplication = async (data) => {
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `
 
-  // Support both old field names (mobile/pan/required_amount/preferred_tenure/purpose)
-  // and new field names for forward compatibility
   const values = [
     applicationId,
     data.full_name,
@@ -54,11 +52,20 @@ export const createApplication = async (data) => {
   return applicationId
 }
 
-// ---- READ ALL ----
+// ---- READ ALL (with document count for admin list) ----
 export const getAllApplications = async () => {
-  const [rows] = await pool.execute(
-    'SELECT * FROM personal_loan_applications ORDER BY created_at DESC'
-  )
+  const [rows] = await pool.execute(`
+    SELECT
+      p.*,
+      COALESCE(d.doc_count, 0) AS document_count
+    FROM personal_loan_applications p
+    LEFT JOIN (
+      SELECT application_id, COUNT(*) AS doc_count
+      FROM application_documents
+      GROUP BY application_id
+    ) d ON d.application_id = p.application_id
+    ORDER BY p.created_at DESC
+  `)
   return rows
 }
 
@@ -69,6 +76,45 @@ export const getApplicationById = async (applicationId) => {
     [applicationId]
   )
   return rows[0] || null
+}
+
+// ---- READ ONE WITH DOCUMENTS (admin detail view) ----
+export const getApplicationWithDocuments = async (applicationId) => {
+  // Fetch the application row
+  const [appRows] = await pool.execute(
+    'SELECT * FROM personal_loan_applications WHERE application_id = ?',
+    [applicationId]
+  )
+  const application = appRows[0] || null
+  if (!application) return null
+
+  // Fetch all documents for this application
+  const [docRows] = await pool.execute(
+    `SELECT
+       id,
+       document_name,
+       file_name,
+       file_path,
+       file_type,
+       file_size,
+       uploaded_at
+     FROM application_documents
+     WHERE application_id = ?
+     ORDER BY uploaded_at ASC`,
+    [applicationId]
+  )
+
+  // Build public file URL from stored path
+  // file_path is stored as: uploads/<applicationId>/<filename>
+  const documents = docRows.map(doc => ({
+    ...doc,
+    file_url: doc.file_path
+      ? `/${doc.file_path.replace(/\\/g, '/')}`  // normalize Windows backslashes
+      : null,
+    file_size_kb: doc.file_size ? Math.round(doc.file_size / 1024) : null,
+  }))
+
+  return { ...application, documents }
 }
 
 // ---- UPDATE STATUS ----
@@ -86,9 +132,21 @@ export const saveDocuments = async (applicationId, documents) => {
   for (const doc of documents) {
     await pool.execute(
       `INSERT INTO application_documents
-       (application_id, document_name, file_name, file_type)
-       VALUES (?, ?, ?, ?)`,
-      [applicationId, doc.document_name, doc.file_name || null, doc.file_type || null]
+       (application_id, document_name, file_name, file_path, file_type, file_size)
+       VALUES (?, ?, ?, ?, ?, ?)
+       ON DUPLICATE KEY UPDATE
+         file_name = VALUES(file_name),
+         file_path = VALUES(file_path),
+         file_type = VALUES(file_type),
+         file_size = VALUES(file_size)`,
+      [
+        applicationId,
+        doc.document_name,
+        doc.file_name  || null,
+        doc.file_path  || null,
+        doc.file_type  || null,
+        doc.file_size  || null,
+      ]
     )
   }
 }

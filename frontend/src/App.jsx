@@ -19,6 +19,7 @@ import SalariedPersonalLoan      from "./modules/personalLoan/pages/SalariedPers
 import SelfEmployedPersonalLoan  from "./modules/personalLoan/pages/SelfEmployedPersonalLoan";
 import SalariedApply             from "./modules/personalLoan/pages/SalariedApply";
 import SelfEmployedApply         from "./modules/personalLoan/pages/SelfEmployedApply";
+import PersonalLoanApply         from "./modules/personalLoan/pages/PersonalLoanApply";
 
 // Vehicle Loan module — new pages
 import VehicleLoanHome           from "./modules/vehicleLoan/pages/VehicleLoanHome";
@@ -29,6 +30,7 @@ import CommercialVehicleLoan     from "./modules/vehicleLoan/pages/CommercialVeh
 import UsedBikeLoan               from "./modules/vehicleLoan/pages/UsedBikeLoan";
 import AgricultureEquipmentLoan   from "./modules/vehicleLoan/pages/AgricultureEquipmentLoan";
 import VehicleLoanApplyNew       from "./modules/vehicleLoan/pages/VehicleLoanApplyNew";
+import VehicleLoanApply          from "./modules/vehicleLoan/pages/VehicleLoanApply";
 import VehicleEligibilityNew     from "./modules/vehicleLoan/pages/VehicleEligibilityNew";
 import VehicleDocumentsNew       from "./modules/vehicleLoan/pages/VehicleDocumentsNew";
 import VehicleLoanSuccessNew     from "./modules/vehicleLoan/pages/VehicleLoanSuccessNew";
@@ -62,16 +64,16 @@ function App() {
         {/* ── Personal Loan ── */}
         <Route path="/personal-loan"                     element={<PersonalLoan />} />
         <Route path="/personal-loan/eligibility"         element={<PersonalEligibility />} />
-        <Route path="/personal-loan/apply"               element={<PersonalApply />} />
+        <Route path="/personal-loan/apply"               element={<PersonalLoanApply />} />
         <Route path="/personal-loan/salaried"            element={<SalariedPersonalLoan />} />
         <Route path="/personal-loan/self-employed"       element={<SelfEmployedPersonalLoan />} />
-        <Route path="/personal-loan/salaried/apply"      element={<SalariedApply />} />
-        <Route path="/personal-loan/self-employed/apply" element={<SelfEmployedApply />} />
+        <Route path="/personal-loan/salaried/apply"      element={<PersonalLoanApply />} />
+        <Route path="/personal-loan/self-employed/apply" element={<PersonalLoanApply />} />
 
         {/* Legacy personal loan paths */}
         <Route path="/loans/personal"                        element={<PersonalLoan />} />
         <Route path="/loans/personal/eligibility"            element={<PersonalEligibility />} />
-        <Route path="/loans/personal/apply"                  element={<PersonalApply />} />
+        <Route path="/loans/personal/apply"                  element={<PersonalLoanApply />} />
         <Route path="/loans/personal/upload/:applicationId"  element={<PersonalDocuments />} />
         <Route path="/loans/personal/success/:applicationId" element={<ApplicationSuccess />} />
 
@@ -84,13 +86,13 @@ function App() {
         <Route path="/vehicle-loan/commercial"               element={<CommercialVehicleLoan />} />
         <Route path="/vehicle-loan/agriculture-equipment"    element={<AgricultureEquipmentLoan />} />
         <Route path="/vehicle-loan/eligibility"              element={<VehicleEligibilityNew />} />
-        <Route path="/vehicle-loan/apply"                    element={<VehicleLoanApplyNew />} />
-        <Route path="/vehicle-loan/new-car/apply"            element={<VehicleLoanApplyNew />} />
-        <Route path="/vehicle-loan/used-car/apply"           element={<VehicleLoanApplyNew />} />
-        <Route path="/vehicle-loan/two-wheeler/apply"        element={<VehicleLoanApplyNew />} />
-        <Route path="/vehicle-loan/used-bike/apply"          element={<VehicleLoanApplyNew />} />
-        <Route path="/vehicle-loan/commercial/apply"         element={<VehicleLoanApplyNew />} />
-        <Route path="/vehicle-loan/agriculture-equipment/apply" element={<VehicleLoanApplyNew />} />
+        <Route path="/vehicle-loan/apply"                    element={<VehicleLoanApply />} />
+        <Route path="/vehicle-loan/new-car/apply"            element={<VehicleLoanApply />} />
+        <Route path="/vehicle-loan/used-car/apply"           element={<VehicleLoanApply />} />
+        <Route path="/vehicle-loan/two-wheeler/apply"        element={<VehicleLoanApply />} />
+        <Route path="/vehicle-loan/used-bike/apply"          element={<VehicleLoanApply />} />
+        <Route path="/vehicle-loan/commercial/apply"         element={<VehicleLoanApply />} />
+        <Route path="/vehicle-loan/agriculture-equipment/apply" element={<VehicleLoanApply />} />
         <Route path="/vehicle-loan/documents/:applicationId" element={<VehicleDocumentsNew />} />
         <Route path="/vehicle-loan/success/:applicationId"   element={<VehicleLoanSuccessNew />} />
 

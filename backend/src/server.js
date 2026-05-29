@@ -6,11 +6,14 @@
 //    /api/personal-loans → Personal loan dedicated flow
 //    /api/vehicle-loans  → Vehicle loan dedicated flow
 //    /api/health         → Health check
+//    /uploads            → Static file serving for uploaded docs
 // ============================================================
 
 import express from 'express'
-import cors from 'cors'
-import dotenv from 'dotenv'
+import cors    from 'cors'
+import dotenv  from 'dotenv'
+import path    from 'path'
+import { fileURLToPath } from 'url'
 import { connectDB } from './config/db.js'
 
 // Legacy route (kept for backward compat)
@@ -28,16 +31,47 @@ dotenv.config()
 const app  = express()
 const PORT = process.env.PORT || 5000
 
+// Resolve __dirname for ESM
+const __filename = fileURLToPath(import.meta.url)
+const __dirname  = path.dirname(__filename)
+
 // ---------- Middleware ----------
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }))
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}))
 app.use(express.json())
 
+// ---------- Static file serving for uploaded documents ----------
+// Files are stored at <project_root>/uploads/<applicationId>/<file>
+// Accessible at: GET /uploads/<applicationId>/<file>
+// Security: only jpg, jpeg, png, pdf are ever stored (enforced in uploadMiddleware)
+const uploadsDir = path.join(process.cwd(), 'uploads')
+app.use('/uploads', express.static(uploadsDir, {
+  // Prevent directory listing
+  index: false,
+  // Only serve known safe extensions
+  setHeaders: (res, filePath) => {
+    const ext = path.extname(filePath).toLowerCase()
+    const mimeMap = {
+      '.pdf':  'application/pdf',
+      '.jpg':  'image/jpeg',
+      '.jpeg': 'image/jpeg',
+      '.png':  'image/png',
+    }
+    if (mimeMap[ext]) res.setHeader('Content-Type', mimeMap[ext])
+    // Allow inline viewing in browser (for PDF/image preview)
+    res.setHeader('Content-Disposition', 'inline')
+  },
+}))
+
 // ---------- Health Check ----------
-app.get('/',            (req, res) => res.send('LoanEase API is running'))
-app.get('/api/health',  (req, res) => res.json({ status: 'ok', message: 'LoanEase backend is running' }))
+app.get('/',           (req, res) => res.send('LoanEase API is running'))
+app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'LoanEase backend is running' }))
 
 // ---------- API Routes ----------
-app.use('/api/applications',  applicationRoutes)
+app.use('/api/applications',   applicationRoutes)
 app.use('/api/personal-loans', personalLoanRoutes)
 app.use('/api/vehicle-loans',  vehicleLoanRoutes)
 

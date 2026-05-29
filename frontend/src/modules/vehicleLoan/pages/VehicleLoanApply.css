@@ -1,0 +1,423 @@
+/* ============================================================
+   VehicleLoanApply.css — 8-step vehicle loan application flow
+   Brand: Navy #003087 · Green #00B050 · White
+   ============================================================ */
+
+/* ── Page shell ── */
+.vla-page {
+  min-height: 100vh;
+  background: #f0f4f9;
+  padding-bottom: 60px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Hero ── */
+.vla-hero {
+  background: linear-gradient(135deg, #003087 0%, #00487a 100%);
+  text-align: center;
+  padding: 60px 24px 40px;
+  color: #fff;
+}
+.vla-hero h1 { font-size: clamp(26px,4vw,40px); font-weight: 800; margin: 0 0 10px; color: #fff; }
+.vla-hero h1 span { color: #00B050; }
+.vla-hero p  { font-size: 15px; opacity: 0.85; margin: 0; }
+
+/* ── Stepper ── */
+.vla-stepper-wrap {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 16px;
+  overflow-x: auto;
+}
+.vla-stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 20px 0;
+  gap: 0;
+  min-width: 800px;
+}
+.vla-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+.vla-step-bubble {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #94a3b8;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 13px;
+  z-index: 2;
+  transition: all 0.2s;
+}
+.vla-step.active .vla-step-bubble {
+  background: #003087; color: #fff;
+  box-shadow: 0 0 0 4px rgba(0,48,135,0.15);
+}
+.vla-step.done .vla-step-bubble { background: #00B050; color: #fff; }
+.vla-step-label {
+  font-size: 10px; font-weight: 600; color: #94a3b8;
+  margin-top: 6px; text-align: center; white-space: nowrap;
+}
+.vla-step.active .vla-step-label { color: #003087; }
+.vla-step.done .vla-step-label   { color: #00B050; }
+.vla-step-line {
+  position: absolute; top: 17px; left: 50%;
+  width: 100%; height: 2px;
+  background: #e2e8f0; z-index: 1;
+}
+.vla-step.done .vla-step-line { background: #00B050; }
+
+/* ── Content ── */
+.vla-content {
+  max-width: 1000px;
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+/* ── Card ── */
+.vla-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 16px rgba(0,48,135,0.08);
+}
+
+/* ── Card head ── */
+.vla-card-head {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 28px;
+}
+.vla-step-badge {
+  width: 32px; height: 32px; min-width: 32px;
+  border-radius: 50%; background: #003087; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px; margin-top: 2px;
+}
+.vla-card-head h2 { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 4px; }
+.vla-card-head p  { font-size: 13px; color: #64748b; margin: 0; }
+
+/* ── Loan type grid ── */
+.vla-loan-type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+@media (max-width: 600px) { .vla-loan-type-grid { grid-template-columns: 1fr; } }
+
+.vla-lt-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 18px;
+  border: 2px solid #e2e8f0; border-radius: 12px;
+  cursor: pointer; transition: all 0.18s; background: #fff;
+}
+.vla-lt-card:hover { border-color: #003087; background: #f0f4ff; }
+.vla-lt-card.selected {
+  border-color: #003087; background: #eef3ff;
+  box-shadow: 0 0 0 1px #003087;
+}
+.vla-lt-img {
+  font-size: 28px; width: 48px; height: 48px;
+  background: #f1f5f9; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.vla-lt-card.selected .vla-lt-img { background: #003087; }
+.vla-lt-body { flex: 1; }
+.vla-lt-body strong { display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+.vla-lt-body span   { font-size: 12px; color: #64748b; }
+.vla-lt-radio {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: border-color 0.15s;
+}
+.vla-lt-radio.checked { border-color: #003087; }
+.vla-lt-dot { width: 10px; height: 10px; border-radius: 50%; background: #003087; }
+
+/* ── Form grid ── */
+.vla-form-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 18px; margin-bottom: 28px;
+}
+@media (max-width: 600px) { .vla-form-grid { grid-template-columns: 1fr; } }
+
+.vla-field { display: flex; flex-direction: column; gap: 6px; }
+.vla-field label { font-size: 13px; font-weight: 600; color: #374151; }
+.vla-field input,
+.vla-field select {
+  height: 44px; padding: 0 14px;
+  border: 1.5px solid #d1d5db; border-radius: 10px;
+  font-size: 14px; color: #0f172a; background: #fff;
+  outline: none; transition: border-color 0.15s;
+  width: 100%; box-sizing: border-box;
+}
+.vla-field input:focus,
+.vla-field select:focus { border-color: #003087; box-shadow: 0 0 0 3px rgba(0,48,135,0.08); }
+.vla-field--full { grid-column: 1 / -1; }
+
+/* ── EMI step layout ── */
+.vla-card--emi { padding-bottom: 28px; }
+.vla-emi-layout {
+  display: grid; grid-template-columns: 1fr 320px;
+  gap: 28px; margin-bottom: 28px;
+}
+@media (max-width: 768px) { .vla-emi-layout { grid-template-columns: 1fr; } }
+
+/* Left summary */
+.vla-emi-summary { display: flex; flex-direction: column; gap: 0; }
+.vla-emi-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; border-bottom: 1px solid #f1f5f9;
+  font-size: 14px; color: #374151;
+}
+.vla-emi-row:last-child { border-bottom: none; }
+.vla-emi-row strong { font-weight: 700; color: #0f172a; font-size: 15px; }
+
+/* Right calculator */
+.vla-emi-calc {
+  background: #f8fafc; border: 1.5px solid #e2e8f0;
+  border-radius: 14px; padding: 22px;
+}
+.vla-calc-title {
+  font-size: 14px; font-weight: 800; color: #003087;
+  margin-bottom: 18px; text-align: center;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.vla-calc-field { margin-bottom: 16px; }
+.vla-calc-field label { font-size: 12px; font-weight: 600; color: #374151; display: block; margin-bottom: 4px; }
+.vla-calc-val { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+.vla-calc-field select {
+  width: 100%; height: 40px; padding: 0 12px;
+  border: 1.5px solid #d1d5db; border-radius: 8px;
+  font-size: 13px; background: #fff; outline: none;
+}
+.vla-calc-emi {
+  background: #003087; color: #fff;
+  border-radius: 10px; padding: 14px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 8px;
+}
+.vla-calc-emi span { font-size: 13px; opacity: 0.85; }
+.vla-calc-emi strong { font-size: 20px; font-weight: 900; }
+
+/* Range */
+.vla-range {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 6px;
+  border-radius: 4px; background: #d1d5db;
+  outline: none; cursor: pointer;
+  padding: 0 !important; border: none !important; box-shadow: none !important;
+}
+.vla-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #003087; cursor: pointer;
+  border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,48,135,0.3);
+}
+.vla-range-labels {
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: #94a3b8; margin-top: 4px;
+}
+
+/* ── Document grid ── */
+.vla-doc-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 14px; margin-bottom: 28px;
+}
+@media (max-width: 640px) { .vla-doc-grid { grid-template-columns: 1fr 1fr; } }
+
+.vla-doc-card {
+  border: 1.5px dashed #d1d5db; border-radius: 12px;
+  padding: 16px; text-align: center;
+  background: #fafafa; transition: all 0.18s;
+}
+.vla-doc-card.uploaded { border-color: #00B050; background: #f0fdf4; }
+.vla-doc-icon  { font-size: 26px; margin-bottom: 8px; }
+.vla-doc-label { font-size: 12px; font-weight: 700; color: #1e293b; margin-bottom: 3px; }
+.vla-doc-hint  { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
+.vla-doc-done  { font-size: 11px; color: #00B050; font-weight: 600; margin-bottom: 8px; word-break: break-all; }
+.vla-doc-btn {
+  background: #eef3ff; color: #003087; border: none;
+  padding: 6px 14px; border-radius: 7px;
+  font-size: 12px; font-weight: 700; cursor: pointer; transition: background 0.15s;
+}
+.vla-doc-btn:hover { background: #dde8ff; }
+.vla-doc-card.uploaded .vla-doc-btn { background: #dcfce7; color: #166534; }
+
+/* ── Review ── */
+.vla-review-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin-bottom: 16px;
+}
+@media (max-width: 640px) { .vla-review-grid { grid-template-columns: 1fr; } }
+
+.vla-review-section {
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 12px; padding: 14px 16px;
+}
+.vla-doc-review { grid-column: 1/-1; }
+.vla-rs-head {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 13px; font-weight: 700; color: #0f172a;
+  margin-bottom: 10px; padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.vla-edit-btn {
+  background: none; border: 1px solid #003087; color: #003087;
+  padding: 3px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+}
+.vla-rs-row { font-size: 13px; color: #374151; line-height: 1.6; }
+.vla-rs-kv  {
+  display: flex; justify-content: space-between;
+  font-size: 13px; color: #374151; padding: 4px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.vla-rs-kv:last-child { border-bottom: none; }
+.vla-rs-kv strong { color: #0f172a; font-weight: 700; }
+
+/* Declaration */
+.vla-declaration {
+  background: #fffbeb; border: 1px solid #fde68a;
+  border-radius: 10px; padding: 14px 16px; margin-bottom: 24px; margin-top: 16px;
+}
+.vla-declaration label {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; color: #374151; cursor: pointer; line-height: 1.6;
+}
+.vla-declaration input[type="checkbox"] {
+  width: 16px; height: 16px; margin-top: 2px;
+  accent-color: #003087; flex-shrink: 0;
+}
+
+/* ── Actions ── */
+.vla-actions {
+  display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;
+}
+.vla-btn-primary {
+  background: #003087; color: #fff; border: none;
+  padding: 12px 28px; border-radius: 10px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+  box-shadow: 0 4px 14px rgba(0,48,135,0.25);
+}
+.vla-btn-primary:hover { background: #002070; transform: translateY(-1px); }
+.vla-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.vla-btn-outline {
+  background: #fff; color: #003087;
+  border: 1.5px solid #c5d5f5; padding: 12px 24px;
+  border-radius: 10px; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+}
+.vla-btn-outline:hover { background: #eef3ff; }
+.vla-btn-submit {
+  background: #00B050; color: #fff; border: none;
+  padding: 14px 36px; border-radius: 10px;
+  font-size: 15px; font-weight: 800; cursor: pointer;
+  transition: background 0.18s;
+  box-shadow: 0 4px 16px rgba(0,176,80,0.3);
+}
+.vla-btn-submit:hover { background: #009040; }
+.vla-btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Success ── */
+.vla-success-card {
+  text-align: center; position: relative;
+  overflow: hidden; max-width: 600px; margin: 0 auto;
+}
+.vla-success-confetti { position: absolute; inset: 0; pointer-events: none; }
+.vla-cd {
+  position: absolute; font-size: 14px; color: #00B050;
+  animation: vla-float 3s ease-in-out infinite;
+}
+.vla-cd--0 { top:8%;  left:10%; animation-delay:0s;   color:#003087; }
+.vla-cd--1 { top:15%; right:12%; animation-delay:0.4s; }
+.vla-cd--2 { bottom:25%; left:8%; animation-delay:0.8s; color:#fbbf24; }
+.vla-cd--3 { top:45%; right:8%; animation-delay:1.2s; color:#003087; }
+.vla-cd--4 { bottom:15%; right:18%; animation-delay:0.6s; }
+.vla-cd--5 { top:20%; left:42%; animation-delay:1.0s; color:#fbbf24; }
+@keyframes vla-float { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-12px) rotate(20deg)} }
+
+.vla-success-check {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: #00B050; color: #fff;
+  font-size: 32px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 24px rgba(0,176,80,0.3);
+}
+.vla-success-card h2 { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 10px; }
+.vla-success-id {
+  background: #f8fafc; border: 1px solid #e2e8f0;
+  border-radius: 12px; padding: 14px 24px;
+  display: inline-block; margin: 16px auto;
+  font-size: 12px; color: #64748b;
+}
+.vla-success-id strong {
+  display: block; font-size: 22px; font-weight: 900;
+  color: #00B050; margin-top: 4px; letter-spacing: 0.02em;
+}
+.vla-success-status {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 14px; color: #374151;
+}
+.vla-status-dot {
+  width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;
+  animation: vla-pulse 1.5s ease-in-out infinite;
+}
+@keyframes vla-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0.4)} 50%{box-shadow:0 0 0 6px rgba(245,158,11,0)} }
+
+.vla-success-notice {
+  background: #fffbeb; border: 1.5px solid #fcd34d;
+  border-radius: 12px; padding: 16px 20px;
+  text-align: left; margin: 20px 0 8px;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.vla-success-notice > span { font-size: 20px; flex-shrink: 0; }
+.vla-success-notice strong { display: block; font-size: 14px; color: #92400e; margin-bottom: 4px; }
+.vla-success-notice p { font-size: 13px; color: #78350f; margin: 0; }
+
+/* ── Trust bar ── */
+.vla-trust-bar {
+  background: #0f172a; padding: 24px 32px;
+  display: flex; flex-wrap: wrap;
+  justify-content: center; gap: 20px 40px;
+  margin-top: 40px;
+}
+.vla-trust-item {
+  display: flex; align-items: center; gap: 10px; color: #cbd5e1;
+}
+.vla-trust-item > span { font-size: 22px; }
+.vla-trust-item strong { display: block; font-size: 13px; color: #fff; font-weight: 700; }
+.vla-trust-item span  { font-size: 12px; color: #94a3b8; }
+.vla-secure-badge {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(0,176,80,0.15); border: 1px solid rgba(0,176,80,0.3);
+  border-radius: 10px; padding: 12px 16px; color: #cbd5e1;
+}
+.vla-secure-badge > span { font-size: 24px; }
+.vla-secure-badge strong { display: block; font-size: 13px; color: #fff; }
+.vla-secure-badge span   { font-size: 12px; color: #94a3b8; }
+
+/* ── Doc section labels ── */
+.vla-doc-section-label {
+  font-size: 13px; font-weight: 700; color: #003087;
+  margin: 20px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #eef3ff;
+}
+.vla-doc-grid--small { grid-template-columns: repeat(2,1fr); max-width: 400px; }
+.vla-doc-note {
+  display: flex; align-items: flex-start; gap: 8px;
+  background: #f0f9ff; border: 1px solid #bae6fd;
+  border-radius: 10px; padding: 12px 14px;
+  font-size: 13px; color: #0369a1; margin: 20px 0 8px;
+}

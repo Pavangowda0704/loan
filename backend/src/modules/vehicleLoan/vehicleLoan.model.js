@@ -43,18 +43,28 @@ export const createApplication = async (data) => {
   return applicationId;
 };
 
-// ---- READ ALL ----
+// ---- READ ALL (with document count for admin list) ----
 export const getAllApplications = async (filters = {}) => {
-  let sql = 'SELECT * FROM vehicle_loan_applications';
+  let sql = `
+    SELECT
+      v.*,
+      COALESCE(d.doc_count, 0) AS document_count
+    FROM vehicle_loan_applications v
+    LEFT JOIN (
+      SELECT application_id, COUNT(*) AS doc_count
+      FROM application_documents
+      GROUP BY application_id
+    ) d ON d.application_id = v.application_id
+  `;
   const params = [];
   const where  = [];
 
-  if (filters.status)       { where.push('status = ?');       params.push(filters.status); }
-  if (filters.vehicle_type) { where.push('vehicle_type = ?'); params.push(filters.vehicle_type); }
-  if (filters.city)         { where.push('city = ?');         params.push(filters.city); }
+  if (filters.status)       { where.push('v.status = ?');       params.push(filters.status); }
+  if (filters.vehicle_type) { where.push('v.vehicle_type = ?'); params.push(filters.vehicle_type); }
+  if (filters.city)         { where.push('v.city = ?');         params.push(filters.city); }
 
   if (where.length) sql += ' WHERE ' + where.join(' AND ');
-  sql += ' ORDER BY created_at DESC';
+  sql += ' ORDER BY v.created_at DESC';
 
   const [rows] = await pool.execute(sql, params);
   return rows;
@@ -67,6 +77,41 @@ export const getApplicationById = async (applicationId) => {
     [applicationId]
   );
   return rows[0] || null;
+};
+
+// ---- READ ONE WITH DOCUMENTS (admin detail view) ----
+export const getApplicationWithDocuments = async (applicationId) => {
+  const [appRows] = await pool.execute(
+    'SELECT * FROM vehicle_loan_applications WHERE application_id = ?',
+    [applicationId]
+  );
+  const application = appRows[0] || null;
+  if (!application) return null;
+
+  const [docRows] = await pool.execute(
+    `SELECT
+       id,
+       document_name,
+       file_name,
+       file_path,
+       file_type,
+       file_size,
+       uploaded_at
+     FROM application_documents
+     WHERE application_id = ?
+     ORDER BY uploaded_at ASC`,
+    [applicationId]
+  );
+
+  const documents = docRows.map(doc => ({
+    ...doc,
+    file_url: doc.file_path
+      ? `/${doc.file_path.replace(/\\/g, '/')}`
+      : null,
+    file_size_kb: doc.file_size ? Math.round(doc.file_size / 1024) : null,
+  }));
+
+  return { ...application, documents };
 };
 
 // ---- UPDATE STATUS ----
@@ -93,3 +138,25 @@ export const getStats = async () => {
   `);
   return rows[0];
 };
+
+// ---- SAVE DOCUMENTS ----
+export const saveDocuments = async (applicationId, documents) => {
+  for (const doc of documents) {
+    await pool.execute(
+      `INSERT INTO application_documents
+       (application_id, document_name, file_name, file_path, file_type, file_size)
+       VALUES (?, ?, ?, ?, ?, ?)
+       ON DUPLICATE KEY UPDATE
+         file_name=VALUES(file_name), file_path=VALUES(file_path),
+         file_type=VALUES(file_type), file_size=VALUES(file_size)`,
+      [
+        applicationId,
+        doc.document_name,
+        doc.file_name  || null,
+        doc.file_path  || null,
+        doc.file_type  || null,
+        doc.file_size  || null,
+      ]
+    )
+  }
+}

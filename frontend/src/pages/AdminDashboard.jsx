@@ -1,17 +1,32 @@
 // ============================================================
 //  pages/AdminDashboard.jsx — Unified LoanEase Admin Dashboard
 //
-//  Fetches both personal and vehicle loan applications.
-//  Tabs: All | Personal Loans | Vehicle Loans | By Status
-//  Admin can update status + add remarks for each application.
+//  Features added:
+//    • "View Details" button opens a 2-panel modal:
+//        Left  — all application fields (Applicant, Loan, Employment)
+//        Right — uploaded documents list with View + Download
+//    • document count shown in the table
+//    • document preview (iframe for PDF, img for images)
+//    • Status update section preserved
+//
 //  Route: /admin
 // ============================================================
 
-import { useEffect, useState } from "react";
-import { getPersonalLoanApplications, updatePersonalLoanStatus } from "../api/personalLoanApi.js";
-import { getVehicleLoanApplications, updateVehicleLoanStatus }   from "../api/vehicleLoanApi.js";
+import { useEffect, useState, useCallback } from "react";
+import {
+  getPersonalLoanApplications,
+  updatePersonalLoanStatus,
+  getPersonalLoanDetails,
+} from "../api/personalLoanApi.js";
+import {
+  getVehicleLoanApplications,
+  updateVehicleLoanStatus,
+  getVehicleLoanDetails,
+} from "../api/vehicleLoanApi.js";
 import "../styles/personalLoan.css";
 import "../styles/adminDashboard.css";
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5000';
 
 const STATUS_OPTIONS = [
   "Pending",
@@ -23,15 +38,34 @@ const STATUS_OPTIONS = [
 ];
 
 const STATUS_COLORS = {
-  Pending:               { bg: "#fef3c7", color: "#92400e" },
-  "Under Review":        { bg: "#dbeafe", color: "#1e40af" },
+  Pending:                 { bg: "#fef3c7", color: "#92400e" },
+  "Under Review":          { bg: "#dbeafe", color: "#1e40af" },
   "Document Verification": { bg: "#ede9fe", color: "#5b21b6" },
-  Approved:              { bg: "#d1fae5", color: "#065f46" },
-  Rejected:              { bg: "#fee2e2", color: "#991b1b" },
-  Disbursed:             { bg: "#d1fae5", color: "#064e3b" },
+  Approved:                { bg: "#d1fae5", color: "#065f46" },
+  Rejected:                { bg: "#fee2e2", color: "#991b1b" },
+  Disbursed:               { bg: "#d1fae5", color: "#064e3b" },
 };
 
-const ALL_TABS   = ["All", "Personal Loans", "Vehicle Loans", "Pending", "Under Review", "Document Verification", "Approved", "Rejected", "Disbursed"];
+const ALL_TABS = [
+  "All", "Personal Loans", "Vehicle Loans",
+  "Pending", "Under Review", "Document Verification",
+  "Approved", "Rejected", "Disbursed",
+];
+
+function fmt(val) {
+  if (val === null || val === undefined || val === "") return "—";
+  return val;
+}
+
+function fmtMoney(val) {
+  if (!val) return "—";
+  return `₹${Number(val).toLocaleString("en-IN")}`;
+}
+
+function fmtDate(val) {
+  if (!val) return "—";
+  return new Date(val).toLocaleDateString("en-IN");
+}
 
 function StatusBadge({ status }) {
   const style = STATUS_COLORS[status] || { bg: "#f3f4f6", color: "#374151" };
@@ -42,10 +76,81 @@ function StatusBadge({ status }) {
   );
 }
 
+// ─── Document row in the detail modal ────────────────────────────────────────
+function DocRow({ doc, index, onPreview }) {
+  const fileUrl = doc.file_url ? `${API_BASE}${doc.file_url}` : null;
+  const isPdf   = doc.file_type?.includes("pdf");
+
+  return (
+    <tr>
+      <td style={{ padding: "10px 12px", color: "#66738d", fontSize: 13 }}>{index + 1}</td>
+      <td style={{ padding: "10px 12px", fontWeight: 700, fontSize: 13, color: "#071b46" }}>
+        {fmt(doc.document_name).replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase())}
+      </td>
+      <td style={{ padding: "10px 12px", fontSize: 12.5, color: "#374151" }}>
+        {fmt(doc.file_name)}
+      </td>
+      <td style={{ padding: "10px 12px", fontSize: 12, color: "#66738d" }}>
+        {doc.file_type || "—"}
+      </td>
+      <td style={{ padding: "10px 12px", fontSize: 12, color: "#66738d", whiteSpace: "nowrap" }}>
+        {doc.file_size_kb ? `${doc.file_size_kb} KB` : "—"}
+      </td>
+      <td style={{ padding: "10px 12px", fontSize: 12, color: "#66738d", whiteSpace: "nowrap" }}>
+        {doc.uploaded_at ? new Date(doc.uploaded_at).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—"}
+      </td>
+      <td style={{ padding: "10px 12px", whiteSpace: "nowrap" }}>
+        {fileUrl ? (
+          <div style={{ display: "flex", gap: 6 }}>
+            <button
+              className="doc-action-btn view"
+              onClick={() => onPreview(fileUrl, doc.file_type)}
+            >
+              👁 View
+            </button>
+            <a
+              className="doc-action-btn download"
+              href={fileUrl}
+              download={doc.file_name || "document"}
+              target="_blank"
+              rel="noreferrer"
+            >
+              ⬇ Download
+            </a>
+          </div>
+        ) : (
+          <span style={{ color: "#aaa", fontSize: 12 }}>No file</span>
+        )}
+      </td>
+    </tr>
+  );
+}
+
+// ─── Detail modal ─────────────────────────────────────────────────────────────
 function DetailModal({ app, loanType, onClose, onStatusUpdate }) {
-  const [status, setStatus]   = useState(app.status);
-  const [remarks, setRemarks] = useState(app.remarks || "");
-  const [saving, setSaving]   = useState(false);
+  const [detailData, setDetailData] = useState(null);
+  const [loadingDocs, setLoadingDocs] = useState(true);
+  const [status,  setStatus]   = useState(app.status);
+  const [remarks, setRemarks]  = useState(app.remarks || "");
+  const [saving,  setSaving]   = useState(false);
+  const [previewUrl,  setPreviewUrl]  = useState(null);
+  const [previewType, setPreviewType] = useState(null);
+  const [activeSection, setActiveSection] = useState("details"); // "details" | "documents"
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      try {
+        const fn = loanType === "vehicle" ? getVehicleLoanDetails : getPersonalLoanDetails;
+        const res = await fn(app.application_id);
+        setDetailData(res.data);
+      } catch {
+        setDetailData(app); // fallback to list data
+      } finally {
+        setLoadingDocs(false);
+      }
+    };
+    fetchDetails();
+  }, [app.application_id, loanType]);
 
   const save = async () => {
     setSaving(true);
@@ -59,90 +164,236 @@ function DetailModal({ app, loanType, onClose, onStatusUpdate }) {
     }
   };
 
+  const data  = detailData || app;
+  const docs  = detailData?.documents || [];
   const isVehicle = loanType === "vehicle";
-  const rows = isVehicle
+
+  const applicantRows = isVehicle
     ? [
-        ["Application ID", app.application_id],
-        ["Full Name",      app.full_name],
-        ["Phone",          app.phone],
-        ["Email",          app.email || "—"],
-        ["City",           app.city  || "—"],
-        ["Vehicle Type",   app.vehicle_type],
-        ["Vehicle Condition", app.vehicle_condition],
-        ["Vehicle Price",  app.vehicle_price ? `₹${Number(app.vehicle_price).toLocaleString("en-IN")}` : "—"],
-        ["Down Payment",   app.down_payment  ? `₹${Number(app.down_payment).toLocaleString("en-IN")}`  : "—"],
-        ["Loan Amount",    app.loan_amount   ? `₹${Number(app.loan_amount).toLocaleString("en-IN")}`   : "—"],
-        ["Monthly Income", app.monthly_income? `₹${Number(app.monthly_income).toLocaleString("en-IN")}`: "—"],
-        ["Employment",     app.employment_type || "—"],
-        ["Tenure",         app.tenure ? `${app.tenure} months` : "—"],
-        ["Applied On",     new Date(app.created_at).toLocaleDateString("en-IN")],
+        ["Full Name",   data.full_name],
+        ["Phone",       data.phone],
+        ["Email",       data.email],
+        ["Date of Birth", fmtDate(data.dob)],
+        ["PAN Number",  data.pan_number],
+        ["City",        data.city],
+        ["Nationality", "Indian"],
       ]
     : [
-        ["Application ID", app.application_id],
-        ["Full Name",      app.full_name],
-        ["Phone",          app.phone || app.mobile],
-        ["Email",          app.email || "—"],
-        ["City",           app.city  || "—"],
-        ["PAN",            app.pan_number || app.pan || "—"],
-        ["Employment",     app.employment_type || "—"],
-        ["Company",        app.company_name || "—"],
-        ["Monthly Income", app.monthly_income ? `₹${Number(app.monthly_income).toLocaleString("en-IN")}` : "—"],
-        ["Loan Product",   app.loan_product  || "Personal Loan"],
-        ["Loan Amount",    app.loan_amount   ? `₹${Number(app.loan_amount).toLocaleString("en-IN")}` : "—"],
-        ["Tenure",         app.tenure ? `${app.tenure} months` : "—"],
-        ["Purpose",        app.loan_purpose || "—"],
-        ["Applied On",     new Date(app.created_at).toLocaleDateString("en-IN")],
+        ["Full Name",   data.full_name],
+        ["Father's Name", data.father_name || "—"],
+        ["Date of Birth", fmtDate(data.dob)],
+        ["Gender",      data.gender || "—"],
+        ["Marital Status", data.marital_status || "—"],
+        ["Mobile",      data.phone || data.mobile],
+        ["Email",       data.email],
+        ["Alternate Mobile", data.alternate_mobile || "—"],
+        ["PAN Number",  data.pan_number || data.pan],
+        ["Aadhaar Number", data.aadhaar_number || "—"],
+        ["Address",     data.address || "—"],
+        ["City",        data.city],
+        ["State",       data.state || "—"],
+        ["Pincode",     data.pincode || "—"],
+        ["Nationality", "Indian"],
       ];
+
+  const loanRows = isVehicle
+    ? [
+        ["Loan Amount",       fmtMoney(data.loan_amount)],
+        ["Vehicle Type",      data.vehicle_type],
+        ["Vehicle Condition", data.vehicle_condition],
+        ["Vehicle Price",     fmtMoney(data.vehicle_price)],
+        ["Down Payment",      fmtMoney(data.down_payment)],
+        ["Tenure",            data.tenure ? `${data.tenure} months` : "—"],
+        ["Employment Type",   data.employment_type],
+        ["Monthly Income",    fmtMoney(data.monthly_income)],
+      ]
+    : [
+        ["Loan Amount",     fmtMoney(data.loan_amount || data.required_amount)],
+        ["Loan Product",    data.loan_product || "Personal Loan"],
+        ["Purpose",         data.loan_purpose || data.purpose],
+        ["Tenure",          data.tenure ? `${data.tenure} months` : "—"],
+        ["Employment Type", data.employment_type],
+        ["Company Name",    data.company_name],
+        ["Work Experience", data.work_experience],
+        ["Monthly Income",  fmtMoney(data.monthly_income)],
+        ["Existing EMI",    fmtMoney(data.existing_emi)],
+        ["Interest Rate (%)", data.interest_rate || "—"],
+      ];
+
+  const FieldSection = ({ title, rows }) => (
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ fontWeight: 800, fontSize: 13, color: "#1455d9", marginBottom: 8, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+        {title}
+      </div>
+      <div className="modal-detail-grid">
+        {rows.map(([label, val]) => (
+          <div className="modal-detail-row" key={label}>
+            <span className="modal-label">{label}</span>
+            <span className="modal-val">{fmt(val)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-box"
+        onClick={e => e.stopPropagation()}
+        style={{ maxWidth: 860, width: "95vw" }}
+      >
+        {/* Header */}
         <div className="modal-header">
-          <h2>Application Details</h2>
-          <button className="modal-close" onClick={onClose}>✕</button>
+          <div>
+            <div style={{ fontSize: 11, color: "#1455d9", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 2 }}>
+              {isVehicle ? "🚗 Vehicle Loan" : "💰 Personal Loan"} Application
+            </div>
+            <h2 style={{ margin: 0 }}>{data.application_id}</h2>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <StatusBadge status={data.status} />
+            <button className="modal-close" onClick={onClose}>✕</button>
+          </div>
         </div>
 
-        <div className="modal-body">
-          <div className="modal-detail-grid">
-            {rows.map(([label, val]) => (
-              <div className="modal-detail-row" key={label}>
-                <span className="modal-label">{label}</span>
-                <span className="modal-val">{val}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="modal-update-section">
-            <h3>Update Status</h3>
-            <select value={status} onChange={(e) => setStatus(e.target.value)}>
-              {STATUS_OPTIONS.map((s) => <option key={s}>{s}</option>)}
-            </select>
-            <textarea
-              placeholder="Add remarks (optional)…"
-              value={remarks}
-              onChange={(e) => setRemarks(e.target.value)}
-              rows={3}
-            />
-            <button className="pl-primary-btn" onClick={save} disabled={saving}>
-              {saving ? "Saving…" : "Save Changes"}
+        {/* Section tabs */}
+        <div style={{ display: "flex", borderBottom: "1px solid #e6edff", paddingLeft: 26 }}>
+          {["details", "documents"].map(sec => (
+            <button
+              key={sec}
+              onClick={() => setActiveSection(sec)}
+              style={{
+                border: "none",
+                background: "transparent",
+                padding: "12px 18px",
+                fontWeight: 700,
+                fontSize: 13,
+                cursor: "pointer",
+                borderBottom: activeSection === sec ? "2px solid #1455d9" : "2px solid transparent",
+                color: activeSection === sec ? "#1455d9" : "#66738d",
+                marginBottom: -1,
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              {sec === "details" ? "📋 Application Details" : `📄 Documents (${loadingDocs ? "…" : docs.length})`}
             </button>
-          </div>
+          ))}
+        </div>
+
+        <div className="modal-body" style={{ maxHeight: "68vh", overflowY: "auto" }}>
+
+          {/* ── DETAILS SECTION ── */}
+          {activeSection === "details" && (
+            <>
+              <FieldSection title="Applicant Information" rows={applicantRows} />
+              <FieldSection title="Loan Information" rows={loanRows} />
+
+              {/* Status Update */}
+              <div className="modal-update-section">
+                <h3>Update Status</h3>
+                <select value={status} onChange={e => setStatus(e.target.value)}>
+                  {STATUS_OPTIONS.map(s => <option key={s}>{s}</option>)}
+                </select>
+                <textarea
+                  placeholder="Add remarks (optional)…"
+                  value={remarks}
+                  onChange={e => setRemarks(e.target.value)}
+                  rows={3}
+                />
+                <button className="pl-primary-btn" onClick={save} disabled={saving}>
+                  {saving ? "Saving…" : "Save Changes"}
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* ── DOCUMENTS SECTION ── */}
+          {activeSection === "documents" && (
+            <div>
+              {loadingDocs ? (
+                <p style={{ textAlign: "center", padding: 32, color: "#66738d" }}>Loading documents…</p>
+              ) : docs.length === 0 ? (
+                <div style={{ textAlign: "center", padding: 40 }}>
+                  <div style={{ fontSize: 36, marginBottom: 8 }}>📭</div>
+                  <p style={{ color: "#66738d" }}>No documents uploaded yet for this application.</p>
+                </div>
+              ) : (
+                <>
+                  <div style={{ overflowX: "auto", borderRadius: 12, border: "1px solid #e6edff", marginBottom: 20 }}>
+                    <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 700 }}>
+                      <thead>
+                        <tr style={{ background: "#f0f5ff" }}>
+                          {["#", "Document Type", "Original File Name", "File Type", "File Size", "Uploaded On", "Actions"].map(h => (
+                            <th key={h} style={{ padding: "11px 12px", textAlign: "left", fontSize: 11, fontWeight: 800, color: "#66738d", textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap" }}>
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {docs.map((doc, i) => (
+                          <DocRow
+                            key={doc.id}
+                            doc={doc}
+                            index={i}
+                            onPreview={(url, type) => { setPreviewUrl(url); setPreviewType(type); }}
+                          />
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Inline preview */}
+                  {previewUrl && (
+                    <div style={{ border: "1px solid #e6edff", borderRadius: 12, overflow: "hidden" }}>
+                      <div style={{ padding: "10px 16px", background: "#f0f5ff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontWeight: 700, fontSize: 13, color: "#071b46" }}>Document Preview</span>
+                        <button
+                          onClick={() => setPreviewUrl(null)}
+                          style={{ background: "none", border: "none", cursor: "pointer", color: "#66738d", fontWeight: 700 }}
+                        >
+                          ✕ Close Preview
+                        </button>
+                      </div>
+                      {previewType?.includes("image") ? (
+                        <img
+                          src={previewUrl}
+                          alt="Document preview"
+                          style={{ width: "100%", maxHeight: 500, objectFit: "contain", background: "#f8f8f8" }}
+                        />
+                      ) : (
+                        <iframe
+                          src={previewUrl}
+                          title="Document preview"
+                          style={{ width: "100%", height: 480, border: "none" }}
+                        />
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
+// ─── Main dashboard ───────────────────────────────────────────────────────────
 function AdminDashboard() {
   const [personalApps, setPersonalApps] = useState([]);
   const [vehicleApps,  setVehicleApps]  = useState([]);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
-  const [activeTab, setActiveTab]   = useState("All");
-  const [selectedApp, setSelectedApp] = useState(null);
+  const [activeTab, setActiveTab]     = useState("All");
+  const [selectedApp,  setSelectedApp]  = useState(null);
   const [selectedType, setSelectedType] = useState(null);
 
-  const fetchAll = async () => {
+  const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
       const [pRes, vRes] = await Promise.all([
@@ -156,9 +407,9 @@ function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const handleStatusUpdate = async (appId, data, loanType) => {
     if (loanType === "vehicle") {
@@ -169,13 +420,12 @@ function AdminDashboard() {
     await fetchAll();
   };
 
-  // Build combined list
   const combined = [
-    ...personalApps.map((a) => ({ ...a, _loanType: "personal" })),
-    ...vehicleApps.map( (a) => ({ ...a, _loanType: "vehicle"  })),
+    ...personalApps.map(a => ({ ...a, _loanType: "personal" })),
+    ...vehicleApps.map( a => ({ ...a, _loanType: "vehicle"  })),
   ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-  const filtered = combined.filter((a) => {
+  const filtered = combined.filter(a => {
     if (activeTab === "All")            return true;
     if (activeTab === "Personal Loans") return a._loanType === "personal";
     if (activeTab === "Vehicle Loans")  return a._loanType === "vehicle";
@@ -186,12 +436,12 @@ function AdminDashboard() {
     All:           combined.length,
     "Personal Loans": personalApps.length,
     "Vehicle Loans":  vehicleApps.length,
-    Pending:           combined.filter((a) => a.status === "Pending").length,
-    "Under Review":    combined.filter((a) => a.status === "Under Review").length,
-    "Document Verification": combined.filter((a) => a.status === "Document Verification").length,
-    Approved:          combined.filter((a) => a.status === "Approved").length,
-    Rejected:          combined.filter((a) => a.status === "Rejected").length,
-    Disbursed:         combined.filter((a) => a.status === "Disbursed").length,
+    Pending:                 combined.filter(a => a.status === "Pending").length,
+    "Under Review":          combined.filter(a => a.status === "Under Review").length,
+    "Document Verification": combined.filter(a => a.status === "Document Verification").length,
+    Approved:                combined.filter(a => a.status === "Approved").length,
+    Rejected:                combined.filter(a => a.status === "Rejected").length,
+    Disbursed:               combined.filter(a => a.status === "Disbursed").length,
   };
 
   if (loading) return <section className="pl-page"><p className="track-loading">Loading dashboard…</p></section>;
@@ -234,16 +484,14 @@ function AdminDashboard() {
 
         {/* Tabs */}
         <div className="admin-tabs">
-          {ALL_TABS.map((tab) => (
+          {ALL_TABS.map(tab => (
             <button
               key={tab}
               className={`admin-tab ${activeTab === tab ? "active" : ""}`}
               onClick={() => setActiveTab(tab)}
             >
               {tab}
-              {counts[tab] > 0 && (
-                <span className="tab-count">{counts[tab]}</span>
-              )}
+              {counts[tab] > 0 && <span className="tab-count">{counts[tab]}</span>}
             </button>
           ))}
         </div>
@@ -258,45 +506,66 @@ function AdminDashboard() {
             <table className="admin-table">
               <thead>
                 <tr>
+                  <th>#</th>
                   <th>Application ID</th>
                   <th>Applicant Name</th>
-                  <th>Mobile</th>
-                  <th>Loan Type</th>
+                  <th>Mobile Number</th>
                   <th>Loan Amount</th>
+                  <th>Purpose / Type</th>
                   <th>Status</th>
-                  <th>Date</th>
+                  <th>Applied On</th>
+                  <th>Documents</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((app) => {
+                {filtered.map((app, idx) => {
                   const loanLabel = app._loanType === "vehicle"
                     ? (app.vehicle_type || "Vehicle Loan")
-                    : (app.loan_product || "Personal Loan");
+                    : (app.loan_purpose || app.loan_product || "Personal Loan");
 
                   const amount = app.loan_amount || app.required_amount || 0;
+                  const docCount = app.document_count ?? "—";
 
                   return (
                     <tr key={app.application_id}>
+                      <td style={{ color: "#66738d", fontWeight: 600, fontSize: 12 }}>{idx + 1}</td>
                       <td>
                         <span className="app-id-chip">{app.application_id}</span>
                       </td>
-                      <td>{app.full_name}</td>
+                      <td style={{ fontWeight: 600 }}>{app.full_name}</td>
                       <td>{app.phone || app.mobile}</td>
+                      <td style={{ fontWeight: 700 }}>{fmtMoney(amount)}</td>
                       <td>
                         <span className={`loan-type-chip ${app._loanType}`}>
                           {app._loanType === "vehicle" ? "🚗" : "💰"} {loanLabel}
                         </span>
                       </td>
-                      <td>₹{Number(amount).toLocaleString("en-IN")}</td>
                       <td><StatusBadge status={app.status} /></td>
-                      <td>{new Date(app.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</td>
+                      <td style={{ whiteSpace: "nowrap", fontSize: 13, color: "#66738d" }}>
+                        {new Date(app.created_at).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                      </td>
+                      <td>
+                        <span style={{
+                          background: docCount > 0 ? "#eef4ff" : "#f3f4f6",
+                          color: docCount > 0 ? "#1455d9" : "#9ca3af",
+                          borderRadius: 8,
+                          padding: "3px 10px",
+                          fontSize: 12.5,
+                          fontWeight: 700,
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 4,
+                        }}>
+                          📄 {docCount}
+                        </span>
+                      </td>
                       <td>
                         <button
                           className="admin-action-btn"
                           onClick={() => { setSelectedApp(app); setSelectedType(app._loanType); }}
                         >
-                          View / Update
+                          View Details
                         </button>
                       </td>
                     </tr>

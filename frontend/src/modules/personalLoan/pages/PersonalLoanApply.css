@@ -1,0 +1,592 @@
+/* ============================================================
+   PersonalLoanApply.css — 7-step application flow
+   Brand: Navy #003087 · Green #00B050 · White
+   ============================================================ */
+
+/* ── Page shell ── */
+.pla-page {
+  min-height: 100vh;
+  background: #f0f4f9;
+  padding-bottom: 60px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Hero ── */
+.pla-hero {
+  background: linear-gradient(135deg, #003087 0%, #00487a 100%);
+  text-align: center;
+  padding: 60px 24px 40px;
+  color: #fff;
+}
+.pla-hero h1 {
+  font-size: clamp(26px, 4vw, 40px);
+  font-weight: 800;
+  margin: 0 0 10px;
+  color: #fff;
+}
+.pla-hero h1 span { color: #00B050; }
+.pla-hero p {
+  font-size: 15px;
+  opacity: 0.85;
+  margin: 0;
+}
+
+/* ── Stepper ── */
+.pla-stepper-wrap {
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 16px;
+  overflow-x: auto;
+}
+.pla-stepper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 0;
+  gap: 0;
+  min-width: 700px;
+}
+.pla-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+.pla-step-bubble {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  z-index: 2;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+.pla-step.active .pla-step-bubble {
+  background: #003087;
+  color: #fff;
+  border-color: #003087;
+  box-shadow: 0 0 0 4px rgba(0,48,135,0.15);
+}
+.pla-step.done .pla-step-bubble {
+  background: #00B050;
+  color: #fff;
+  border-color: #00B050;
+}
+.pla-step-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-top: 6px;
+  text-align: center;
+  white-space: nowrap;
+}
+.pla-step.active .pla-step-label { color: #003087; }
+.pla-step.done .pla-step-label   { color: #00B050; }
+.pla-step-line {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #e2e8f0;
+  z-index: 1;
+}
+.pla-step.done .pla-step-line { background: #00B050; }
+
+/* ── Content ── */
+.pla-content {
+  max-width: 1000px;
+  margin: 32px auto;
+  padding: 0 20px;
+}
+
+/* ── Card ── */
+.pla-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 16px rgba(0,48,135,0.08);
+}
+.pla-card--wide { max-width: 100%; }
+
+/* ── Card head ── */
+.pla-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.pla-step-badge {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: #003087;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  margin-top: 2px;
+}
+.pla-card-head h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+}
+.pla-card-head p {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ── Loan Type selector ── */
+.pla-loan-type-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.pla-loan-type-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.18s;
+  background: #fff;
+}
+.pla-loan-type-card:hover { border-color: #003087; background: #f0f4ff; }
+.pla-loan-type-card.selected {
+  border-color: #003087;
+  background: #eef3ff;
+  box-shadow: 0 0 0 1px #003087;
+}
+.pla-lt-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #eef3ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.pla-loan-type-card.selected .pla-lt-icon { background: #003087; }
+.pla-lt-body { flex: 1; }
+.pla-lt-body strong { display: block; font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+.pla-lt-body span   { font-size: 13px; color: #64748b; }
+.pla-lt-radio {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pla-loan-type-card.selected .pla-lt-radio { border-color: #003087; }
+.pla-lt-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #003087;
+}
+
+/* ── Form grid ── */
+.pla-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+@media (max-width: 600px) { .pla-form-grid { grid-template-columns: 1fr; } }
+
+.pla-field { display: flex; flex-direction: column; gap: 6px; }
+.pla-field label { font-size: 13px; font-weight: 600; color: #374151; }
+.pla-field input,
+.pla-field select {
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.pla-field input:focus,
+.pla-field select:focus { border-color: #003087; box-shadow: 0 0 0 3px rgba(0,48,135,0.08); }
+.pla-field--full { grid-column: 1 / -1; }
+
+/* Range slider */
+.pla-range {
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 4px;
+  background: linear-gradient(to right, #003087 0%, #003087 calc((var(--v,50)) * 1%), #d1d5db calc((var(--v,50)) * 1%), #d1d5db 100%);
+  outline: none;
+  cursor: pointer;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  height: 6px !important;
+}
+.pla-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #003087;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0,48,135,0.3);
+}
+.pla-range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: -8px;
+}
+
+/* ── Loan + EMI layout ── */
+.pla-loan-emi-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 28px;
+  margin-bottom: 28px;
+}
+@media (max-width: 768px) { .pla-loan-emi-layout { grid-template-columns: 1fr; } }
+
+.pla-loan-form-col .pla-form-grid { margin-bottom: 0; }
+.pla-loan-form-col .pla-field { margin-bottom: 16px; }
+
+/* EMI Panel */
+.pla-emi-panel {
+  background: linear-gradient(160deg, #f0fdf4, #ecfdf5);
+  border: 1.5px solid #d1fae5;
+  border-radius: 16px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: fit-content;
+}
+.pla-emi-icon { font-size: 32px; margin-bottom: 4px; }
+.pla-emi-title { font-size: 13px; font-weight: 700; color: #00B050; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; }
+.pla-emi-label { font-size: 13px; color: #374151; margin-bottom: 4px; }
+.pla-emi-amount { font-size: 32px; font-weight: 900; color: #00B050; margin-bottom: 16px; }
+.pla-emi-divider { width: 100%; height: 1px; background: #d1fae5; margin-bottom: 12px; }
+.pla-emi-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: #374151;
+}
+.pla-emi-row strong { color: #0f172a; }
+
+/* ── Document upload grid ── */
+.pla-doc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+@media (max-width: 640px) { .pla-doc-grid { grid-template-columns: 1fr 1fr; } }
+
+.pla-doc-card {
+  border: 1.5px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  background: #fafafa;
+  transition: all 0.18s;
+}
+.pla-doc-card.uploaded {
+  border-color: #00B050;
+  background: #f0fdf4;
+}
+.pla-doc-icon { font-size: 28px; margin-bottom: 8px; }
+.pla-doc-label { font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 3px; }
+.pla-doc-hint  { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
+.pla-doc-uploaded { font-size: 11px; color: #00B050; margin-bottom: 8px; font-weight: 600; word-break: break-all; }
+.pla-doc-btn {
+  background: #eef3ff;
+  color: #003087;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.pla-doc-btn:hover { background: #dde8ff; }
+.pla-doc-card.uploaded .pla-doc-btn { background: #dcfce7; color: #166534; }
+
+/* ── Review ── */
+.pla-review-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+@media (max-width: 640px) { .pla-review-grid { grid-template-columns: 1fr; } }
+
+.pla-review-section {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+}
+.pla-review-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.pla-edit-btn {
+  background: none;
+  border: 1px solid #003087;
+  color: #003087;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.pla-review-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 13px;
+  color: #374151;
+  border-bottom: 1px solid #f1f5f9;
+}
+.pla-review-row:last-child { border-bottom: none; }
+.pla-rr-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.pla-review-row--kv { justify-content: space-between; }
+.pla-rr-label { color: #64748b; }
+.pla-rr-val   { font-weight: 700; color: #0f172a; }
+
+/* Declaration */
+.pla-declaration {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+.pla-declaration label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+  line-height: 1.6;
+}
+.pla-declaration input[type="checkbox"] { width: 16px; height: 16px; margin-top: 2px; accent-color: #003087; flex-shrink: 0; }
+
+/* ── Actions ── */
+.pla-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+.pla-actions--center { justify-content: center; }
+
+.pla-btn-primary {
+  background: #003087;
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.1s;
+  box-shadow: 0 4px 14px rgba(0,48,135,0.25);
+}
+.pla-btn-primary:hover { background: #002070; transform: translateY(-1px); }
+.pla-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.pla-btn-outline {
+  background: #fff;
+  color: #003087;
+  border: 1.5px solid #c5d5f5;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pla-btn-outline:hover { background: #eef3ff; }
+
+.pla-btn-submit {
+  background: #00B050;
+  color: #fff;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: background 0.18s;
+  box-shadow: 0 4px 16px rgba(0,176,80,0.3);
+}
+.pla-btn-submit:hover { background: #009040; }
+.pla-btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── Success ── */
+.pla-success-card {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.pla-success-confetti { position: absolute; inset: 0; pointer-events: none; }
+.pla-confetti-dot {
+  position: absolute;
+  font-size: 12px;
+  color: #00B050;
+  animation: confetti-float 3s ease-in-out infinite;
+}
+.pla-confetti-dot--0 { top: 10%; left: 10%; animation-delay: 0s; color: #003087; }
+.pla-confetti-dot--1 { top: 20%; right: 15%; animation-delay: 0.3s; }
+.pla-confetti-dot--2 { bottom: 30%; left: 8%; animation-delay: 0.6s; color: #fbbf24; }
+.pla-confetti-dot--3 { top: 40%; right: 8%; animation-delay: 0.9s; color: #003087; }
+.pla-confetti-dot--4 { bottom: 20%; right: 20%; animation-delay: 1.2s; }
+.pla-confetti-dot--5 { top: 15%; left: 40%; animation-delay: 1.5s; color: #fbbf24; }
+.pla-confetti-dot--6 { bottom: 40%; left: 20%; animation-delay: 0.4s; color: #003087; font-size: 8px; }
+.pla-confetti-dot--7 { top: 60%; right: 10%; animation-delay: 0.8s; font-size: 8px; }
+@keyframes confetti-float { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-12px) rotate(20deg)} }
+
+.pla-success-check {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #00B050;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 8px 24px rgba(0,176,80,0.3);
+}
+.pla-success-card h2 { font-size: 24px; font-weight: 800; color: #0f172a; margin: 0 0 10px; }
+.pla-success-card > p { font-size: 14px; color: #64748b; margin-bottom: 24px; }
+
+.pla-success-id {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 24px;
+  display: inline-block;
+  margin: 0 auto 14px;
+}
+.pla-sid-label { font-size: 12px; color: #64748b; font-weight: 600; margin-bottom: 4px; }
+.pla-sid-value { font-size: 22px; font-weight: 900; color: #00B050; letter-spacing: 0.02em; }
+
+.pla-success-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 10px;
+}
+.pla-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f59e0b;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+@keyframes pulse-dot { 0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,0.4)} 50%{box-shadow:0 0 0 6px rgba(245,158,11,0)} }
+
+.pla-success-note { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+
+.pla-success-notice {
+  background: #fffbeb;
+  border: 1.5px solid #fcd34d;
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-align: left;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.pla-success-notice > span { font-size: 20px; flex-shrink: 0; }
+.pla-success-notice strong { display: block; font-size: 14px; color: #92400e; margin-bottom: 4px; }
+.pla-success-notice p { font-size: 13px; color: #78350f; margin: 0; }
+
+/* ── Trust bar ── */
+.pla-trust-bar {
+  background: #0f172a;
+  padding: 24px 32px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px 40px;
+  margin-top: 40px;
+}
+.pla-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #cbd5e1;
+}
+.pla-trust-icon { font-size: 22px; }
+.pla-trust-item strong { display: block; font-size: 13px; color: #fff; font-weight: 700; }
+.pla-trust-item span  { font-size: 12px; color: #94a3b8; }
+
+/* ── Doc section labels ── */
+.pla-doc-section-label {
+  font-size: 13px; font-weight: 700; color: #003087;
+  margin: 20px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #eef3ff;
+}
+.pla-doc-grid--small { grid-template-columns: repeat(2,1fr); max-width: 400px; }
+
+.pla-doc-note {
+  display: flex; align-items: flex-start; gap: 8px;
+  background: #f0f9ff; border: 1px solid #bae6fd;
+  border-radius: 10px; padding: 12px 14px;
+  font-size: 13px; color: #0369a1; margin: 20px 0 8px;
+}

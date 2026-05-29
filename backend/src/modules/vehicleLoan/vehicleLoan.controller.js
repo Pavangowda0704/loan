@@ -63,6 +63,20 @@ export const getVehicleLoanById = async (req, res) => {
   }
 };
 
+// GET /api/vehicle-loans/:applicationId/details
+// Returns full application data + documents array with file URLs
+export const getVehicleLoanDetails = async (req, res) => {
+  try {
+    const data = await VehicleLoan.getApplicationWithDocuments(req.params.applicationId);
+    if (!data)
+      return res.status(404).json({ message: 'Application not found' });
+    res.json(data);
+  } catch (error) {
+    console.error('getVehicleLoanDetails error:', error);
+    res.status(500).json({ message: 'Failed to fetch application details' });
+  }
+};
+
 // PUT /api/vehicle-loans/:applicationId/status
 export const updateVehicleLoanStatus = async (req, res) => {
   try {
@@ -80,3 +94,27 @@ export const updateVehicleLoanStatus = async (req, res) => {
     res.status(500).json({ message: 'Failed to update status' });
   }
 };
+
+// POST /api/vehicle-loans/:applicationId/documents
+export const uploadVehicleDocuments = async (req, res) => {
+  try {
+    const applicationId = req.params.applicationId
+    const docs = (req.files || []).map(f => ({
+      document_name: f.fieldname,
+      file_name:     f.originalname,
+      file_path:     f.path,
+      file_type:     f.mimetype,
+      file_size:     f.size,
+    }))
+
+    if (docs.length === 0)
+      return res.status(400).json({ message: 'No files received' })
+
+    await VehicleLoan.saveDocuments(applicationId, docs)
+
+    res.json({ message: 'Documents uploaded successfully', uploaded: docs.length })
+  } catch (error) {
+    console.error('uploadVehicleDocuments error:', error)
+    res.status(500).json({ message: 'Failed to upload documents' })
+  }
+}

@@ -62,6 +62,21 @@ export const getPersonalLoanById = async (req, res) => {
   }
 }
 
+// GET /api/personal-loans/:applicationId/details
+// Returns full application data + documents array with file URLs
+export const getPersonalLoanDetails = async (req, res) => {
+  try {
+    const data = await PersonalLoan.getApplicationWithDocuments(req.params.applicationId)
+    if (!data) {
+      return res.status(404).json({ message: 'Application not found' })
+    }
+    res.json(data)
+  } catch (error) {
+    console.error('getPersonalLoanDetails error:', error)
+    res.status(500).json({ message: 'Failed to fetch application details' })
+  }
+}
+
 // PUT /api/personal-loans/:applicationId/status
 export const updatePersonalLoanStatus = async (req, res) => {
   try {
@@ -78,12 +93,31 @@ export const updatePersonalLoanStatus = async (req, res) => {
 }
 
 // POST /api/personal-loans/:applicationId/documents
+// Accepts multipart/form-data — files handled by multer (upload.any())
 export const uploadDocuments = async (req, res) => {
   try {
-    await PersonalLoan.saveDocuments(req.params.applicationId, req.body.documents || [])
-    res.json({ message: 'Documents saved successfully' })
+    const applicationId = req.params.applicationId
+
+    const docs = (req.files || []).map(f => ({
+      document_name: f.fieldname,
+      file_name:     f.originalname,
+      file_path:     f.path,
+      file_type:     f.mimetype,
+      file_size:     f.size,
+    }))
+
+    if (docs.length === 0) {
+      return res.status(400).json({ message: 'No files received' })
+    }
+
+    await PersonalLoan.saveDocuments(applicationId, docs)
+    res.json({
+      message: 'Documents uploaded successfully',
+      uploaded: docs.length,
+      files: docs.map(d => ({ name: d.document_name, file: d.file_name })),
+    })
   } catch (error) {
     console.error('uploadDocuments error:', error)
-    res.status(500).json({ message: 'Failed to save documents' })
+    res.status(500).json({ message: 'Failed to upload documents' })
   }
 }
