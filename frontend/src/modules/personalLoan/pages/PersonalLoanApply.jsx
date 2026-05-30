@@ -5,6 +5,7 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPersonalLoan } from "../../../api/personalLoanApi.js";
+import API from "../../../api/axiosInstance.js";
 import "../personalLoan.css";
 import "./PersonalLoanApply.css";
 
@@ -23,7 +24,6 @@ const LOAN_TYPES = [
   { id: "self-employed", icon: "🏢", title: "Self-Employed Personal Loan",  desc: "For self-employed professionals & business owners" },
 ];
 
-// ── PDF Page 2: Salaried Documents ──
 const SALARIED_DOCS = [
   { key: "pan",        label: "PAN Card",             hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
   { key: "aadhaar",    label: "Aadhaar Card",          hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
@@ -36,7 +36,6 @@ const SALARIED_DOCS = [
   { key: "photo",      label: "Passport Size Photo",   hint: "JPG, PNG (Max 1MB)",      accept: ".jpg,.jpeg,.png",      required: true  },
 ];
 
-// ── PDF Page 2: Self-Employed Documents ──
 const SE_DOCS = [
   { key: "pan",        label: "PAN Card",                      hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
   { key: "aadhaar",    label: "Aadhaar Card",                   hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
@@ -134,20 +133,22 @@ export default function PersonalLoanApply() {
       const applicationId = res.data.application_id;
       setAppId(applicationId);
 
-      // Step 2 — upload documents as multipart/form-data
+      // Step 2 — upload documents using axios (handles HTTP/2 issues)
       if (Object.keys(files).length > 0) {
         const formData = new FormData();
         Object.entries(files).forEach(([key, file]) => {
-          formData.append(key, file);   // fieldname = doc key e.g. "pan", "aadhaar"
+          formData.append(key, file);
         });
-
-        // ✅ FIXED: Use VITE_API_BASE_URL (strip /api suffix to get base server URL)
-        const serverBase = (import.meta.env.VITE_API_BASE_URL || 'https://loan-l0df.onrender.com/api')
-          .replace(/\/api$/, '')
-        await fetch(
-          `${serverBase}/api/personal-loans/${applicationId}/documents`,
-          { method: 'POST', body: formData }
-        );
+        try {
+          await API.post(
+            `/personal-loans/${applicationId}/documents`,
+            formData,
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+          );
+        } catch (uploadErr) {
+          // Don't block success — application was saved, docs can be collected later
+          console.warn('Document upload error:', uploadErr.message);
+        }
       }
 
       setStep(7);
@@ -197,7 +198,6 @@ export default function PersonalLoanApply() {
                   className={`pla-loan-type-card ${loanType?.id===lt.id?"selected":""}`}
                   onClick={()=>{
                     setLoanType(lt);
-                    // Auto-sync employment type with loan type selection
                     setForm(f=>({...f, employment_type: lt.id==="self-employed" ? "Self-Employed" : "Salaried"}));
                   }}>
                   <div className="pla-lt-icon">{lt.icon}</div>
@@ -374,8 +374,6 @@ export default function PersonalLoanApply() {
                 <p>Documents required for <strong>{loanType?.title}</strong></p>
               </div>
             </div>
-
-            {/* KYC section */}
             <div className="pla-doc-section-label">📋 KYC Documents</div>
             <div className="pla-doc-grid">
               {docs.filter(d=>["pan","aadhaar"].includes(d.key)).map(doc=>(
@@ -385,8 +383,6 @@ export default function PersonalLoanApply() {
                   onChange={e=>handleFile(doc.key,e)}/>
               ))}
             </div>
-
-            {/* Income / Business proof section */}
             <div className="pla-doc-section-label">💰 Income Proof</div>
             <div className="pla-doc-grid">
               {docs.filter(d=>!["pan","aadhaar","photo"].includes(d.key)).map(doc=>(
@@ -396,8 +392,6 @@ export default function PersonalLoanApply() {
                   onChange={e=>handleFile(doc.key,e)}/>
               ))}
             </div>
-
-            {/* Photo */}
             <div className="pla-doc-section-label">📸 Photograph</div>
             <div className="pla-doc-grid pla-doc-grid--small">
               {docs.filter(d=>d.key==="photo").map(doc=>(
@@ -407,12 +401,10 @@ export default function PersonalLoanApply() {
                   onChange={e=>handleFile(doc.key,e)}/>
               ))}
             </div>
-
             <div className="pla-doc-note">
               <span>ℹ️</span>
-              <span>Documents marked <strong>*</strong> are mandatory. Our team may request additional documents during verification (Step 6).</span>
+              <span>Documents marked <strong>*</strong> are mandatory. Our team may request additional documents during verification.</span>
             </div>
-
             <div className="pla-actions">
               <button className="pla-btn-outline" onClick={back}>← Back</button>
               <button className="pla-btn-primary" onClick={next}>Save &amp; Continue</button>
@@ -525,7 +517,6 @@ export default function PersonalLoanApply() {
   );
 }
 
-// ── Reusable doc card ──
 function DocCard({doc, file, onUpload, inputRef, onChange}){
   return (
     <div className={`pla-doc-card ${file?"uploaded":""}`}>

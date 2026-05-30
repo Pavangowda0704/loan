@@ -192,10 +192,19 @@ export default function VehicleLoanApply(){
         // ✅ FIXED: Use VITE_API_BASE_URL (strip /api suffix to get base server URL)
         const serverBase = (import.meta.env.VITE_API_BASE_URL || 'https://loan-l0df.onrender.com/api')
           .replace(/\/api$/, '')
-        await fetch(
-          `${serverBase}/api/vehicle-loans/${applicationId}/documents`,
-          { method: 'POST', body: formData }
-        );
+        const uploadRes = await fetch(
+  `${serverBase}/api/vehicle-loans/${applicationId}/documents`,
+  {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'Accept': 'application/json',
+    }
+  }
+);
+if (!uploadRes.ok) {
+  console.warn('Document upload failed but continuing...');
+}
       }
 
       setStep(8);
