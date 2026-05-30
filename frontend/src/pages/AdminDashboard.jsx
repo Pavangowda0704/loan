@@ -26,7 +26,7 @@ import {
 import "../styles/personalLoan.css";
 import "../styles/adminDashboard.css";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'https://loan-production-fe55.up.railway.app';
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'https://loan-l0df.onrender.com';
 
 const STATUS_OPTIONS = [
   "Pending",

@@ -142,7 +142,7 @@ export default function PersonalLoanApply() {
         });
 
         // ✅ FIXED: Use VITE_API_BASE_URL (strip /api suffix to get base server URL)
-        const serverBase = (import.meta.env.VITE_API_BASE_URL || 'https://loan-production-fe55.up.railway.app/api')
+        const serverBase = (import.meta.env.VITE_API_BASE_URL || 'https://loan-l0df.onrender.com/api')
           .replace(/\/api$/, '')
         await fetch(
           `${serverBase}/api/personal-loans/${applicationId}/documents`,

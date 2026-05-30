@@ -14,7 +14,7 @@
 import axios from 'axios'
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://loan-production-fe55.up.railway.app/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://loan-l0df.onrender.com/api',
 })
 
 export default API

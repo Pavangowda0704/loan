@@ -8,7 +8,7 @@ import "../vehicleLoan.css";
 
 // ✅ FIXED: import upload API function
 const uploadVehicleDocuments = (applicationId, formData) => {
-  const serverBase = (import.meta.env.VITE_API_BASE_URL || 'https://loan-production-fe55.up.railway.app/api')
+  const serverBase = (import.meta.env.VITE_API_BASE_URL || 'https://loan-l0df.onrender.com/api')
     .replace(/\/api$/, '')
   return fetch(`${serverBase}/api/vehicle-loans/${applicationId}/documents`, {
     method: 'POST',
