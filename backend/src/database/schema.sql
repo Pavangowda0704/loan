@@ -25,13 +25,17 @@ CREATE TABLE IF NOT EXISTS loan_applications (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- ✅ FIXED: Added file_path, file_size columns + UNIQUE key so ON DUPLICATE KEY UPDATE works
 CREATE TABLE IF NOT EXISTS application_documents (
   id INT PRIMARY KEY AUTO_INCREMENT,
   application_id VARCHAR(30) NOT NULL,
   document_name VARCHAR(255) NOT NULL,
   file_name VARCHAR(255),
+  file_path VARCHAR(500),
   file_type VARCHAR(100),
-  uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  file_size INT,
+  uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_app_doc (application_id, document_name)
 );
 
 CREATE TABLE IF NOT EXISTS personal_loan_applications (

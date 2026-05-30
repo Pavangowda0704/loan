@@ -189,8 +189,11 @@ export default function VehicleLoanApply(){
         Object.entries(files).forEach(([key, file]) => {
           formData.append(key, file);
         });
+        // ✅ FIXED: Use VITE_API_BASE_URL (strip /api suffix to get base server URL)
+        const serverBase = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api')
+          .replace(/\/api$/, '')
         await fetch(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/vehicle-loans/${applicationId}/documents`,
+          `${serverBase}/api/vehicle-loans/${applicationId}/documents`,
           { method: 'POST', body: formData }
         );
       }

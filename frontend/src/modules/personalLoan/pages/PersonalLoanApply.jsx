@@ -141,8 +141,11 @@ export default function PersonalLoanApply() {
           formData.append(key, file);   // fieldname = doc key e.g. "pan", "aadhaar"
         });
 
+        // ✅ FIXED: Use VITE_API_BASE_URL (strip /api suffix to get base server URL)
+        const serverBase = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api')
+          .replace(/\/api$/, '')
         await fetch(
-          `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/personal-loans/${applicationId}/documents`,
+          `${serverBase}/api/personal-loans/${applicationId}/documents`,
           { method: 'POST', body: formData }
         );
       }

@@ -384,7 +384,48 @@ function DetailModal({ app, loanType, onClose, onStatusUpdate }) {
 }
 
 // ─── Main dashboard ───────────────────────────────────────────────────────────
+// ✅ ADDED: Simple admin password guard
+const ADMIN_PASSWORD = 'loanease@admin2024'
+const STORAGE_KEY = 'loanease_admin_auth'
+
+function AdminLogin({ onSuccess }) {
+  const [pwd, setPwd] = useState('')
+  const [err, setErr] = useState(false)
+  const submit = () => {
+    if (pwd === ADMIN_PASSWORD) { sessionStorage.setItem(STORAGE_KEY, '1'); onSuccess() }
+    else { setErr(true); setTimeout(() => setErr(false), 2000) }
+  }
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f7ff' }}>
+      <div style={{ background: '#fff', borderRadius: 16, padding: '2.5rem', width: 360, boxShadow: '0 4px 24px rgba(0,0,0,0.10)', textAlign: 'center' }}>
+        <div style={{ fontSize: 40, marginBottom: 12 }}>🔒</div>
+        <h2 style={{ fontSize: 20, fontWeight: 700, color: '#071b46', marginBottom: 6 }}>Admin Access</h2>
+        <p style={{ fontSize: 14, color: '#6b7280', marginBottom: 24 }}>Enter password to continue</p>
+        <input
+          type="password" value={pwd} onChange={e => setPwd(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && submit()}
+          placeholder="Admin password"
+          style={{ width: '100%', padding: '10px 14px', border: `1.5px solid ${err ? '#ef4444' : '#d1d5db'}`, borderRadius: 10, fontSize: 15, marginBottom: 12, outline: 'none', fontFamily: 'inherit' }}
+          autoFocus
+        />
+        {err && <p style={{ color: '#ef4444', fontSize: 13, marginBottom: 8 }}>Incorrect password</p>}
+        <button onClick={submit}
+          style={{ width: '100%', background: '#1a56db', color: '#fff', border: 'none', borderRadius: 10, padding: '11px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+          Login →
+        </button>
+      </div>
+    </div>
+  )
+}
+
 function AdminDashboard() {
+  const [authed, setAuthed] = useState(!!sessionStorage.getItem(STORAGE_KEY))
+  if (!authed) return <AdminLogin onSuccess={() => setAuthed(true)} />
+
+  return <AdminDashboardInner />
+}
+
+function AdminDashboardInner() {
   const [personalApps, setPersonalApps] = useState([]);
   const [vehicleApps,  setVehicleApps]  = useState([]);
   const [loading, setLoading] = useState(true);
@@ -590,3 +631,4 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+

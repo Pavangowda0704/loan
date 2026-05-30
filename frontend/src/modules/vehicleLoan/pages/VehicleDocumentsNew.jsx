@@ -6,6 +6,16 @@ import { useState } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import "../vehicleLoan.css";
 
+// ✅ FIXED: import upload API function
+const uploadVehicleDocuments = (applicationId, formData) => {
+  const serverBase = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api')
+    .replace(/\/api$/, '')
+  return fetch(`${serverBase}/api/vehicle-loans/${applicationId}/documents`, {
+    method: 'POST',
+    body: formData,
+  })
+}
+
 const NEW_DOCS = [
   {name:"PAN Card",       desc:"Upload clear scan — JPG/PDF (Max 2MB)"},
   {name:"Aadhaar Card",   desc:"Upload clear scan — JPG/PDF (Max 2MB)"},
@@ -79,13 +89,29 @@ export default function VehicleDocumentsNew() {
 
   const setFile = (name, file) => setFiles({...files,[name]:file});
 
-  const handleSubmit = () => {
+  // ✅ FIXED: actually upload files to the server before navigating
+  const handleSubmit = async () => {
     setSubmitting(true);
-    setTimeout(() => {
+    try {
+      if (Object.keys(files).length > 0) {
+        const formData = new FormData();
+        Object.entries(files).forEach(([key, file]) => {
+          // Use doc name as fieldname (spaces replaced with underscore)
+          formData.append(key.replace(/\s+/g, '_').toLowerCase(), file);
+        });
+        const res = await uploadVehicleDocuments(applicationId, formData);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || 'Upload failed');
+        }
+      }
       navigate(`/vehicle-loan/success/${applicationId}`, {
-        state:{ full_name:state?.full_name, vehicle_type:state?.vehicle_type||"Vehicle Loan" }
+        state: { full_name: state?.full_name, vehicle_type: state?.vehicle_type || "Vehicle Loan" }
       });
-    }, 800);
+    } catch (err) {
+      alert('Document upload failed: ' + (err.message || 'Please try again.'));
+      setSubmitting(false);
+    }
   };
 
   const uploadedCount = Object.keys(files).length;

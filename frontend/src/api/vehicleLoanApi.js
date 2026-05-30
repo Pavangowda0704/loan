@@ -24,3 +24,9 @@ export const getVehicleLoanDetails = (applicationId) =>
 // PUT /api/vehicle-loans/:applicationId/status
 export const updateVehicleLoanStatus = (applicationId, data) =>
   API.put(`/vehicle-loans/${applicationId}/status`, data)
+
+// POST /api/vehicle-loans/:applicationId/documents  ✅ ADDED
+export const uploadVehicleDocuments = (applicationId, formData) =>
+  API.post(`/vehicle-loans/${applicationId}/documents`, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
