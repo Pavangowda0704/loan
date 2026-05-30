@@ -105,9 +105,7 @@ export const getApplicationWithDocuments = async (applicationId) => {
 
   const documents = docRows.map(doc => ({
     ...doc,
-    file_url: doc.file_path
-      ? `/${doc.file_path.replace(/\\/g, '/')}`
-      : null,
+    file_url: doc.file_path || null,
     file_size_kb: doc.file_size ? Math.round(doc.file_size / 1024) : null,
   }));
 

@@ -26,7 +26,7 @@ import {
 import "../styles/personalLoan.css";
 import "../styles/adminDashboard.css";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'https://loan-l0df.onrender.com';
+const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'https://loan-production-fe55.up.railway.app';
 
 const STATUS_OPTIONS = [
   "Pending",
@@ -78,7 +78,8 @@ function StatusBadge({ status }) {
 
 // ─── Document row in the detail modal ────────────────────────────────────────
 function DocRow({ doc, index, onPreview }) {
-  const fileUrl = doc.file_url ? `${API_BASE}${doc.file_url}` : null;
+  // file_url is now a full Cloudinary URL — use directly
+  const fileUrl = doc.file_url || null;
   const isPdf   = doc.file_type?.includes("pdf");
 
   return (

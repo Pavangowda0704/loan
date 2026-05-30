@@ -104,13 +104,10 @@ export const getApplicationWithDocuments = async (applicationId) => {
     [applicationId]
   )
 
-  // Build public file URL from stored path
-  // file_path is stored as: uploads/<applicationId>/<filename>
+  // file_path now stores full Cloudinary URL directly
   const documents = docRows.map(doc => ({
     ...doc,
-    file_url: doc.file_path
-      ? `/${doc.file_path.replace(/\\/g, '/')}`  // normalize Windows backslashes
-      : null,
+    file_url: doc.file_path || null,
     file_size_kb: doc.file_size ? Math.round(doc.file_size / 1024) : null,
   }))
 

@@ -93,7 +93,7 @@ export const updatePersonalLoanStatus = async (req, res) => {
 }
 
 // POST /api/personal-loans/:applicationId/documents
-// Accepts multipart/form-data — files handled by multer (upload.any())
+// Accepts multipart/form-data — files handled by multer (Cloudinary)
 export const uploadDocuments = async (req, res) => {
   try {
     const applicationId = req.params.applicationId
@@ -101,7 +101,7 @@ export const uploadDocuments = async (req, res) => {
     const docs = (req.files || []).map(f => ({
       document_name: f.fieldname,
       file_name:     f.originalname,
-      file_path:     f.path,
+      file_path:     f.path,        // Cloudinary URL
       file_type:     f.mimetype,
       file_size:     f.size,
     }))
