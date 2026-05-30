@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import './LoanWorkflow.css'
-import API from '../api'
+import API from '../api/axiosInstance'
 
 const PRODUCT_COPY = {
   personal: {
