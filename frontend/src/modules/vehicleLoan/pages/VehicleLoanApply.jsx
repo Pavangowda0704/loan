@@ -190,7 +190,7 @@ export default function VehicleLoanApply(){
           formData.append(key, file);
         });
         // ✅ FIXED: Use VITE_API_BASE_URL (strip /api suffix to get base server URL)
-        const serverBase = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api')
+        const serverBase = (import.meta.env.VITE_API_BASE_URL || 'https://loan-production-fe55.up.railway.app/api')
           .replace(/\/api$/, '')
         await fetch(
           `${serverBase}/api/vehicle-loans/${applicationId}/documents`,
