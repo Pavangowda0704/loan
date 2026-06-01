@@ -1,7 +1,8 @@
 // ============================================================
 //  pages/Home.jsx — Assembles all homepage sections
 // ============================================================
-import React from 'react'
+import React, { useEffect } from 'react'
+import API from '../api/axiosInstance'
 import Hero from '../components/Hero'
 import LoanTypes from '../components/LoanTypes'
 import HowItWorks from '../components/HowItWorks'
@@ -13,6 +14,11 @@ import FAQ from '../components/FAQ'
 import CallToAction from '../components/CallToAction'
 
 function Home() {
+  // Wake up Render backend as soon as homepage loads
+  useEffect(() => {
+    API.get('/health').catch(() => {});
+  }, []);
+
   return (
     <>
       <Hero />

@@ -1,36 +1,35 @@
 // ============================================================
-//  uploadMiddleware.js — Multer file upload config
-//  Stores files in /uploads/<applicationId>/
-//  Accepts: jpg, jpeg, png, pdf — max 5MB per file
+//  uploadMiddleware.js — Multer file upload config (Cloudinary)
 // ============================================================
 
 import multer from 'multer'
-import path   from 'path'
-import fs     from 'fs'
+import { v2 as cloudinary } from 'cloudinary'
+import { CloudinaryStorage } from 'multer-storage-cloudinary'
+import dotenv from 'dotenv'
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+dotenv.config()
+
+// 1. Configure Cloudinary using your Environment Variables
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
+
+// 2. Configure Multer to upload directly to Cloudinary
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
     const appId = req.params.applicationId || req.body.application_id || 'temp'
-    const dir   = path.join(process.cwd(), 'uploads', appId)
-    fs.mkdirSync(dir, { recursive: true })
-    cb(null, dir)
-  },
-  filename: (req, file, cb) => {
-    const ext      = path.extname(file.originalname)
-    const safeName = file.fieldname + '_' + Date.now() + ext
-    cb(null, safeName)
+    return {
+      folder: `loan_applications/${appId}`, // Creates a folder in Cloudinary for each application
+      allowed_formats: ['jpg', 'jpeg', 'png', 'pdf'],
+      resource_type: 'auto' // Important for accepting both PDFs (raw) and Images
+    }
   },
 })
 
-const fileFilter = (req, file, cb) => {
-  const allowed = ['.jpg', '.jpeg', '.png', '.pdf']
-  const ext     = path.extname(file.originalname).toLowerCase()
-  if (allowed.includes(ext)) cb(null, true)
-  else cb(new Error(`File type ${ext} not allowed`), false)
-}
-
 export const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit per file
 })

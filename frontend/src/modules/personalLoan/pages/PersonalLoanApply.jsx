@@ -1,8 +1,7 @@
 // ============================================================
 //  PersonalLoanApply.jsx — 7-step Personal Loan Apply
-//  PDF-compliant: all mandatory + salaried + self-employed docs
 // ============================================================
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPersonalLoan } from "../../../api/personalLoanApi.js";
 import API from "../../../api/axiosInstance.js";
@@ -25,27 +24,27 @@ const LOAN_TYPES = [
 ];
 
 const SALARIED_DOCS = [
-  { key: "pan",        label: "PAN Card",             hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "aadhaar",    label: "Aadhaar Card",          hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "salary1",    label: "Salary Slip – Month 1", hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "salary2",    label: "Salary Slip – Month 2", hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: false },
-  { key: "salary3",    label: "Salary Slip – Month 3", hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: false },
-  { key: "bank",       label: "6 Months Bank Statement",hint: "JPG, PNG, PDF (Max 5MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "form16",     label: "Form 16 / IT Returns",  hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "empid",      label: "Employee ID Card",       hint: "JPG, PNG (Max 2MB)",      accept: ".jpg,.jpeg,.png,.pdf", required: false },
-  { key: "photo",      label: "Passport Size Photo",   hint: "JPG, PNG (Max 1MB)",      accept: ".jpg,.jpeg,.png",      required: true  },
+  { key: "pan",     label: "PAN Card",              hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "aadhaar", label: "Aadhaar Card",           hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "salary1", label: "Salary Slip – Month 1",  hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "salary2", label: "Salary Slip – Month 2",  hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: false },
+  { key: "salary3", label: "Salary Slip – Month 3",  hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: false },
+  { key: "bank",    label: "6 Months Bank Statement",hint: "JPG, PNG, PDF (Max 5MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "form16",  label: "Form 16 / IT Returns",   hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "empid",   label: "Employee ID Card",        hint: "JPG, PNG (Max 2MB)",      accept: ".jpg,.jpeg,.png,.pdf", required: false },
+  { key: "photo",   label: "Passport Size Photo",    hint: "JPG, PNG (Max 1MB)",      accept: ".jpg,.jpeg,.png",      required: true  },
 ];
 
 const SE_DOCS = [
-  { key: "pan",        label: "PAN Card",                      hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "aadhaar",    label: "Aadhaar Card",                   hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "gst",        label: "GST Registration",              hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "bizproof",   label: "Business Proof",                 hint: "Ownership / Registration — PDF", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "trade",      label: "Trade License",                  hint: "Shops & Establishment cert — PDF", accept: ".jpg,.jpeg,.png,.pdf", required: false },
-  { key: "itr",        label: "IT Returns (2 Years)",           hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "bankbiz",    label: "Business Bank Statement",        hint: "6 months — PDF (Max 5MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
-  { key: "compreg",    label: "Company Registration Documents", hint: "MOA / AOA / Partnership deed — PDF", accept: ".jpg,.jpeg,.png,.pdf", required: false },
-  { key: "photo",      label: "Passport Size Photo",           hint: "JPG, PNG (Max 1MB)",      accept: ".jpg,.jpeg,.png",      required: true  },
+  { key: "pan",     label: "PAN Card",                      hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "aadhaar", label: "Aadhaar Card",                   hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "gst",     label: "GST Registration",              hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "bizproof",label: "Business Proof",                 hint: "Ownership / Registration — PDF", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "trade",   label: "Trade License",                  hint: "Shops & Establishment cert — PDF", accept: ".jpg,.jpeg,.png,.pdf", required: false },
+  { key: "itr",     label: "IT Returns (2 Years)",           hint: "JPG, PNG, PDF (Max 2MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "bankbiz", label: "Business Bank Statement",        hint: "6 months — PDF (Max 5MB)", accept: ".jpg,.jpeg,.png,.pdf", required: true  },
+  { key: "compreg", label: "Company Registration Documents", hint: "MOA / AOA / Partnership deed — PDF", accept: ".jpg,.jpeg,.png,.pdf", required: false },
+  { key: "photo",   label: "Passport Size Photo",           hint: "JPG, PNG (Max 1MB)",      accept: ".jpg,.jpeg,.png",      required: true  },
 ];
 
 const PURPOSES = ["Medical","Education","Travel","Marriage","Home Renovation","Business","Debt Consolidation","Other"];
@@ -76,6 +75,11 @@ export default function PersonalLoanApply() {
     work_experience:"", existing_emi:"", other_obligations:"", bank_name:"",
     loan_amount:"800000", tenure:"60", loan_purpose:"Home Renovation", interest_rate:"10.49",
   });
+
+  // Wake up Render backend on page load
+  useEffect(() => {
+    API.get('/health').catch(() => {});
+  }, []);
 
   const set = e => setForm(f=>({...f,[e.target.name]:e.target.value}));
   const docs = loanType?.id === "self-employed" ? SE_DOCS : SALARIED_DOCS;
@@ -118,7 +122,6 @@ export default function PersonalLoanApply() {
   const submit = async () => {
     setSubmitting(true);
     try {
-      // Step 1 — submit application JSON to get application_id
       const res = await createPersonalLoan({
         ...form,
         loan_product:    loanType.title,
@@ -133,7 +136,7 @@ export default function PersonalLoanApply() {
       const applicationId = res.data.application_id;
       setAppId(applicationId);
 
-      // Step 2 — upload documents using axios (handles HTTP/2 issues)
+      // Upload documents using axios
       if (Object.keys(files).length > 0) {
         const formData = new FormData();
         Object.entries(files).forEach(([key, file]) => {
@@ -146,7 +149,6 @@ export default function PersonalLoanApply() {
             { headers: { 'Content-Type': 'multipart/form-data' } }
           );
         } catch (uploadErr) {
-          // Don't block success — application was saved, docs can be collected later
           console.warn('Document upload error:', uploadErr.message);
         }
       }
@@ -159,14 +161,10 @@ export default function PersonalLoanApply() {
 
   return (
     <div className="pla-page">
-
-      {/* ── Hero ── */}
       <div className="pla-hero">
         <h1>Personal Loan <span>Application Process</span></h1>
         <p>Simple, Quick &amp; 100% Digital Process</p>
       </div>
-
-      {/* ── Stepper ── */}
       <div className="pla-stepper-wrap">
         <div className="pla-stepper">
           {STEPS.map((s,i)=>{
@@ -181,11 +179,7 @@ export default function PersonalLoanApply() {
           })}
         </div>
       </div>
-
-      {/* ── Content ── */}
       <div className="pla-content">
-
-        {/* STEP 1 — Loan Type */}
         {step===1 && (
           <div className="pla-card">
             <div className="pla-card-head">
@@ -201,13 +195,8 @@ export default function PersonalLoanApply() {
                     setForm(f=>({...f, employment_type: lt.id==="self-employed" ? "Self-Employed" : "Salaried"}));
                   }}>
                   <div className="pla-lt-icon">{lt.icon}</div>
-                  <div className="pla-lt-body">
-                    <strong>{lt.title}</strong>
-                    <span>{lt.desc}</span>
-                  </div>
-                  <div className="pla-lt-radio">
-                    {loanType?.id===lt.id && <div className="pla-lt-dot"/>}
-                  </div>
+                  <div className="pla-lt-body"><strong>{lt.title}</strong><span>{lt.desc}</span></div>
+                  <div className="pla-lt-radio">{loanType?.id===lt.id && <div className="pla-lt-dot"/>}</div>
                 </div>
               ))}
             </div>
@@ -216,8 +205,6 @@ export default function PersonalLoanApply() {
             </div>
           </div>
         )}
-
-        {/* STEP 2 — Personal Details */}
         {step===2 && (
           <div className="pla-card">
             <div className="pla-card-head">
@@ -226,35 +213,26 @@ export default function PersonalLoanApply() {
             </div>
             <div className="pla-form-grid">
               <div className="pla-field"><label>Full Name *</label>
-                <input name="full_name" placeholder="Rahul Sharma" value={form.full_name} onChange={set}/>
-              </div>
+                <input name="full_name" placeholder="Rahul Sharma" value={form.full_name} onChange={set}/></div>
               <div className="pla-field"><label>Mobile Number *</label>
-                <input name="phone" placeholder="98765 43210" value={form.phone} onChange={set} maxLength={10}/>
-              </div>
+                <input name="phone" placeholder="98765 43210" value={form.phone} onChange={set} maxLength={10}/></div>
               <div className="pla-field"><label>Email Address *</label>
-                <input name="email" type="email" placeholder="rahul@email.com" value={form.email} onChange={set}/>
-              </div>
+                <input name="email" type="email" placeholder="rahul@email.com" value={form.email} onChange={set}/></div>
               <div className="pla-field"><label>Date of Birth</label>
-                <input name="dob" type="date" value={form.dob} onChange={set}/>
-              </div>
+                <input name="dob" type="date" value={form.dob} onChange={set}/></div>
               <div className="pla-field"><label>PAN Number *</label>
-                <input name="pan_number" placeholder="ABCDE1234F" value={form.pan_number} onChange={set} style={{textTransform:"uppercase"}}/>
-              </div>
+                <input name="pan_number" placeholder="ABCDE1234F" value={form.pan_number} onChange={set} style={{textTransform:"uppercase"}}/></div>
               <div className="pla-field"><label>Aadhaar Number</label>
-                <input name="aadhaar" placeholder="1234 5678 9012" value={form.aadhaar} onChange={set} maxLength={14}/>
-              </div>
+                <input name="aadhaar" placeholder="1234 5678 9012" value={form.aadhaar} onChange={set} maxLength={14}/></div>
               <div className="pla-field"><label>City *</label>
-                <input name="city" placeholder="Mumbai" value={form.city} onChange={set}/>
-              </div>
+                <input name="city" placeholder="Mumbai" value={form.city} onChange={set}/></div>
               <div className="pla-field"><label>State</label>
                 <select name="state" value={form.state} onChange={set}>
                   <option value="">Select State</option>
                   {STATES.map(s=><option key={s}>{s}</option>)}
-                </select>
-              </div>
+                </select></div>
               <div className="pla-field"><label>Pincode</label>
-                <input name="pincode" placeholder="400001" value={form.pincode} onChange={set} maxLength={6}/>
-              </div>
+                <input name="pincode" placeholder="400001" value={form.pincode} onChange={set} maxLength={6}/></div>
             </div>
             <div className="pla-actions">
               <button className="pla-btn-outline" onClick={back}>← Back</button>
@@ -262,8 +240,6 @@ export default function PersonalLoanApply() {
             </div>
           </div>
         )}
-
-        {/* STEP 3 — Employment & Income */}
         {step===3 && (
           <div className="pla-card">
             <div className="pla-card-head">
@@ -275,35 +251,27 @@ export default function PersonalLoanApply() {
                 <select name="employment_type" value={form.employment_type} onChange={set}>
                   {loanType?.id === "self-employed"
                     ? <><option>Self-Employed</option><option>Business Owner</option><option>Freelancer</option></>
-                    : <><option>Salaried</option><option>Self-Employed</option><option>Business Owner</option><option>Freelancer</option></>
-                  }
-                </select>
-              </div>
+                    : <><option>Salaried</option><option>Self-Employed</option><option>Business Owner</option><option>Freelancer</option></>}
+                </select></div>
               <div className="pla-field">
                 <label>{loanType?.id==="self-employed"?"Business Name *":"Company Name *"}</label>
-                <input name="company_name" placeholder={loanType?.id==="self-employed"?"My Business Pvt Ltd":"TCS Private Limited"} value={form.company_name} onChange={set}/>
-              </div>
+                <input name="company_name" placeholder={loanType?.id==="self-employed"?"My Business Pvt Ltd":"TCS Private Limited"} value={form.company_name} onChange={set}/></div>
               <div className="pla-field"><label>Monthly Income (₹) *</label>
-                <input name="monthly_income" type="number" placeholder="75,000" value={form.monthly_income} onChange={set}/>
-              </div>
+                <input name="monthly_income" type="number" placeholder="75,000" value={form.monthly_income} onChange={set}/></div>
               <div className="pla-field"><label>Work Experience</label>
                 <select name="work_experience" value={form.work_experience} onChange={set}>
                   <option value="">Select</option>
                   {["Less than 1 Year","1 Year","2 Years","3 Years","4 Years","5 Years","6-10 Years","10+ Years"].map(v=><option key={v}>{v}</option>)}
-                </select>
-              </div>
+                </select></div>
               <div className="pla-field"><label>Existing EMI (₹)</label>
-                <input name="existing_emi" type="number" placeholder="10,000" value={form.existing_emi} onChange={set}/>
-              </div>
+                <input name="existing_emi" type="number" placeholder="10,000" value={form.existing_emi} onChange={set}/></div>
               <div className="pla-field"><label>Other Monthly Obligations (₹)</label>
-                <input name="other_obligations" type="number" placeholder="5,000" value={form.other_obligations} onChange={set}/>
-              </div>
+                <input name="other_obligations" type="number" placeholder="5,000" value={form.other_obligations} onChange={set}/></div>
               <div className="pla-field"><label>Bank Name</label>
                 <select name="bank_name" value={form.bank_name} onChange={set}>
                   <option value="">Select Bank</option>
                   {BANKS.map(b=><option key={b}>{b}</option>)}
-                </select>
-              </div>
+                </select></div>
             </div>
             <div className="pla-actions">
               <button className="pla-btn-outline" onClick={back}>← Back</button>
@@ -311,8 +279,6 @@ export default function PersonalLoanApply() {
             </div>
           </div>
         )}
-
-        {/* STEP 4 — Loan Details & EMI */}
         {step===4 && (
           <div className="pla-card pla-card--wide">
             <div className="pla-loan-emi-layout">
@@ -324,8 +290,7 @@ export default function PersonalLoanApply() {
                 <div className="pla-field pla-field--full">
                   <label>Required Loan Amount (₹)</label>
                   <input name="loan_amount" type="number" value={form.loan_amount} onChange={set} placeholder="8,00,000"/>
-                  <input name="loan_amount" type="range" min={50000} max={2500000} step={10000}
-                    value={form.loan_amount} onChange={set} className="pla-range"/>
+                  <input name="loan_amount" type="range" min={50000} max={2500000} step={10000} value={form.loan_amount} onChange={set} className="pla-range"/>
                   <div className="pla-range-labels"><span>₹50,000</span><span>₹25,00,000</span></div>
                 </div>
                 <div className="pla-field pla-field--full">
@@ -336,8 +301,7 @@ export default function PersonalLoanApply() {
                 </div>
                 <div className="pla-field pla-field--full">
                   <label>Interest Rate (p.a.): <strong>{form.interest_rate}%</strong></label>
-                  <input name="interest_rate" type="range" min={8} max={24} step={0.01}
-                    value={form.interest_rate} onChange={set} className="pla-range"/>
+                  <input name="interest_rate" type="range" min={8} max={24} step={0.01} value={form.interest_rate} onChange={set} className="pla-range"/>
                   <div className="pla-range-labels"><span>8%</span><span>24%</span></div>
                 </div>
                 <div className="pla-field pla-field--full">
@@ -363,16 +327,11 @@ export default function PersonalLoanApply() {
             </div>
           </div>
         )}
-
-        {/* STEP 5 — Upload Documents */}
         {step===5 && (
           <div className="pla-card">
             <div className="pla-card-head">
               <span className="pla-step-badge">5</span>
-              <div>
-                <h2>Upload Documents</h2>
-                <p>Documents required for <strong>{loanType?.title}</strong></p>
-              </div>
+              <div><h2>Upload Documents</h2><p>Documents required for <strong>{loanType?.title}</strong></p></div>
             </div>
             <div className="pla-doc-section-label">📋 KYC Documents</div>
             <div className="pla-doc-grid">
@@ -403,7 +362,7 @@ export default function PersonalLoanApply() {
             </div>
             <div className="pla-doc-note">
               <span>ℹ️</span>
-              <span>Documents marked <strong>*</strong> are mandatory. Our team may request additional documents during verification.</span>
+              <span>Documents marked <strong>*</strong> are mandatory.</span>
             </div>
             <div className="pla-actions">
               <button className="pla-btn-outline" onClick={back}>← Back</button>
@@ -411,8 +370,6 @@ export default function PersonalLoanApply() {
             </div>
           </div>
         )}
-
-        {/* STEP 6 — Review & Submit */}
         {step===6 && (
           <div className="pla-card pla-card--review">
             <div className="pla-card-head">
@@ -443,9 +400,7 @@ export default function PersonalLoanApply() {
                 {docs.map(doc=>(
                   <div key={doc.key} className="pla-review-row">
                     <span className="pla-rr-icon">{files[doc.key]?"✅":"⬜"}</span>
-                    <span style={{color:files[doc.key]?"#065f46":"#6b7280"}}>
-                      {doc.label}{doc.required?" *":""}
-                    </span>
+                    <span style={{color:files[doc.key]?"#065f46":"#6b7280"}}>{doc.label}{doc.required?" *":""}</span>
                   </div>
                 ))}
               </div>
@@ -464,8 +419,6 @@ export default function PersonalLoanApply() {
             </div>
           </div>
         )}
-
-        {/* STEP 7 — Success */}
         {step===7 && (
           <div className="pla-card pla-success-card">
             <div className="pla-success-confetti">
@@ -494,10 +447,7 @@ export default function PersonalLoanApply() {
             </div>
           </div>
         )}
-
       </div>
-
-      {/* ── Trust bar ── */}
       <div className="pla-trust-bar">
         {[
           {icon:"⚡",title:"Quick Approval",desc:"Get approval in 24-48 hours"},

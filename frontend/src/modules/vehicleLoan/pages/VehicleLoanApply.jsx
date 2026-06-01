@@ -1,10 +1,10 @@
 // ============================================================
 //  VehicleLoanApply.jsx — 8-step Vehicle Loan Apply
-//  PDF-compliant: mandatory docs + per-vehicle-type docs
 // ============================================================
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createVehicleLoanApplication } from "../../../api/vehicleLoanApi.js";
+import API from "../../../api/axiosInstance.js";
 import "../vehicleLoan.css";
 import "./VehicleLoanApply.css";
 
@@ -34,49 +34,46 @@ const TYPE_MAP = {
   "agriculture-equipment":"agriculture",
 };
 
-// ── PDF: Mandatory docs for ALL loans ──
 const MANDATORY_DOCS = [
-  { key:"pan",    label:"PAN Card",    hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true },
-  { key:"aadhaar",label:"Aadhaar Card",hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true },
-  { key:"photo",  label:"Passport Size Photo", hint:"JPG, PNG (Max 1MB)", accept:".jpg,.jpeg,.png",  required:true },
+  { key:"pan",    label:"PAN Card",           hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true },
+  { key:"aadhaar",label:"Aadhaar Card",        hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true },
+  { key:"photo",  label:"Passport Size Photo", hint:"JPG, PNG (Max 1MB)",      accept:".jpg,.jpeg,.png",      required:true },
 ];
 
-// ── Income docs split by employment ──
 const INCOME_DOCS_SALARIED = [
-  { key:"salary", label:"Latest 3 Salary Slips",   hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
-  { key:"bank",   label:"6 Months Bank Statement",  hint:"PDF (Max 5MB)",           accept:".jpg,.jpeg,.png,.pdf", required:true  },
-  { key:"form16", label:"Form 16 / IT Returns",     hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:false },
+  { key:"salary", label:"Latest 3 Salary Slips",  hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
+  { key:"bank",   label:"6 Months Bank Statement", hint:"PDF (Max 5MB)",           accept:".jpg,.jpeg,.png,.pdf", required:true  },
+  { key:"form16", label:"Form 16 / IT Returns",    hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:false },
 ];
 const INCOME_DOCS_SE = [
-  { key:"itr",    label:"IT Returns (2 Years)",     hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
-  { key:"bankbiz",label:"Business Bank Statement",  hint:"6 months — PDF (Max 5MB)",accept:".jpg,.jpeg,.png,.pdf", required:true  },
-  { key:"gst",    label:"GST Registration",         hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:false },
+  { key:"itr",    label:"IT Returns (2 Years)",    hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
+  { key:"bankbiz",label:"Business Bank Statement", hint:"6 months — PDF (Max 5MB)",accept:".jpg,.jpeg,.png,.pdf", required:true  },
+  { key:"gst",    label:"GST Registration",        hint:"JPG, PNG, PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:false },
 ];
 
-// ── Vehicle-specific docs ──
 const VEHICLE_DOCS = {
-  "new-car":    [{ key:"quotation", label:"Proforma Invoice / Dealer Quotation", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  }],
+  "new-car":    [{ key:"quotation", label:"Proforma Invoice / Dealer Quotation", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true }],
   "used-car":   [
-    { key:"rc",        label:"RC Copy (Registration Certificate)", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
+    { key:"rc",        label:"RC Copy (Registration Certificate)",    hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
     { key:"noc",       label:"Form 35 (NOC from previous financier)", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:false },
-    { key:"insurance", label:"Insurance Copy",                     hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
-    { key:"valuation", label:"Valuation Report",                   hint:"From approved evaluator — PDF", accept:".jpg,.jpeg,.png,.pdf", required:true },
+    { key:"insurance", label:"Insurance Copy",                        hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
+    { key:"valuation", label:"Valuation Report",                      hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
   ],
   "two-wheeler":[{ key:"quotation", label:"Proforma Invoice / Dealer Quotation", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true }],
   "used-bike":  [
-    { key:"rc",        label:"RC Copy (Registration Certificate)", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
+    { key:"rc",        label:"RC Copy (Registration Certificate)",    hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
     { key:"noc",       label:"Form 35 (NOC from previous financier)", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:false },
-    { key:"insurance", label:"Insurance Copy",                     hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
-    { key:"valuation", label:"Valuation Report",                   hint:"From approved evaluator — PDF", accept:".jpg,.jpeg,.png,.pdf", required:false },
+    { key:"insurance", label:"Insurance Copy",                        hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
+    { key:"valuation", label:"Valuation Report",                      hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:false },
   ],
   "commercial": [
-    { key:"quotation",  label:"Proforma Invoice / Dealer Quotation", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
-    { key:"transport",  label:"Transport Licence",                   hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
-    { key:"bizreg",     label:"Business Registration Certificate",   hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:false },
+    { key:"quotation", label:"Proforma Invoice / Dealer Quotation",   hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
+    { key:"transport", label:"Transport Licence",                      hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
+    { key:"bizreg",    label:"Business Registration Certificate",      hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:false },
   ],
   "agriculture":[
-    { key:"quotation",  label:"Equipment Quotation / Proforma Invoice", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
-    { key:"land",       label:"Land Documents (7/12 extract)",          hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true  },
+    { key:"quotation", label:"Equipment Quotation / Proforma Invoice", hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true },
+    { key:"land",      label:"Land Documents (7/12 extract)",          hint:"PDF (Max 2MB)", accept:".jpg,.jpeg,.png,.pdf", required:true },
   ],
 };
 
@@ -122,6 +119,12 @@ export default function VehicleLoanApply(){
 
   const [files, setFiles] = useState({});
   const fileRefs          = useRef({});
+
+  // Wake up Render backend on page load
+  useEffect(() => {
+    API.get('/health').catch(() => {});
+  }, []);
+
   const set = e => setForm(f=>({...f,[e.target.name]:e.target.value}));
 
   const derivedLoan = form.ex_showroom_price && form.down_payment
@@ -132,10 +135,9 @@ export default function VehicleLoanApply(){
   const totalPayable  = emi * +form.tenure;
   const totalInterest = totalPayable - +derivedLoan;
 
-  // Build full docs list based on vehicle type + employment type
-  const incomeDocs = form.employment_type==="Salaried" ? INCOME_DOCS_SALARIED : INCOME_DOCS_SE;
+  const incomeDocs  = form.employment_type==="Salaried" ? INCOME_DOCS_SALARIED : INCOME_DOCS_SE;
   const vehicleDocs = VEHICLE_DOCS[loanType?.id] || [];
-  const allDocs = [...MANDATORY_DOCS, ...incomeDocs, ...vehicleDocs];
+  const allDocs     = [...MANDATORY_DOCS, ...incomeDocs, ...vehicleDocs];
 
   const validate = () => {
     if(step===1 && !loanType) return alert("Please select a vehicle loan type."),false;
@@ -167,7 +169,6 @@ export default function VehicleLoanApply(){
   const submit = async () => {
     setSubmitting(true);
     try {
-      // Step 1 — submit application JSON
       const res = await createVehicleLoanApplication({
         ...form,
         vehicle_type:   loanType.title,
@@ -183,28 +184,21 @@ export default function VehicleLoanApply(){
       const applicationId = res.data.application_id;
       setAppId(applicationId);
 
-      // Step 2 — upload documents as multipart/form-data
+      // Upload documents using axios
       if (Object.keys(files).length > 0) {
         const formData = new FormData();
         Object.entries(files).forEach(([key, file]) => {
           formData.append(key, file);
         });
-        // ✅ FIXED: Use VITE_API_BASE_URL (strip /api suffix to get base server URL)
-        const serverBase = (import.meta.env.VITE_API_BASE_URL || 'https://loan-l0df.onrender.com/api')
-          .replace(/\/api$/, '')
-        const uploadRes = await fetch(
-  `${serverBase}/api/vehicle-loans/${applicationId}/documents`,
-  {
-    method: 'POST',
-    body: formData,
-    headers: {
-      'Accept': 'application/json',
-    }
-  }
-);
-if (!uploadRes.ok) {
-  console.warn('Document upload failed but continuing...');
-}
+        try {
+          await API.post(
+            `/vehicle-loans/${applicationId}/documents`,
+            formData,
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+          );
+        } catch (uploadErr) {
+          console.warn('Document upload error:', uploadErr.message);
+        }
       }
 
       setStep(8);
@@ -217,14 +211,10 @@ if (!uploadRes.ok) {
 
   return(
     <div className="vla-page">
-
-      {/* Hero */}
       <div className="vla-hero">
         <h1>Vehicle Loan <span>Application Process</span></h1>
         <p>Simple, Quick &amp; 100% Digital Process</p>
       </div>
-
-      {/* Stepper */}
       <div className="vla-stepper-wrap">
         <div className="vla-stepper">
           {STEPS.map((s,i)=>{
@@ -239,10 +229,7 @@ if (!uploadRes.ok) {
           })}
         </div>
       </div>
-
       <div className="vla-content">
-
-        {/* STEP 1 — Loan Type */}
         {step===1 && (
           <div className="vla-card">
             <div className="vla-card-head">
@@ -251,14 +238,9 @@ if (!uploadRes.ok) {
             </div>
             <div className="vla-loan-type-grid">
               {LOAN_TYPES.map(lt=>(
-                <div key={lt.id}
-                  className={`vla-lt-card ${loanType?.id===lt.id?"selected":""}`}
-                  onClick={()=>setLoanType(lt)}>
+                <div key={lt.id} className={`vla-lt-card ${loanType?.id===lt.id?"selected":""}`} onClick={()=>setLoanType(lt)}>
                   <div className="vla-lt-img">{lt.img}</div>
-                  <div className="vla-lt-body">
-                    <strong>{lt.title}</strong>
-                    <span>{lt.desc}</span>
-                  </div>
+                  <div className="vla-lt-body"><strong>{lt.title}</strong><span>{lt.desc}</span></div>
                   <div className={`vla-lt-radio ${loanType?.id===lt.id?"checked":""}`}>
                     {loanType?.id===lt.id && <div className="vla-lt-dot"/>}
                   </div>
@@ -270,8 +252,6 @@ if (!uploadRes.ok) {
             </div>
           </div>
         )}
-
-        {/* STEP 2 — Personal Details */}
         {step===2 && (
           <div className="vla-card">
             <div className="vla-card-head">
@@ -280,12 +260,12 @@ if (!uploadRes.ok) {
             </div>
             <div className="vla-form-grid">
               {[
-                {name:"full_name", label:"Full Name *",      ph:"Rahul Sharma"},
-                {name:"phone",     label:"Mobile Number *",  ph:"98765 43210", max:10},
-                {name:"email",     label:"Email Address *",  ph:"rahul@email.com", type:"email"},
-                {name:"dob",       label:"Date of Birth",    type:"date"},
-                {name:"pan_number",label:"PAN Number *",     ph:"ABCDE1234F", upper:true},
-                {name:"aadhaar",   label:"Aadhaar Number",   ph:"1234 5678 9012", max:14},
+                {name:"full_name", label:"Full Name *",     ph:"Rahul Sharma"},
+                {name:"phone",     label:"Mobile Number *", ph:"98765 43210", max:10},
+                {name:"email",     label:"Email Address *", ph:"rahul@email.com", type:"email"},
+                {name:"dob",       label:"Date of Birth",   type:"date"},
+                {name:"pan_number",label:"PAN Number *",    ph:"ABCDE1234F", upper:true},
+                {name:"aadhaar",   label:"Aadhaar Number",  ph:"1234 5678 9012", max:14},
               ].map(f=>(
                 <div key={f.name} className="vla-field">
                   <label>{f.label}</label>
@@ -295,17 +275,14 @@ if (!uploadRes.ok) {
                 </div>
               ))}
               <div className="vla-field"><label>City *</label>
-                <input name="city" placeholder="Mumbai" value={form.city} onChange={set}/>
-              </div>
+                <input name="city" placeholder="Mumbai" value={form.city} onChange={set}/></div>
               <div className="vla-field"><label>State</label>
                 <select name="state" value={form.state} onChange={set}>
                   <option value="">Select State</option>
                   {STATES.map(s=><option key={s}>{s}</option>)}
-                </select>
-              </div>
+                </select></div>
               <div className="vla-field"><label>Pincode</label>
-                <input name="pincode" placeholder="400001" value={form.pincode} onChange={set} maxLength={6}/>
-              </div>
+                <input name="pincode" placeholder="400001" value={form.pincode} onChange={set} maxLength={6}/></div>
             </div>
             <div className="vla-actions">
               <button className="vla-btn-outline" onClick={back}>← Back</button>
@@ -313,8 +290,6 @@ if (!uploadRes.ok) {
             </div>
           </div>
         )}
-
-        {/* STEP 3 — Employment & Income */}
         {step===3 && (
           <div className="vla-card">
             <div className="vla-card-head">
@@ -326,32 +301,25 @@ if (!uploadRes.ok) {
                 <select name="employment_type" value={form.employment_type} onChange={set}>
                   <option>Salaried</option><option>Self-Employed</option>
                   <option>Business Owner</option><option>Farmer</option><option>Freelancer</option>
-                </select>
-              </div>
+                </select></div>
               <div className="vla-field"><label>Company / Business Name *</label>
-                <input name="company_name" placeholder="TCS Private Limited" value={form.company_name} onChange={set}/>
-              </div>
+                <input name="company_name" placeholder="TCS Private Limited" value={form.company_name} onChange={set}/></div>
               <div className="vla-field"><label>Monthly Income (₹) *</label>
-                <input name="monthly_income" type="number" placeholder="75,000" value={form.monthly_income} onChange={set}/>
-              </div>
+                <input name="monthly_income" type="number" placeholder="75,000" value={form.monthly_income} onChange={set}/></div>
               <div className="vla-field"><label>Work Experience</label>
                 <select name="work_experience" value={form.work_experience} onChange={set}>
                   <option value="">Select</option>
                   {["Less than 1 Year","1 Year","2 Years","3 Years","4 Years","5 Years","6-10 Years","10+ Years"].map(v=><option key={v}>{v}</option>)}
-                </select>
-              </div>
+                </select></div>
               <div className="vla-field"><label>Existing EMI (₹)</label>
-                <input name="existing_emi" type="number" placeholder="10,000" value={form.existing_emi} onChange={set}/>
-              </div>
+                <input name="existing_emi" type="number" placeholder="10,000" value={form.existing_emi} onChange={set}/></div>
               <div className="vla-field"><label>Other Monthly Obligations (₹)</label>
-                <input name="other_obligations" type="number" placeholder="5,000" value={form.other_obligations} onChange={set}/>
-              </div>
+                <input name="other_obligations" type="number" placeholder="5,000" value={form.other_obligations} onChange={set}/></div>
               <div className="vla-field"><label>Bank Name</label>
                 <select name="bank_name" value={form.bank_name} onChange={set}>
                   <option value="">Select Bank</option>
                   {BANKS.map(b=><option key={b}>{b}</option>)}
-                </select>
-              </div>
+                </select></div>
             </div>
             <div className="vla-actions">
               <button className="vla-btn-outline" onClick={back}>← Back</button>
@@ -359,8 +327,6 @@ if (!uploadRes.ok) {
             </div>
           </div>
         )}
-
-        {/* STEP 4 — Vehicle Details */}
         {step===4 && (
           <div className="vla-card">
             <div className="vla-card-head">
@@ -369,33 +335,26 @@ if (!uploadRes.ok) {
             </div>
             <div className="vla-form-grid">
               <div className="vla-field"><label>Vehicle Type</label>
-                <input value={loanType?.title||""} readOnly style={{background:"#f8fafc",color:"#64748b"}}/>
-              </div>
+                <input value={loanType?.title||""} readOnly style={{background:"#f8fafc",color:"#64748b"}}/></div>
               <div className="vla-field"><label>Vehicle Brand</label>
                 <select name="vehicle_brand" value={form.vehicle_brand} onChange={set}>
                   <option value="">Select Brand</option>
                   {brands.map(b=><option key={b}>{b}</option>)}
-                </select>
-              </div>
+                </select></div>
               <div className="vla-field"><label>Vehicle Model</label>
-                <input name="vehicle_model" placeholder="e.g. Creta SX" value={form.vehicle_model} onChange={set}/>
-              </div>
+                <input name="vehicle_model" placeholder="e.g. Creta SX" value={form.vehicle_model} onChange={set}/></div>
               <div className="vla-field"><label>Fuel Type</label>
                 <select name="fuel_type" value={form.fuel_type} onChange={set}>
                   {FUEL_TYPES.map(f=><option key={f}>{f}</option>)}
-                </select>
-              </div>
+                </select></div>
               <div className="vla-field"><label>Ex-Showroom / Assessed Price (₹) *</label>
-                <input name="ex_showroom_price" type="number" placeholder="12,00,000" value={form.ex_showroom_price} onChange={set}/>
-              </div>
+                <input name="ex_showroom_price" type="number" placeholder="12,00,000" value={form.ex_showroom_price} onChange={set}/></div>
               <div className="vla-field"><label>Down Payment (₹)</label>
-                <input name="down_payment" type="number" placeholder="2,00,000" value={form.down_payment} onChange={set}/>
-              </div>
+                <input name="down_payment" type="number" placeholder="2,00,000" value={form.down_payment} onChange={set}/></div>
               <div className="vla-field vla-field--full">
                 <label>Required Loan Amount (₹) — Auto-calculated</label>
                 <input name="loan_amount" type="number" value={derivedLoan} onChange={set}
-                  style={{background:"#f0fdf4",fontWeight:700,color:"#166534"}}/>
-              </div>
+                  style={{background:"#f0fdf4",fontWeight:700,color:"#166534"}}/></div>
             </div>
             <div className="vla-actions">
               <button className="vla-btn-outline" onClick={back}>← Back</button>
@@ -403,8 +362,6 @@ if (!uploadRes.ok) {
             </div>
           </div>
         )}
-
-        {/* STEP 5 — EMI Preview */}
         {step===5 && (
           <div className="vla-card vla-card--emi">
             <div className="vla-emi-layout">
@@ -413,14 +370,7 @@ if (!uploadRes.ok) {
                   <span className="vla-step-badge">5</span>
                   <div><h2>EMI Preview</h2><p>Review your loan and EMI details</p></div>
                 </div>
-                {[
-                  ["Loan Amount",fmt(derivedLoan)],
-                  ["Interest Rate (p.a.)",`${form.interest_rate}%`],
-                  ["Tenure",`${form.tenure} Months`],
-                  ["Monthly EMI",`₹ ${emi.toLocaleString("en-IN")}`],
-                  ["Total Payable",`₹ ${totalPayable.toLocaleString("en-IN")}`],
-                  ["Total Interest",`₹ ${totalInterest.toLocaleString("en-IN")}`],
-                ].map(([l,v])=>(
+                {[["Loan Amount",fmt(derivedLoan)],["Interest Rate (p.a.)",`${form.interest_rate}%`],["Tenure",`${form.tenure} Months`],["Monthly EMI",`₹ ${emi.toLocaleString("en-IN")}`],["Total Payable",`₹ ${totalPayable.toLocaleString("en-IN")}`],["Total Interest",`₹ ${totalInterest.toLocaleString("en-IN")}`]].map(([l,v])=>(
                   <div key={l} className="vla-emi-row">
                     <span>{l}</span>
                     <strong style={l.includes("EMI")?{color:"#00B050",fontSize:"18px"}:{}}>{v}</strong>
@@ -432,14 +382,12 @@ if (!uploadRes.ok) {
                 <div className="vla-calc-field">
                   <label>Loan Amount</label>
                   <div className="vla-calc-val">{fmt(derivedLoan)}</div>
-                  <input name="loan_amount" type="range" min={50000} max={3000000} step={10000}
-                    value={derivedLoan} onChange={set} className="vla-range"/>
+                  <input name="loan_amount" type="range" min={50000} max={3000000} step={10000} value={derivedLoan} onChange={set} className="vla-range"/>
                   <div className="vla-range-labels"><span>₹50,000</span><span>₹30,00,000</span></div>
                 </div>
                 <div className="vla-calc-field">
                   <label>Interest Rate (p.a.): <strong>{form.interest_rate}%</strong></label>
-                  <input name="interest_rate" type="range" min={8} max={24} step={0.01}
-                    value={form.interest_rate} onChange={set} className="vla-range"/>
+                  <input name="interest_rate" type="range" min={8} max={24} step={0.01} value={form.interest_rate} onChange={set} className="vla-range"/>
                   <div className="vla-range-labels"><span>8%</span><span>24%</span></div>
                 </div>
                 <div className="vla-calc-field">
@@ -462,18 +410,12 @@ if (!uploadRes.ok) {
             </div>
           </div>
         )}
-
-        {/* STEP 6 — Upload Documents */}
         {step===6 && (
           <div className="vla-card">
             <div className="vla-card-head">
               <span className="vla-step-badge">6</span>
-              <div>
-                <h2>Upload Documents</h2>
-                <p>Documents for <strong>{loanType?.title}</strong> — {form.employment_type} applicant</p>
-              </div>
+              <div><h2>Upload Documents</h2><p>Documents for <strong>{loanType?.title}</strong> — {form.employment_type} applicant</p></div>
             </div>
-
             <div className="vla-doc-section-label">📋 KYC Documents</div>
             <div className="vla-doc-grid">
               {MANDATORY_DOCS.filter(d=>d.key!=="photo").map(doc=>(
@@ -483,7 +425,6 @@ if (!uploadRes.ok) {
                   onChange={e=>handleFile(doc.key,e)}/>
               ))}
             </div>
-
             <div className="vla-doc-section-label">💰 Income Proof</div>
             <div className="vla-doc-grid">
               {incomeDocs.map(doc=>(
@@ -493,7 +434,6 @@ if (!uploadRes.ok) {
                   onChange={e=>handleFile(doc.key,e)}/>
               ))}
             </div>
-
             <div className="vla-doc-section-label">🚗 Vehicle Documents</div>
             <div className="vla-doc-grid">
               {vehicleDocs.map(doc=>(
@@ -503,7 +443,6 @@ if (!uploadRes.ok) {
                   onChange={e=>handleFile(doc.key,e)}/>
               ))}
             </div>
-
             <div className="vla-doc-section-label">📸 Photograph</div>
             <div className="vla-doc-grid vla-doc-grid--small">
               {MANDATORY_DOCS.filter(d=>d.key==="photo").map(doc=>(
@@ -513,20 +452,16 @@ if (!uploadRes.ok) {
                   onChange={e=>handleFile(doc.key,e)}/>
               ))}
             </div>
-
             <div className="vla-doc-note">
               <span>ℹ️</span>
-              <span>Documents marked <strong>*</strong> are mandatory. Our team may collect remaining documents in person (Step 6 of the process).</span>
+              <span>Documents marked <strong>*</strong> are mandatory.</span>
             </div>
-
             <div className="vla-actions">
               <button className="vla-btn-outline" onClick={back}>← Back</button>
               <button className="vla-btn-primary" onClick={next}>Save &amp; Continue</button>
             </div>
           </div>
         )}
-
-        {/* STEP 7 — Review & Submit */}
         {step===7 && (
           <div className="vla-card">
             <div className="vla-card-head">
@@ -561,16 +496,12 @@ if (!uploadRes.ok) {
               <div className="vla-rs-head">Uploaded Documents<button className="vla-edit-btn" onClick={()=>setStep(6)}>Edit</button></div>
               <div style={{display:"flex",flexWrap:"wrap",gap:8,marginTop:8}}>
                 {allDocs.map(d=>(
-                  <span key={d.key} style={{
-                    padding:"4px 10px",borderRadius:6,fontSize:12,fontWeight:600,
-                    background:files[d.key]?"#dcfce7":"#f1f5f9",
-                    color:files[d.key]?"#166534":"#94a3b8"
-                  }}>{files[d.key]?"✅":"⬜"} {d.label}</span>
+                  <span key={d.key} style={{padding:"4px 10px",borderRadius:6,fontSize:12,fontWeight:600,background:files[d.key]?"#dcfce7":"#f1f5f9",color:files[d.key]?"#166534":"#94a3b8"}}>
+                    {files[d.key]?"✅":"⬜"} {d.label}
+                  </span>
                 ))}
               </div>
-              <div style={{fontSize:12,color:"#64748b",marginTop:8}}>
-                {Object.keys(files).length} of {allDocs.length} Documents Uploaded
-              </div>
+              <div style={{fontSize:12,color:"#64748b",marginTop:8}}>{Object.keys(files).length} of {allDocs.length} Documents Uploaded</div>
             </div>
             <div className="vla-declaration">
               <label>
@@ -586,8 +517,6 @@ if (!uploadRes.ok) {
             </div>
           </div>
         )}
-
-        {/* STEP 8 — Success */}
         {step===8 && (
           <div className="vla-card vla-success-card">
             <div className="vla-success-confetti">
@@ -603,9 +532,7 @@ if (!uploadRes.ok) {
             <div className="vla-success-status">
               <span className="vla-status-dot"/> Status: <strong>Under Review</strong>
             </div>
-            <p style={{fontSize:13,color:"#94a3b8",margin:"8px 0 20px"}}>
-              We will review your application and get back to you shortly.
-            </p>
+            <p style={{fontSize:13,color:"#94a3b8",margin:"8px 0 20px"}}>We will review your application and get back to you shortly.</p>
             <div className="vla-success-notice">
               <span>📞</span>
               <div>
@@ -618,10 +545,7 @@ if (!uploadRes.ok) {
             </div>
           </div>
         )}
-
       </div>
-
-      {/* Trust bar */}
       <div className="vla-trust-bar">
         {[
           {icon:"⚡",t:"Quick Approval",d:"Get approval in 24-48 hours"},
@@ -635,19 +559,11 @@ if (!uploadRes.ok) {
             <div><strong>{item.t}</strong><span>{item.d}</span></div>
           </div>
         ))}
-        <div className="vla-secure-badge">
-          <span>🛡️</span>
-          <div>
-            <strong>Your data is 100% secure with Plumzo</strong>
-            <span>We use bank-level security to protect your information</span>
-          </div>
-        </div>
       </div>
     </div>
   );
 }
 
-// ── Reusable doc card ──
 function VlaDocCard({doc,file,onUpload,inputRef,onChange}){
   return(
     <div className={`vla-doc-card ${file?"uploaded":""}`}>
