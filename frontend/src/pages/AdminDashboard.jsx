@@ -82,8 +82,15 @@ function StatusBadge({ status }) {
 // ─── Document row in the detail modal ────────────────────────────────────────
 function DocRow({ doc, index, onPreview }) {
   // file_url is now a full Cloudinary URL — use directly
-  const fileUrl = doc.file_url || null;
-  const isPdf   = doc.file_type?.includes("pdf");
+ const rawUrl = doc.file_url || doc.file_path || "";
+
+const fileUrl = rawUrl
+  ? rawUrl.startsWith("http")
+    ? rawUrl
+    : `${API_BASE}${rawUrl.startsWith("/") ? rawUrl : `/${rawUrl}`}`
+  : null;
+
+const isPdf = doc.file_type?.includes("pdf");
 
   return (
     <tr>
@@ -145,8 +152,9 @@ function DetailModal({ app, loanType, onClose, onStatusUpdate }) {
     const fetchDetails = async () => {
       try {
         const fn = loanType === "vehicle" ? getVehicleLoanDetails : getPersonalLoanDetails;
-        const res = await fn(app.application_id);
-        setDetailData(res.data);
+       const res = await fn(app.application_id);
+console.log("DETAIL API RESPONSE:", res.data);
+setDetailData(res.data);
       } catch {
         setDetailData(app); // fallback to list data
       } finally {
@@ -169,7 +177,11 @@ function DetailModal({ app, loanType, onClose, onStatusUpdate }) {
   };
 
   const data  = detailData || app;
-  const docs  = detailData?.documents || [];
+ const docs =
+  detailData?.documents ||
+  detailData?.data?.documents ||
+  detailData?.application?.documents ||
+  [];
   const isVehicle = loanType === "vehicle";
 
   const applicantRows = isVehicle
@@ -439,20 +451,31 @@ function AdminDashboardInner() {
   const [selectedType, setSelectedType] = useState(null);
 
   const fetchAll = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [pRes, vRes] = await Promise.all([
-        getPersonalLoanApplications(),
-        getVehicleLoanApplications(),
-      ]);
-      setPersonalApps(pRes.data || []);
-      setVehicleApps(vRes.data  || []);
-    } catch {
-      setError("Failed to load applications. Is the backend running?");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  setLoading(true);
+  try {
+    const [pRes, vRes] = await Promise.all([
+      getPersonalLoanApplications(),
+      getVehicleLoanApplications(),
+    ]);
+
+    const personalData = Array.isArray(pRes.data)
+      ? pRes.data
+      : pRes.data?.applications || [];
+
+    const vehicleData = Array.isArray(vRes.data)
+      ? vRes.data
+      : vRes.data?.applications || [];
+
+    setPersonalApps(personalData);
+    setVehicleApps(vehicleData);
+    setError(null);
+  } catch (error) {
+    console.error("Admin fetch error:", error);
+    setError("Failed to load applications. Is the backend running?");
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 

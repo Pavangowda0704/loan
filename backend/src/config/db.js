@@ -18,10 +18,12 @@ export const pool = mysql.createPool({
   host:             process.env.DB_HOST     || 'localhost',
    port:               Number(process.env.DB_PORT) || 3306,   // ← add this line
   user:             process.env.DB_USER     || 'root',
-  password:         process.env.DB_PASSWORD || '',
+  password:         process.env.DB_PASSWORD || 'RmJXiztOmvUBbtvtpJqgBBCXiTOMTkZF',
   database:         process.env.DB_NAME     || 'loanease',
   waitForConnections: true,
   connectionLimit:  10,
+  queueLimit: 0,
+  connectTimeout: 30000,
 })
 
 export async function connectDB() {
