@@ -26,7 +26,10 @@ import {
 import "../styles/personalLoan.css";
 import "../styles/adminDashboard.css";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'https://loan-production-fe55.up.railway.app';
+// Derive the backend root URL from the same VITE_API_BASE_URL env var
+// Local:      VITE_API_BASE_URL = http://localhost:5000/api  → http://localhost:5000
+// Production: VITE_API_BASE_URL = https://your.render.com/api → https://your.render.com
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api').replace(/\/api$/, '');
 
 const STATUS_OPTIONS = [
   "Pending",

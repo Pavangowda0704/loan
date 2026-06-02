@@ -2,6 +2,7 @@
 //  vehicleLoan.controller.js
 // ============================================================
 import * as VehicleLoan from './vehicleLoan.model.js'
+import { diskPathToUrl } from '../../shared/utils/fileUrl.js'
 
 // POST /api/vehicle-loans
 export const createVehicleLoan = async (req, res) => {
@@ -102,7 +103,7 @@ export const uploadVehicleDocuments = async (req, res) => {
     const docs = (req.files || []).map(f => ({
       document_name: f.fieldname,
       file_name:     f.originalname,
-      file_path:     f.path,
+      file_path:     diskPathToUrl(f.path),   // store public URL, not disk path
       file_type:     f.mimetype,
       file_size:     f.size,
     }))

@@ -1,6 +1,4 @@
-// ============================================================
-//  MegaLoanMenu.jsx — Tata Capital-style mega dropdown
-// ============================================================
+// frontend/src/components/MegaLoanMenu.jsx
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { LOAN_CATEGORIES } from '../data/loanCategories'
@@ -19,7 +17,6 @@ function Icon({ pathData, size = 18, color = 'currentColor' }) {
   )
 }
 
-// ── Map category id → its main landing route ────────────────
 function loanPath(catId) {
   const map = {
     home:     '/#loans',
@@ -47,8 +44,6 @@ function CategoryPanel({ cat, onClose }) {
 
   return (
     <div className="mlm-panel" key={cat.id}>
-
-      {/* ── Header ── */}
       <div className="mlm-panel__header" style={{ borderColor: cat.color + '22' }}>
         <div>
           <p className="mlm-panel__rate" style={{ color: cat.color }}>
@@ -62,7 +57,6 @@ function CategoryPanel({ cat, onClose }) {
         </div>
       </div>
 
-      {/* ── Bullets ── */}
       <ul className="mlm-panel__bullets" aria-label="Key features">
         {cat.bullets.map((b) => (
           <li key={b}>
@@ -72,7 +66,6 @@ function CategoryPanel({ cat, onClose }) {
         ))}
       </ul>
 
-      {/* ── Action buttons ── */}
       <div className="mlm-panel__actions">
         <button onClick={handleKnowMore} className="mlm-btn mlm-btn--ghost" style={{ color: cat.color, borderColor: cat.color + '55' }}>
           Know More
@@ -82,7 +75,6 @@ function CategoryPanel({ cat, onClose }) {
         </button>
       </div>
 
-      {/* ── Sub-loans ── */}
       <div className="mlm-panel__section-label">Loan Options</div>
       <ul className="mlm-panel__subloans" role="list">
         {cat.subLoans.map((s) => (
@@ -108,7 +100,6 @@ function CategoryPanel({ cat, onClose }) {
         ))}
       </ul>
 
-      {/* ── Calculators ── */}
       {cat.calculators?.length > 0 && (
         <>
           <div className="mlm-panel__section-label">Calculators</div>
@@ -154,11 +145,9 @@ export default function MegaLoanMenu({ visible, onClose }) {
       role="dialog"
       aria-modal="false"
       aria-label="Loan categories menu"
-      aria-hidden={!visible}
+      inert={!visible ? "" : undefined}
     >
       <div className="mlm-box">
-
-        {/* LEFT SIDEBAR */}
         <nav className="mlm-sidebar" aria-label="Loan category list">
           <p className="mlm-sidebar__heading">All Loans</p>
           <ul role="list">
@@ -197,13 +186,11 @@ export default function MegaLoanMenu({ visible, onClose }) {
           </div>
         </nav>
 
-        {/* RIGHT CONTENT PANEL */}
         <div className="mlm-content" aria-live="polite" aria-atomic="true">
           <CategoryPanel cat={activeCategory} onClose={onClose} />
         </div>
       </div>
 
-      {/* BOTTOM CTA STRIP */}
       <div className="mlm-footer">
         <div className="mlm-footer__left">
           <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#1A56DB" strokeWidth="2" strokeLinecap="round" aria-hidden="true">

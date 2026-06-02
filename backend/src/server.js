@@ -36,10 +36,11 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname  = path.dirname(__filename)
 
 // ---------- Middleware ----------
-// Allow production Vercel URL + localhost for dev
+// Allow production Vercel URL + local dev URL
 const allowedOrigins = [
-  process.env.CLIENT_URL,
-  'http://localhost:5173',
+  process.env.CLIENT_URL,        // e.g. https://your-app.vercel.app
+  process.env.CLIENT_URL_LOCAL,  // e.g. http://localhost:5173
+  'http://localhost:5173',       // fallback if CLIENT_URL_LOCAL not set
   'http://localhost:3000',
 ].filter(Boolean)
 
@@ -56,6 +57,8 @@ app.use(cors({
 }))
 app.use(express.json({ limit: '50mb' }))
 app.use(express.urlencoded({ extended: true, limit: '50mb' }))
+// Add this line along with your other app.use() declarations
+app.use('/uploads', express.static('uploads'));
 
 // ---------- Static file serving for uploaded documents ----------
 // Files are stored at <project_root>/uploads/<applicationId>/<file>

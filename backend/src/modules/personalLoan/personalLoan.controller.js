@@ -6,6 +6,7 @@
 // ============================================================
 
 import * as PersonalLoan from './personalLoan.model.js'
+import { diskPathToUrl } from '../../shared/utils/fileUrl.js'
 
 // POST /api/personal-loans
 export const createPersonalLoan = async (req, res) => {
@@ -93,7 +94,7 @@ export const updatePersonalLoanStatus = async (req, res) => {
 }
 
 // POST /api/personal-loans/:applicationId/documents
-// Accepts multipart/form-data — files handled by multer (Cloudinary)
+// Accepts multipart/form-data — files stored on disk via multer
 export const uploadDocuments = async (req, res) => {
   try {
     const applicationId = req.params.applicationId
@@ -101,7 +102,7 @@ export const uploadDocuments = async (req, res) => {
     const docs = (req.files || []).map(f => ({
       document_name: f.fieldname,
       file_name:     f.originalname,
-      file_path:     f.path,        // Cloudinary URL
+      file_path:     diskPathToUrl(f.path),   // store public URL, not disk path
       file_type:     f.mimetype,
       file_size:     f.size,
     }))
