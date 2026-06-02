@@ -9,6 +9,8 @@ import { connectDB } from "./config/db.js";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import personalLoanRoutes from "./modules/personalLoan/personalLoan.routes.js";
 import vehicleLoanRoutes from "./modules/vehicleLoan/vehicleLoan.routes.js";
+import homeLoanRoutes from "./modules/homeLoan/homeLoan.routes.js";
+import businessLoanRoutes from "./modules/businessLoan/businessLoan.routes.js";
 
 import { errorHandler } from "./shared/middleware/errorHandler.js";
 
@@ -87,6 +89,8 @@ app.get("/api/health", (req, res) => {
 app.use("/api/applications", applicationRoutes);
 app.use("/api/personal-loans", personalLoanRoutes);
 app.use("/api/vehicle-loans", vehicleLoanRoutes);
+app.use("/api/home-loans", homeLoanRoutes);
+app.use("/api/business-loans", businessLoanRoutes);
 
 app.use(errorHandler);
 

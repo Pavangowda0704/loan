@@ -114,11 +114,17 @@ const isPdf = doc.file_type?.includes("pdf");
         {fileUrl ? (
           <div style={{ display: "flex", gap: 6 }}>
             <button
-              className="doc-action-btn view"
-              onClick={() => onPreview(fileUrl, doc.file_type)}
-            >
-              👁 View
-            </button>
+  className="doc-action-btn view"
+  onClick={() => {
+    if (isPdf) {
+      window.open(fileUrl, "_blank", "noopener,noreferrer");
+    } else {
+      onPreview(fileUrl, doc.file_type);
+    }
+  }}
+>
+  👁 View
+</button>
             <a
               className="doc-action-btn download"
               href={fileUrl}

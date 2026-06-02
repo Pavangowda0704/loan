@@ -1,20 +1,29 @@
 // frontend/src/api/businessLoanApi.js
-// Matches the exact pattern of personalLoanApi.js
+
 import API from "./axiosInstance.js";
 
-export const createBusinessLoan = (data) =>
+// POST /api/business-loans
+export const createBusinessLoanApplication = (data) =>
   API.post("/business-loans", data);
 
-export const getBusinessLoan = (id) =>
-  API.get(`/business-loans/${id}`);
+// GET /api/business-loans
+export const getBusinessLoanApplications = () =>
+  API.get("/business-loans");
 
+// GET /api/business-loans/:applicationId
+export const getBusinessLoanById = (applicationId) =>
+  API.get(`/business-loans/${applicationId}`);
+
+// GET /api/business-loans/:applicationId/details
+export const getBusinessLoanDetails = (applicationId) =>
+  API.get(`/business-loans/${applicationId}/details`);
+
+// PUT /api/business-loans/:applicationId/status
+export const updateBusinessLoanStatus = (applicationId, data) =>
+  API.put(`/business-loans/${applicationId}/status`, data);
+
+// POST /api/business-loans/:applicationId/documents
 export const uploadBusinessLoanDocuments = (applicationId, formData) =>
   API.post(`/business-loans/${applicationId}/documents`, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
-
-export const getAllBusinessLoans = () =>
-  API.get("/business-loans");
-
-export const updateBusinessLoanStatus = (id, status, remarks) =>
-  API.put(`/business-loans/${id}/status`, { status, remarks });
