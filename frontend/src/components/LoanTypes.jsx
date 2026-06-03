@@ -94,7 +94,7 @@ export default function LoanTypes() {
                     type="button"
                     className="loan-card__cta"
                     aria-label={`Apply for ${loan.title}`}
-                    onClick={() => navigate(`/loans/${loan.id === 'vehicle' ? 'vehicle' : 'personal'}`)}
+                    onClick={() => navigate(`/${loan.id}-loan`)}
                   >
                     Apply →
                   </button>

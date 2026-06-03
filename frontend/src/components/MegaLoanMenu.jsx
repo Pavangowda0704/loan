@@ -19,8 +19,8 @@ function Icon({ pathData, size = 18, color = 'currentColor' }) {
 
 function loanPath(catId) {
   const map = {
-    home:     '/#loans',
-    business: '/#loans',
+    home:     '/home-loan',
+    business: '/business-loan',
     personal: '/personal-loan',
     vehicle:  '/vehicle-loan',
   }
