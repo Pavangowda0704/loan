@@ -4,7 +4,7 @@
 // ============================================================
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getBusinessLoan } from "../../../api/businessLoanApi.js";
+import { getBusinessLoanById } from '../../../api/businessLoanApi.js'
 import "../businessLoan.css";
 
 const MOCK_STAGES = [
@@ -71,7 +71,7 @@ export default function BusinessLoanTrack() {
     if (!id) return;
     setLoading(true); setError("");
     try {
-      const res = await getBusinessLoan(id);
+      const res = await getBusinessLoanById(id);
       setData(res.data);
     } catch (err) {
       if (err.code === "ERR_NETWORK" || err.response?.status >= 500) {

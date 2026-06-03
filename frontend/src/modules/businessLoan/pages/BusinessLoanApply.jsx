@@ -4,7 +4,7 @@
 // ============================================================
 import { useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { createBusinessLoan } from "../../../api/businessLoanApi.js";
+import { createBusinessLoanApplication } from '../../../api/businessLoanApi.js'
 import API from "../../../api/axiosInstance.js";
 import "../businessLoan.css";
 import "./BusinessLoanApply.css";
