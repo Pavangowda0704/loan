@@ -38,7 +38,7 @@ const FEATURE_BLOCKS = [
     btnLabel: 'Check Eligibility',
     btnHref: '#emi',
     bgColor: '#FFF7ED',
-    accentColor: '#EA580C',
+    accentColor: '#00C85',
     illustration: 'rates',
     imageRight: true,   // content LEFT, image RIGHT
   },

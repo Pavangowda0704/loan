@@ -38,8 +38,8 @@ const LOAN_TYPES = [
   },
   {
     id: 'business',
-    color: '#FFF7ED',
-    iconColor: '#EA580C',
+    color: '#F0FDF4',
+  iconColor: '#234732',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>

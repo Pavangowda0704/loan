@@ -22,8 +22,8 @@ const INSIGHTS = [
   {
     id: 2,
     category: 'Documentation',
-    categoryColor: '#EA580C',
-    categoryBg: '#FFF7ED',
+    categoryColor: '#00C853',
+    categoryBg: '#F0FDF4',
     title: 'Documents Required for Loan Approval',
     desc: 'Know exactly which KYC, income, and property documents you need ready before starting your loan application.',
     readTime: '3 min read',

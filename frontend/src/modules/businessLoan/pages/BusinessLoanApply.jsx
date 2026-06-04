@@ -176,7 +176,7 @@ export default function BusinessLoanApply() {
   const submit = async () => {
     setSubmitting(true);
     try {
-      const res = await createBusinessLoan({
+      const res = await createBusinessLoanApplication({
         full_name:              form.full_name,
         phone:                  form.phone,
         email:                  form.email,
@@ -559,7 +559,7 @@ export default function BusinessLoanApply() {
             <div className={`bla-collateral-wrap ${isSecured ? "visible" : "hidden"}`}>
               <div className="bla-doc-group-title">
                 Collateral Documents
-                <span style={{ fontSize: "0.7rem", color: "#ea580c", fontWeight: 600, marginLeft: 8 }}>
+                <span style={{ fontSize: "0.7rem", color: "#0e8b42", fontWeight: 600, marginLeft: 8 }}>
                   Required for Secured Business Loan
                 </span>
               </div>

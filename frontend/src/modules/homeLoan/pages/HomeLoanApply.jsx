@@ -1,12 +1,12 @@
 // frontend/src/modules/homeLoan/pages/HomeLoanApply.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import API from '../../../api/axiosInstance.js';
 import HomeLoanDocUpload from '../components/HomeLoanDocUpload';
 import { LOAN_TYPES } from './HomeLoan';
 import '../homeLoan.css';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
 
 const formatINR = (val) =>
   '₹' + Number(Math.round(val)).toLocaleString('en-IN');
@@ -204,25 +204,21 @@ const HomeLoanApply = () => {
         loan_purpose: form.loanPurpose,
       };
 
-      const res = await axios.post(`${API_BASE}/home-loans`, payload);
-      const applicationId = res.data?.application_id || `HLN${Date.now()}`;
+       const res = await API.post('/home-loans', payload);
+      const applicationId = res.data?.application_id;
 
-      // Upload documents
       const fd = new FormData();
       Object.entries(form.files).forEach(([key, file]) => {
         if (file) fd.append(key, file);
       });
-      await axios.post(`${API_BASE}/home-loans/${applicationId}/documents`, fd, {
+      await API.post(`/home-loans/${applicationId}/documents`, fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
       localStorage.setItem('hl_application_id', applicationId);
       navigate(`/home-loan/success/${applicationId}`);
     } catch (err) {
-      // Fallback: generate local application ID for demo
-      const applicationId = `HLN${Date.now()}`;
-      localStorage.setItem('hl_application_id', applicationId);
-      navigate(`/home-loan/success/${applicationId}`);
+      alert('Submission failed: ' + (err.response?.data?.message || err.message || 'Please try again.'));
     } finally {
       setSubmitting(false);
     }
