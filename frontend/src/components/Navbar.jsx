@@ -8,11 +8,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { NAV_LINKS } from '../data/loanCategories'
 import MegaLoanMenu from './MegaLoanMenu'
 import MobileMenu from './MobileMenu'
+import { useAuth } from '../context/AuthContext.jsx'   // ✅ NEW
 import '../styles/navbar.css'
 
 export default function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { user, logout } = useAuth()                  // ✅ NEW
+
   const [scrolled, setScrolled] = useState(false)
   const [isDropdownOpen, setDropdownOpen] = useState(false)
   const [isMobileMenuOpen, setMobileOpen] = useState(false)
@@ -75,13 +78,19 @@ export default function Navbar() {
     return () => { document.body.style.overflow = '' }
   }, [isMobileMenuOpen])
 
+  // ✅ Handle logout
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   return (
     <>
       <header ref={navbarRef} className={`navbar${scrolled ? ' navbar--scrolled' : ''}`} role="banner">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo" aria-label="Plumzo Capital Services — home" onClick={() => setDropdownOpen(false)}>
-  <img src="/plumzo_logo.jpg" alt="Plumzo Capital Services" height="44" style={{height:'44px', width:'auto'}} />
-</Link>
+            <img src="/plumzo_logo.jpg" alt="Plumzo Capital Services" height="44" style={{height:'44px', width:'auto'}} />
+          </Link>
 
           <nav className="navbar__nav" aria-label="Main navigation">
             <ul className="navbar__nav-list" role="list">
@@ -117,6 +126,38 @@ export default function Navbar() {
           </nav>
 
           <div className="navbar__right">
+
+            {/* ✅ Auth buttons — logged out */}
+            {!user && (
+              <button
+                type="button"
+                className="navbar__login-btn"
+                onClick={() => { setDropdownOpen(false); navigate('/login') }}
+              >
+                Login
+              </button>
+            )}
+
+            {/* ✅ Auth buttons — logged in */}
+            {user && (
+              <div className="navbar__user">
+                <button
+                  type="button"
+                  className="navbar__user-btn"
+                  onClick={() => { setDropdownOpen(false); navigate('/dashboard') }}
+                >
+                  👤 {user.name?.split(' ')[0] || 'Account'}
+                </button>
+                <button
+                  type="button"
+                  className="navbar__logout-btn"
+                  onClick={handleLogout}
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+
             <button type="button" className="navbar__cta-btn" onClick={() => { setDropdownOpen(false); navigate('/loans/personal') }}>
               Apply Now
               <svg viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true">

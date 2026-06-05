@@ -12,6 +12,8 @@ import vehicleLoanRoutes from "./modules/vehicleLoan/vehicleLoan.routes.js";
 import homeLoanRoutes from "./modules/homeLoan/homeLoan.routes.js";
 import businessLoanRoutes from "./modules/businessLoan/businessLoan.routes.js";
 
+import authRoutes from "./modules/auth/auth.routes.js";
+
 import { errorHandler } from "./shared/middleware/errorHandler.js";
 
 dotenv.config();
@@ -91,6 +93,8 @@ app.use("/api/personal-loans", personalLoanRoutes);
 app.use("/api/vehicle-loans", vehicleLoanRoutes);
 app.use("/api/home-loans", homeLoanRoutes);
 app.use("/api/business-loans", businessLoanRoutes);
+
+app.use("/api/auth", authRoutes);
 
 app.use(errorHandler);
 

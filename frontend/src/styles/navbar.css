@@ -752,3 +752,73 @@
   .navbar__logo-tagline { display: none; }
   .mob-menu { width: 100vw; }
 }
+
+
+/* ============================================================
+   ADD THESE STYLES TO THE BOTTOM OF frontend/src/styles/navbar.css
+   Do NOT replace the file — just paste at the end
+============================================================ */
+
+/* Login button (logged out state) */
+.navbar__login-btn {
+  background: transparent;
+  border: 1.5px solid #1a56db;
+  color: #1a56db;
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.navbar__login-btn:hover {
+  background: #1a56db;
+  color: #fff;
+}
+
+/* User area (logged in state) */
+.navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.navbar__user-btn {
+  background: #eef4ff;
+  border: none;
+  color: #1a56db;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.navbar__user-btn:hover {
+  background: #dbeafe;
+}
+
+.navbar__logout-btn {
+  background: transparent;
+  border: 1.5px solid #e5e7eb;
+  color: #6b7280;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.navbar__logout-btn:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}

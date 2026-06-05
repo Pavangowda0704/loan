@@ -1,9 +1,17 @@
 // frontend/src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 
+import { AuthProvider } from "./context/AuthContext.jsx";
+import ProtectedApply from "./components/ProtectedApply.jsx";
+
 import Navbar  from "./components/Navbar";
 import Footer  from "./components/Footer";
-import Home from "./pages/Home";
+import Home    from "./pages/Home";
+
+// ── NEW auth pages ──
+import Login         from "./pages/Login";
+import Register      from "./pages/Register";
+import UserDashboard from "./pages/UserDashboard";
 
 import PersonalLoan             from "./modules/personalLoan/pages/PersonalLoan";
 import PersonalEligibility      from "./modules/personalLoan/pages/PersonalEligibility";
@@ -45,82 +53,100 @@ import AdminDashboard     from "./pages/AdminDashboard";
 
 import "./styles/global.css";
 
-// Hides Navbar + Footer on /admin and /admin/* routes
+// Hides Navbar + Footer on /admin, /login, /register
 function Layout({ children }) {
   const { pathname } = useLocation();
-  const isAdmin = pathname.startsWith("/admin");
+  const hideShell = pathname.startsWith("/admin") ||
+                    pathname === "/login"          ||
+                    pathname === "/register";
   return (
     <>
-      {!isAdmin && <Navbar />}
+      {!hideShell && <Navbar />}
       {children}
-      {!isAdmin && <Footer />}
+      {!hideShell && <Footer />}
     </>
   );
+}
+
+// Wraps any apply page — redirects to /login if not logged in
+function Protected({ element }) {
+  return <ProtectedApply>{element}</ProtectedApply>;
 }
 
 function App() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Home />} />
+      <AuthProvider>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Home />} />
 
-          {/* Redirects for missing routes */}
-          <Route path="/loans/personal" element={<Navigate to="/personal-loan" replace />} />
-          <Route path="/loans/vehicle"  element={<Navigate to="/vehicle-loan"  replace />} />
+            {/* ── Auth routes (NEW) ── */}
+            <Route path="/login"     element={<Login />} />
+            <Route path="/register"  element={<Register />} />
+            <Route path="/dashboard" element={<UserDashboard />} />
 
-          <Route path="/personal-loan"                        element={<PersonalLoan />} />
-          <Route path="/personal-loan/eligibility"            element={<PersonalEligibility />} />
-          <Route path="/personal-loan/salaried"               element={<SalariedPersonalLoan />} />
-          <Route path="/personal-loan/self-employed"          element={<SelfEmployedPersonalLoan />} />
-          <Route path="/personal-loan/apply"                  element={<PersonalLoanApply />} />
-          <Route path="/personal-loan/salaried/apply"         element={<PersonalLoanApply />} />
-          <Route path="/personal-loan/self-employed/apply"    element={<PersonalLoanApply />} />
-          <Route path="/personal-loan/upload/:applicationId"  element={<PersonalDocuments />} />
-          <Route path="/personal-loan/success/:applicationId" element={<ApplicationSuccess />} />
+            {/* Redirects — unchanged */}
+            <Route path="/loans/personal" element={<Navigate to="/personal-loan" replace />} />
+            <Route path="/loans/vehicle"  element={<Navigate to="/vehicle-loan"  replace />} />
 
-          <Route path="/vehicle-loan"                              element={<VehicleLoanHome />} />
-          <Route path="/vehicle-loan/new-car"                      element={<NewCarLoan />} />
-          <Route path="/vehicle-loan/used-car"                     element={<UsedCarLoan />} />
-          <Route path="/vehicle-loan/two-wheeler"                  element={<TwoWheelerLoan />} />
-          <Route path="/vehicle-loan/used-bike"                    element={<UsedBikeLoan />} />
-          <Route path="/vehicle-loan/commercial"                   element={<CommercialVehicleLoan />} />
-          <Route path="/vehicle-loan/agriculture-equipment"        element={<AgricultureEquipmentLoan />} />
-          <Route path="/vehicle-loan/eligibility"                  element={<VehicleEligibilityNew />} />
-          <Route path="/vehicle-loan/apply"                        element={<VehicleLoanApply />} />
-          <Route path="/vehicle-loan/new-car/apply"                element={<VehicleLoanApply />} />
-          <Route path="/vehicle-loan/used-car/apply"               element={<VehicleLoanApply />} />
-          <Route path="/vehicle-loan/two-wheeler/apply"            element={<VehicleLoanApply />} />
-          <Route path="/vehicle-loan/used-bike/apply"              element={<VehicleLoanApply />} />
-          <Route path="/vehicle-loan/commercial/apply"             element={<VehicleLoanApply />} />
-          <Route path="/vehicle-loan/agriculture-equipment/apply"  element={<VehicleLoanApply />} />
-          <Route path="/vehicle-loan/documents/:applicationId"     element={<VehicleDocumentsNew />} />
-          <Route path="/vehicle-loan/success/:applicationId"       element={<VehicleLoanSuccessNew />} />
+            {/* Personal Loan — apply routes now protected */}
+            <Route path="/personal-loan"                        element={<PersonalLoan />} />
+            <Route path="/personal-loan/eligibility"            element={<PersonalEligibility />} />
+            <Route path="/personal-loan/salaried"               element={<SalariedPersonalLoan />} />
+            <Route path="/personal-loan/self-employed"          element={<SelfEmployedPersonalLoan />} />
+            <Route path="/personal-loan/apply"                  element={<Protected element={<PersonalLoanApply />} />} />
+            <Route path="/personal-loan/salaried/apply"         element={<Protected element={<PersonalLoanApply />} />} />
+            <Route path="/personal-loan/self-employed/apply"    element={<Protected element={<PersonalLoanApply />} />} />
+            <Route path="/personal-loan/upload/:applicationId"  element={<PersonalDocuments />} />
+            <Route path="/personal-loan/success/:applicationId" element={<ApplicationSuccess />} />
 
-          <Route path="/home-loan"                       element={<HomeLoan />} />
-          <Route path="/home-loan/:loanType"             element={<HomeLoanDetail />} />
-          <Route path="/home-loan/eligibility"           element={<HomeLoanEligibility />} />
-          <Route path="/home-loan/apply"                 element={<HomeLoanApply />} />
-          <Route path="/home-loan/apply/:loanType"       element={<HomeLoanApply />} />
-          <Route path="/home-loan/success"               element={<HomeLoanSuccess />} />
-          <Route path="/home-loan/success/:applicationId" element={<HomeLoanSuccess />} />
+            {/* Vehicle Loan — apply routes now protected */}
+            <Route path="/vehicle-loan"                              element={<VehicleLoanHome />} />
+            <Route path="/vehicle-loan/new-car"                      element={<NewCarLoan />} />
+            <Route path="/vehicle-loan/used-car"                     element={<UsedCarLoan />} />
+            <Route path="/vehicle-loan/two-wheeler"                  element={<TwoWheelerLoan />} />
+            <Route path="/vehicle-loan/used-bike"                    element={<UsedBikeLoan />} />
+            <Route path="/vehicle-loan/commercial"                   element={<CommercialVehicleLoan />} />
+            <Route path="/vehicle-loan/agriculture-equipment"        element={<AgricultureEquipmentLoan />} />
+            <Route path="/vehicle-loan/eligibility"                  element={<VehicleEligibilityNew />} />
+            <Route path="/vehicle-loan/apply"                        element={<Protected element={<VehicleLoanApply />} />} />
+            <Route path="/vehicle-loan/new-car/apply"                element={<Protected element={<VehicleLoanApply />} />} />
+            <Route path="/vehicle-loan/used-car/apply"               element={<Protected element={<VehicleLoanApply />} />} />
+            <Route path="/vehicle-loan/two-wheeler/apply"            element={<Protected element={<VehicleLoanApply />} />} />
+            <Route path="/vehicle-loan/used-bike/apply"              element={<Protected element={<VehicleLoanApply />} />} />
+            <Route path="/vehicle-loan/commercial/apply"             element={<Protected element={<VehicleLoanApply />} />} />
+            <Route path="/vehicle-loan/agriculture-equipment/apply"  element={<Protected element={<VehicleLoanApply />} />} />
+            <Route path="/vehicle-loan/documents/:applicationId"     element={<VehicleDocumentsNew />} />
+            <Route path="/vehicle-loan/success/:applicationId"       element={<VehicleLoanSuccessNew />} />
 
-          <Route path="/business-loan"                        element={<BusinessLoan />} />
-          <Route path="/business-loan/:loanType"              element={<BusinessLoanDetail />} />
-          <Route path="/business-loan/eligibility"            element={<BusinessLoanEligibility />} />
-          <Route path="/business-loan/apply"                  element={<BusinessLoanApply />} />
-          <Route path="/business-loan/apply/:loanType"        element={<BusinessLoanApply />} />
-          <Route path="/business-loan/compare"                element={<BusinessLoanCompare />} />
-          <Route path="/business-loan/track"                  element={<BusinessLoanTrack />} />
-          <Route path="/business-loan/success"                element={<BusinessLoanSuccess />} />
-          <Route path="/business-loan/success/:applicationId" element={<BusinessLoanSuccess />} />
+            {/* Home Loan — apply routes now protected */}
+            <Route path="/home-loan"                         element={<HomeLoan />} />
+            <Route path="/home-loan/:loanType"               element={<HomeLoanDetail />} />
+            <Route path="/home-loan/eligibility"             element={<HomeLoanEligibility />} />
+            <Route path="/home-loan/apply"                   element={<Protected element={<HomeLoanApply />} />} />
+            <Route path="/home-loan/apply/:loanType"         element={<Protected element={<HomeLoanApply />} />} />
+            <Route path="/home-loan/success"                 element={<HomeLoanSuccess />} />
+            <Route path="/home-loan/success/:applicationId"  element={<HomeLoanSuccess />} />
 
-          <Route path="/track-application/:applicationId" element={<TrackApplication />} />
+            {/* Business Loan — apply routes now protected */}
+            <Route path="/business-loan"                          element={<BusinessLoan />} />
+            <Route path="/business-loan/:loanType"                element={<BusinessLoanDetail />} />
+            <Route path="/business-loan/eligibility"              element={<BusinessLoanEligibility />} />
+            <Route path="/business-loan/apply"                    element={<Protected element={<BusinessLoanApply />} />} />
+            <Route path="/business-loan/apply/:loanType"          element={<Protected element={<BusinessLoanApply />} />} />
+            <Route path="/business-loan/compare"                  element={<BusinessLoanCompare />} />
+            <Route path="/business-loan/track"                    element={<BusinessLoanTrack />} />
+            <Route path="/business-loan/success"                  element={<BusinessLoanSuccess />} />
+            <Route path="/business-loan/success/:applicationId"   element={<BusinessLoanSuccess />} />
 
-          <Route path="/admin"               element={<AdminDashboard />} />
-          <Route path="/admin/vehicle-loans" element={<VehicleLoanAdminNew />} />
-        </Routes>
-      </Layout>
+            {/* Unchanged */}
+            <Route path="/track-application/:applicationId" element={<TrackApplication />} />
+            <Route path="/admin"               element={<AdminDashboard />} />
+            <Route path="/admin/vehicle-loans" element={<VehicleLoanAdminNew />} />
+          </Routes>
+        </Layout>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

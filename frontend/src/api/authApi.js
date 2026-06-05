@@ -1,0 +1,7 @@
+// frontend/src/api/authApi.js
+import API from "./axiosInstance.js";
+
+export const registerUser  = (data) => API.post("/auth/register", data);
+export const loginUser     = (data) => API.post("/auth/login", data);
+export const getMe         = ()     => API.get("/auth/me");
+export const getMyApps     = ()     => API.get("/auth/my-applications");
