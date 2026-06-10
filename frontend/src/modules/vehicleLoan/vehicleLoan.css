@@ -586,3 +586,1023 @@
 .vl-product-card p { color: #66738d; font-size: 13.5px; line-height: 1.6; flex: 1; }
 .vl-products-section { max-width: 1180px; margin: 56px auto 0; }
 .vl-products-section h2 { color: #071b46; font-size: clamp(22px,3vw,32px); margin-bottom: 28px; }
+/* ============================================================
+   HOME PAGE LAYOUT FIXES
+   ============================================================ */
+
+/* FIX 3 — Remove bottom padding that creates CTA→footer gap */
+.vl-page {
+  padding-bottom: 0;
+}
+
+/* Section vertical rhythm utility */
+.vl-section--padded {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+
+/* ── FIX 1: Loan Products Grid ──────────────────────────────
+   Root cause: repeat(4,1fr) leaves 2 orphan cards
+   left-aligned in the last row with a huge empty right gap.
+   Fix: auto-fill with minmax so cards wrap naturally, and
+   justify-content: center so the last (incomplete) row
+   centres its cards instead of leaving them flush-left.
+   ---------------------------------------------------------- */
+.vl-types-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);   /* 3-col desktop: 6 cards = 2 even rows */
+  gap: 22px;
+  justify-content: center;
+}
+/* Equal card height + button always at bottom */
+.vl-type-card {
+  display: flex;
+  flex-direction: column;
+}
+.vl-type-card p {
+  flex: 1;                /* pushes features + actions to bottom */
+}
+.vl-type-card-actions {
+  margin-top: auto;
+  padding-top: 14px;
+}
+
+/* ── FIX 2: Required Documents — centred section ───────────
+   Root cause: .vl-docs-section added margin: 56px 0 which
+   combined with .vl-section padding caused left drift on
+   certain viewport widths. Also the grid wasn't constrained
+   to the section max-width so it could feel off-centre.
+   Fix: remove the separate .vl-docs-section class reliance;
+   the section now uses .vl-section + .vl-section--padded.
+   Ensure the grid fills the container symmetrically.
+   ---------------------------------------------------------- */
+.vl-docs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  width: 100%;           /* fill the .vl-section container exactly */
+}
+
+/* Subtle hover on doc cards */
+.vl-doc-card {
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.vl-doc-card:hover {
+  box-shadow: 0 8px 28px rgba(15,28,63,.1);
+  transform: translateY(-2px);
+}
+
+/* ── FIX 4: How It Works — responsive CSS grid ─────────────
+   Root cause: inline style `grid-template-columns:repeat(4,1fr)`
+   had no responsive breakpoint, causing overflow on tablet/mobile.
+   ---------------------------------------------------------- */
+.vl-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.vl-step-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 24px;
+  border: 1px solid #e6edff;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(15,28,63,.05);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.vl-step-card:hover {
+  box-shadow: 0 8px 28px rgba(15,28,63,.1);
+  transform: translateY(-2px);
+}
+.vl-step-card-num {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: #eef3ff; color: #1A56DB;
+  font-weight: 800; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+}
+.vl-step-card-icon { font-size: 26px; margin-bottom: 10px; }
+.vl-step-card h5 { font-weight: 800; color: #0F1C3F; margin-bottom: 6px; font-size: 14px; }
+.vl-step-card p { font-size: 13px; color: #6b7280; line-height: 1.6; margin: 0; }
+
+/* ── FIX 5: UI Polish — consistent hover on benefit cards ── */
+.vl-benefit-card {
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.vl-benefit-card:hover {
+  box-shadow: 0 8px 28px rgba(15,28,63,.1);
+  transform: translateY(-2px);
+}
+
+/* ── RESPONSIVE FIXES ───────────────────────────────────────
+   Ensure all new grids collapse gracefully
+   ---------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .vl-types-grid   { grid-template-columns: repeat(2, 1fr); }
+  .vl-steps-grid   { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .vl-types-grid   { grid-template-columns: repeat(2, 1fr); }
+  .vl-docs-grid    { grid-template-columns: repeat(2, 1fr); }
+  .vl-steps-grid   { grid-template-columns: repeat(2, 1fr); }
+  .vl-section--padded { padding-top: 40px; padding-bottom: 40px; }
+}
+
+@media (max-width: 540px) {
+  .vl-types-grid   { grid-template-columns: 1fr; }
+  .vl-docs-grid    { grid-template-columns: 1fr; }
+  .vl-steps-grid   { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   VEHICLE LOAN DETAIL PAGE — vld-* classes
+   Used by VehicleLoanDetailPage.jsx (shared template for all
+   6 loan type detail pages)
+   ============================================================ */
+
+/* ── FAQ smooth animation (fixes hook violation + animation) */
+.vl-faq-a-wrap {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.vl-faq-a-wrap--open {
+  max-height: 400px;
+}
+
+/* ── Hero ── */
+.vld-hero {
+  padding: 56px 24px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.vld-hero-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 44px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+.vld-hero-left { color: #fff; }
+.vld-hero-title {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.12;
+  margin-bottom: 12px;
+}
+.vld-hero-sub {
+  color: rgba(255,255,255,.8);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 22px;
+  max-width: 520px;
+}
+
+/* Key benefit stats row */
+.vld-hero-benefits {
+  display: flex;
+  gap: 0;
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 16px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.vld-hero-benefit {
+  flex: 1;
+  text-align: center;
+  min-width: 90px;
+  padding: 4px 8px;
+  border-right: 1px solid rgba(255,255,255,.18);
+}
+.vld-hero-benefit:last-child { border-right: none; }
+.vld-hero-benefit-val {
+  font-size: 15px;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 2px;
+}
+.vld-hero-benefit-lab {
+  font-size: 11px;
+  color: rgba(255,255,255,.65);
+}
+
+/* Trust badges */
+.vld-hero-trust {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.vld-hero-trust-badge {
+  padding: 5px 12px;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,.9);
+}
+
+/* Right visual panel */
+.vld-hero-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.vld-hero-emoji-wrap {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vld-hero-emoji { font-size: 72px; }
+.vld-hero-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.18);
+  width: 100%;
+}
+.vld-hero-card-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 12px;
+}
+.vld-hero-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid #f0f4ff;
+  font-size: 13px;
+}
+.vld-hero-card-row:last-of-type { border-bottom: none; margin-bottom: 4px; }
+.vld-hero-card-row span { color: #6b7280; }
+.vld-hero-card-row strong { font-weight: 800; font-size: 13.5px; }
+
+/* ── Section block (content grouping inside tabs) ── */
+.vld-section-block {
+  margin-bottom: 36px;
+}
+.vld-block-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0F1C3F;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f0f4ff;
+}
+.vld-sub-heading {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  margin: 20px 0 12px;
+}
+
+/* ── Features & Benefits chips ── */
+.vld-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.vld-benefit-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #f8faff;
+  border: 1px solid #e6edff;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #374151;
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+.vld-benefit-chip:hover {
+  box-shadow: 0 4px 14px rgba(15,28,63,.08);
+  transform: translateY(-1px);
+}
+.vld-benefit-check {
+  font-size: 15px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+/* ── Loan Highlights cards ── */
+.vld-highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.vld-highlight-card {
+  background: #fff;
+  border: 1px solid #e6edff;
+  border-top: 3px solid;
+  border-radius: 14px;
+  padding: 18px 16px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(15,28,63,.05);
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+.vld-highlight-card:hover {
+  box-shadow: 0 6px 22px rgba(15,28,63,.1);
+  transform: translateY(-2px);
+}
+.vld-highlight-val {
+  font-size: 17px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.vld-highlight-lab {
+  font-size: 11.5px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* ── Why Choose This Loan ── */
+.vld-why-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.vld-why-card {
+  background: #fff;
+  border: 1px solid #e6edff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(15,28,63,.04);
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+.vld-why-card:hover {
+  box-shadow: 0 8px 24px rgba(15,28,63,.09);
+  transform: translateY(-2px);
+}
+.vld-why-icon {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+.vld-why-card h5 {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0F1C3F;
+  margin-bottom: 6px;
+}
+.vld-why-card p {
+  font-size: 12.5px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Suitable For chips ── */
+.vld-suitable-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.vld-suitable-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  background: #f8faff;
+  border: 1px solid #e6edff;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* ── Eligibility — salaried vs SE profile cards ── */
+.vld-elig-profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.vld-elig-profile-card {
+  background: #fff;
+  border: 1px solid #e6edff;
+  border-top: 3px solid;
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 2px 10px rgba(15,28,63,.04);
+}
+.vld-elig-profile-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+.vld-elig-profile-card h4 {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0F1C3F;
+  margin-bottom: 12px;
+}
+.vld-elig-profile-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.vld-elig-profile-card ul li {
+  font-size: 13px;
+  color: #374151;
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.5;
+}
+.vld-elig-profile-card ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #10b981;
+  font-weight: 800;
+  font-size: 12px;
+}
+.vld-elig-table-wrap {
+  background: #f8faff;
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid #e6edff;
+}
+
+/* ── Document groups ── */
+.vld-doc-group {
+  margin-bottom: 24px;
+}
+.vld-doc-group-title {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0F1C3F;
+  margin-bottom: 12px;
+  padding: 8px 14px;
+  background: #eef3ff;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Application Process Timeline ── */
+.vld-process-section {
+  background: #f0f4ff;
+  padding: 56px 24px;
+}
+.vld-process-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.vld-process-steps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  position: relative;
+}
+/* Horizontal connector line */
+.vld-process-steps::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: calc(10% + 12px);
+  right: calc(10% + 12px);
+  height: 2px;
+  background: #c5d5f9;
+  z-index: 0;
+}
+.vld-process-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 12px;
+  position: relative;
+  z-index: 1;
+}
+.vld-process-line { display: none; } /* handled by ::before */
+.vld-process-bubble {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.15);
+  flex-shrink: 0;
+}
+.vld-process-bubble span { font-size: 16px; font-weight: 800; }
+.vld-process-icon {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+.vld-process-step h5 {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0F1C3F;
+  margin-bottom: 8px;
+}
+.vld-process-step p {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── Related Products ── */
+.vld-related-section {
+  background: #fff;
+  padding: 56px 24px;
+  border-top: 1px solid #e8edf9;
+}
+.vld-related-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.vld-related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+.vld-related-card {
+  background: #f8faff;
+  border: 1px solid #e6edff;
+  border-radius: 18px;
+  padding: 22px 18px;
+  text-align: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.vld-related-card:hover {
+  box-shadow: 0 8px 28px rgba(15,28,63,.1);
+  transform: translateY(-3px);
+  background: #fff;
+}
+.vld-related-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+.vld-related-card h4 {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0F1C3F;
+  margin-bottom: 6px;
+}
+.vld-related-rate {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 14px;
+}
+.vld-related-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── RESPONSIVE for new vld- classes ── */
+@media (max-width: 1024px) {
+  .vld-hero-inner          { grid-template-columns: 1fr; }
+  .vld-hero-visual         { display: none; }  /* hide on tablet — content takes priority */
+  .vld-highlights-grid     { grid-template-columns: repeat(2, 1fr); }
+  .vld-process-steps       { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .vld-process-steps::before { display: none; }
+  .vld-related-grid        { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .vld-hero                { padding: 40px 20px 36px; }
+  .vld-hero-benefits       { gap: 0; }
+  .vld-hero-benefit        { min-width: 80px; }
+  .vld-hero-trust          { gap: 6px; }
+  .vld-hero-trust-badge    { font-size: 11px; padding: 4px 10px; }
+  .vld-benefits-grid       { grid-template-columns: 1fr; }
+  .vld-highlights-grid     { grid-template-columns: repeat(2, 1fr); }
+  .vld-why-grid            { grid-template-columns: 1fr; }
+  .vld-elig-profile-grid   { grid-template-columns: 1fr; }
+  .vld-process-steps       { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .vld-related-grid        { grid-template-columns: repeat(2, 1fr); }
+  .vld-process-section     { padding: 40px 20px; }
+  .vld-related-section     { padding: 40px 20px; }
+}
+
+@media (max-width: 540px) {
+  .vld-hero-title          { font-size: 26px; }
+  .vld-hero-benefits       { flex-direction: column; gap: 8px; }
+  .vld-hero-benefit        { border-right: none; border-bottom: 1px solid rgba(255,255,255,.15); padding: 8px 0; }
+  .vld-hero-benefit:last-child { border-bottom: none; }
+  .vld-highlights-grid     { grid-template-columns: repeat(2, 1fr); }
+  .vld-process-steps       { grid-template-columns: 1fr; gap: 14px; }
+  .vld-related-grid        { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ============================================================
+   PROFESSIONAL FIXES — Toast, Skeleton, Pagination,
+   Eligibility redesign, Admin improvements
+   ============================================================ */
+
+/* ── Global Toast notification ──────────────────────────────*/
+.vl-toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,.14);
+  min-width: 280px;
+  max-width: 480px;
+  animation: vl-toast-in .2s ease;
+}
+@keyframes vl-toast-in {
+  from { opacity:0; transform: translateX(-50%) translateY(-8px); }
+  to   { opacity:1; transform: translateX(-50%) translateY(0); }
+}
+.vl-toast-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  opacity: .6;
+  padding: 0 4px;
+}
+.vl-toast-close:hover { opacity: 1; }
+
+/* Inline apply-form toast */
+.vla-toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin: 16px 0;
+}
+.vla-toast--error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+.vla-toast button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: inherit;
+  opacity: .7;
+  flex-shrink: 0;
+}
+
+/* ── Inline field error (eligibility form) ──────────────────*/
+.vl-inline-error {
+  font-size: 11.5px;
+  color: #dc2626;
+  font-weight: 600;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.vl-input-err {
+  border-color: #dc2626 !important;
+  background: #fff5f5 !important;
+}
+.vl-input-err:focus {
+  box-shadow: 0 0 0 3px rgba(220,38,38,.1) !important;
+}
+
+/* ── Skeleton loader (admin table) ─────────────────────────*/
+.vl-skeleton-row td { padding: 14px !important; }
+.vl-skeleton-cell {
+  height: 16px;
+  background: linear-gradient(90deg, #f0f4ff 25%, #e6edff 50%, #f0f4ff 75%);
+  background-size: 200% 100%;
+  border-radius: 6px;
+  animation: vl-shimmer 1.4s infinite;
+}
+@keyframes vl-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Admin improvements ─────────────────────────────────────*/
+.vl-admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.vl-admin-stat-card {
+  background: #fff;
+  border: 1px solid #e6edff;
+  border-radius: 14px;
+  padding: 18px 16px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(15,28,63,.04);
+}
+.vl-admin-stat-icon { font-size: 22px; margin-bottom: 6px; }
+.vl-admin-stat-val  { font-size: 26px; font-weight: 800; }
+.vl-admin-stat-lab  { font-size: 12px; color: #6b7280; margin-top: 2px; }
+
+.vl-admin-error {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  padding: 16px 20px;
+  color: #991b1b;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.vl-admin-error button {
+  background: #fff;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  padding: 6px 14px;
+  color: #991b1b;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.vl-sortable {
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.vl-sortable:hover { color: #003087; background: #f8faff; }
+
+.vl-modal-close {
+  font-size: 20px;
+  cursor: pointer;
+  color: #6b7280;
+  border: none;
+  background: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.vl-modal-close:hover { background: #f0f4ff; }
+
+/* ── Pagination ─────────────────────────────────────────────*/
+.vl-admin-pagination {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+.vl-page-btn {
+  min-width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1.5px solid #e6edff;
+  background: #fff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+.vl-page-btn:hover:not(:disabled) { background: #eef3ff; border-color: #003087; color: #003087; }
+.vl-page-btn.active  { background: #003087; border-color: #003087; color: #fff; }
+.vl-page-btn:disabled { opacity: .35; cursor: not-allowed; }
+.vl-page-ellipsis { padding: 0 6px; color: #b0bcd4; font-size: 14px; }
+
+/* ── Eligibility page redesign ──────────────────────────────*/
+.vl-elig-hero {
+  background: linear-gradient(135deg,#0F1C3F 0%,#003087 100%);
+  padding: 48px 24px 40px;
+  text-align: center;
+  color: #fff;
+}
+.vl-elig-hero h1 {
+  font-size: clamp(24px,3.5vw,38px);
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.vl-elig-hero p { color: rgba(255,255,255,.8); font-size: 15px; margin-bottom: 18px; }
+.vl-elig-hero-badges { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+/* Loan type selector buttons */
+.vl-elig-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.vl-elig-type-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px;
+  border: 1.5px solid #e6edff;
+  border-radius: 12px;
+  background: #f8faff;
+  cursor: pointer;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #374151;
+  transition: all .15s;
+  text-align: center;
+  line-height: 1.3;
+}
+.vl-elig-type-btn span:first-child { font-size: 20px; }
+.vl-elig-type-btn:hover { border-color: #003087; background: #eef3ff; color: #003087; }
+.vl-elig-type-btn.active {
+  border-color: #003087;
+  background: #003087;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0,48,135,.2);
+}
+
+/* Form grid for eligibility */
+.vl-elig-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.vl-elig-field { display: flex; flex-direction: column; gap: 4px; }
+.vl-elig-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #374151;
+}
+.vl-elig-field input, .vl-elig-field select {
+  padding: 11px 14px;
+  border: 1.5px solid #d4dcf0;
+  border-radius: 10px;
+  font-size: 13.5px;
+  color: #0F1C3F;
+  background: #fff;
+  font-family: inherit;
+  transition: border-color .15s;
+}
+.vl-elig-field input:focus, .vl-elig-field select:focus {
+  outline: none;
+  border-color: #003087;
+  box-shadow: 0 0 0 3px rgba(0,48,135,.08);
+}
+.vl-elig-hint {
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 1px;
+}
+.vl-elig-section-label {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #003087;
+  padding: 8px 0 4px;
+  border-top: 1px solid #f0f4ff;
+  margin-top: 4px;
+}
+
+/* Eligibility result panels */
+.vl-elig-placeholder { text-align: center; padding: 8px 0; }
+.vl-elig-placeholder-icon { font-size: 52px; margin-bottom: 14px; }
+.vl-elig-placeholder h3 { font-size:17px; font-weight:800; color:#0F1C3F; margin-bottom:8px; }
+.vl-elig-placeholder p  { font-size:13.5px; color:#6b7280; line-height:1.65; margin-bottom:20px; }
+
+.vl-elig-criteria-box {
+  background: #f8faff;
+  border: 1px solid #e6edff;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: left;
+}
+.vl-elig-criteria-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0F1C3F;
+  margin-bottom: 12px;
+}
+.vl-elig-criteria-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-bottom: 1px solid #f0f4ff;
+  font-size: 13px;
+}
+.vl-elig-criteria-row:last-child { border: none; }
+.vl-elig-criteria-row span { color: #6b7280; }
+.vl-elig-criteria-row strong { color: #0F1C3F; font-weight: 700; }
+
+.vl-elig-success, .vl-elig-failure { text-align: center; }
+.vl-elig-result-rows {
+  text-align: left;
+  background: #f8faff;
+  border: 1px solid #e6edff;
+  border-radius: 12px;
+  padding: 4px 14px;
+  margin-bottom: 4px;
+}
+.vl-elig-result-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid #f0f4ff;
+  font-size: 13px;
+}
+.vl-elig-result-row:last-child { border: none; }
+.vl-elig-result-row span { color: #6b7280; }
+.vl-elig-result-row strong { font-weight: 700; color: #0F1C3F; }
+
+.vl-elig-score-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.vl-elig-score-badge--green { background: #d1fae5; color: #065f46; }
+.vl-elig-score-badge--red   { background: #fee2e2; color: #991b1b; }
+
+.vl-elig-issues {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: left;
+  margin: 16px 0;
+}
+.vl-elig-issues-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #991b1b;
+  margin-bottom: 10px;
+}
+.vl-elig-issue-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #7f1d1d;
+  padding: 4px 0;
+}
+.vl-elig-issue-item span:first-child { color: #ef4444; font-weight: 800; flex-shrink:0; }
+
+.vl-elig-suggestions {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: left;
+}
+.vl-elig-suggestions-title { font-size:13px; font-weight:800; color:#92400e; margin-bottom:8px; }
+.vl-elig-suggestions ul { padding-left: 18px; margin:0; }
+.vl-elig-suggestions ul li { font-size:13px; color:#78350f; line-height:1.8; }
+
+/* ── Responsive ─────────────────────────────────────────────*/
+@media (max-width: 1024px) {
+  .vl-admin-stats-grid { grid-template-columns: repeat(3,1fr); }
+}
+@media (max-width: 768px) {
+  .vl-admin-stats-grid { grid-template-columns: repeat(2,1fr); }
+  .vl-elig-form-grid { grid-template-columns: 1fr; }
+  .vl-elig-type-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 540px) {
+  .vl-admin-stats-grid { grid-template-columns: repeat(2,1fr); }
+  .vl-elig-type-grid { grid-template-columns: repeat(3,1fr); }
+  .vl-admin-pagination { gap: 3px; }
+  .vl-page-btn { min-width: 30px; height: 30px; font-size: 12px; }
+}

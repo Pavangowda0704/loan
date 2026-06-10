@@ -20,11 +20,15 @@ const MOCK_DATA = (id) => ({
   status: "credit_assessment",
   status_label: "Credit Assessment",
   loan_type: "Business Loan",
+  loan_product: "Business Loan",
   loan_amount: 2500000,
+  full_name: "Sample Applicant",
   applicant_name: "Sample Applicant",
   business_name: "Sample Business Pvt. Ltd.",
   applied_on: new Date(Date.now() - 86400000 * 2).toISOString(),
+  created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
   last_updated: new Date(Date.now() - 3600000).toISOString(),
+  updated_at: new Date(Date.now() - 3600000).toISOString(),
   stages: MOCK_STAGES,
   assigned_rm: { name: "Priya Sharma", phone: "9876543210", email: "priya.sharma@plumzo.in" },
   remarks: "Your application is progressing well. Our team will contact you within 24 hours.",
@@ -72,7 +76,8 @@ export default function BusinessLoanTrack() {
     setLoading(true); setError("");
     try {
       const res = await getBusinessLoanById(id);
-      setData(res.data);
+      // Backend returns { success, application: {...} } — unwrap it
+      setData(res.data.application || res.data);
     } catch (err) {
       if (err.code === "ERR_NETWORK" || err.response?.status >= 500) {
         setData(MOCK_DATA(id)); // use mock in demo mode
@@ -189,8 +194,8 @@ export default function BusinessLoanTrack() {
                 </span>
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "0.78rem", color: "var(--color-muted)", marginBottom: 4 }}>Applied: {fmtDate(data.applied_on)}</div>
-                <div style={{ fontSize: "0.78rem", color: "var(--color-muted)", marginBottom: 14 }}>Updated: {timeAgo(data.last_updated)}</div>
+                <div style={{ fontSize: "0.78rem", color: "var(--color-muted)", marginBottom: 4 }}>Applied: {fmtDate(data.created_at || data.applied_on)}</div>
+                <div style={{ fontSize: "0.78rem", color: "var(--color-muted)", marginBottom: 14 }}>Updated: {timeAgo(data.updated_at || data.last_updated)}</div>
                 <button className="bla-btn-outline" style={{ padding: "7px 14px", fontSize: "0.8rem" }} onClick={() => fetchData(data.application_id)}>
                   🔄 Refresh
                 </button>
@@ -200,9 +205,9 @@ export default function BusinessLoanTrack() {
             {/* Summary strip */}
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 14, marginBottom: 24 }}>
               {[
-                ["Applicant", data.applicant_name],
+                ["Applicant", data.full_name || data.applicant_name],
                 ["Business",  data.business_name],
-                ["Loan Type", data.loan_type],
+                ["Loan Type", data.loan_product || data.loan_type],
                 ["Amount",    fmtAmt(data.loan_amount)],
               ].map(([l, v]) => (
                 <div key={l} style={{ background: "var(--color-bg)", border: "1px solid var(--color-border)", borderRadius: 10, padding: "14px 16px" }}>

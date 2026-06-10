@@ -1,5 +1,7 @@
 // ============================================================
 //  VehicleLoanHome.jsx  —  Route: /vehicle-loan
+//  IMPROVED: layout fixes, centered sections, responsive grid
+//  Zero flow/route/API changes
 // ============================================================
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
@@ -79,10 +81,10 @@ const FAQS = [
 ];
 
 const EMI_CONFIGS = {
-  "New Car":        { min: 200000, max: 5000000, rate: 8.49, minRate: 8.49 },
-  "Used Car":       { min: 100000, max: 3000000, rate: 10.5, minRate: 10.5 },
-  "Two-Wheeler":    { min: 30000,  max: 500000,  rate: 9.5,  minRate: 9.5  },
-  "Commercial":     { min: 500000, max: 10000000,rate: 11,   minRate: 11   },
+  "New Car":     { min: 200000, max: 5000000,  rate: 8.49, minRate: 8.49 },
+  "Used Car":    { min: 100000, max: 3000000,  rate: 10.5, minRate: 10.5 },
+  "Two-Wheeler": { min: 30000,  max: 500000,   rate: 9.5,  minRate: 9.5  },
+  "Commercial":  { min: 500000, max: 10000000, rate: 11,   minRate: 11   },
 };
 
 function useEmi(loanAmt, rate, tenure) {
@@ -95,15 +97,14 @@ function useEmi(loanAmt, rate, tenure) {
 }
 
 function HomeEmiCalculator() {
-  const [tab, setTab]     = useState("New Car");
-  const cfg               = EMI_CONFIGS[tab];
-  const [amt, setAmt]     = useState(cfg.min * 5);
-  const [rate, setRate]   = useState(cfg.rate);
+  const [tab, setTab]       = useState("New Car");
+  const cfg                 = EMI_CONFIGS[tab];
+  const [amt, setAmt]       = useState(cfg.min * 5);
+  const [rate, setRate]     = useState(cfg.rate);
   const [tenure, setTenure] = useState(48);
   const { emi, interest, total } = useEmi(amt, rate, tenure);
   const fmt = v => "₹" + Math.round(v).toLocaleString("en-IN");
-  const principal = amt, totalPay = total;
-  const principalPct = totalPay > 0 ? (principal / totalPay) * 238.76 : 0;
+  const principalPct = total > 0 ? (amt / total) * 238.76 : 0;
 
   return (
     <div className="vl-emi-section vl-section" style={{borderRadius:24}}>
@@ -162,7 +163,7 @@ function HomeEmiCalculator() {
               <span><i style={{background:"rgba(255,255,255,.15)"}}/>Interest</span>
             </div>
           </div>
-          <Link to={`/vehicle-loan/${["New Car","Used Car","Two-Wheeler","Commercial"].indexOf(tab)===0?"new-car":tab==="Used Car"?"used-car":tab==="Two-Wheeler"?"two-wheeler":"commercial"}/apply`}
+          <Link to={`/vehicle-loan/${tab==="New Car"?"new-car":tab==="Used Car"?"used-car":tab==="Two-Wheeler"?"two-wheeler":"commercial"}/apply`}
             className="vl-btn-primary" style={{width:"100%",marginTop:18,justifyContent:"center"}}>
             Apply Now →
           </Link>
@@ -177,7 +178,7 @@ export default function VehicleLoanHome() {
 
   return (
     <div className="vl-page">
-      {/* Hero */}
+      {/* ── Hero ── */}
       <section className="vl-hero">
         <div className="vl-hero-inner">
           <div className="vl-hero-text">
@@ -212,7 +213,7 @@ export default function VehicleLoanHome() {
         <div className="vl-hero-blob vl-hero-blob--2"/>
       </section>
 
-      {/* Stats Bar */}
+      {/* ── Stats Bar ── */}
       <section className="vl-stats-bar">
         <div className="vl-stats-inner">
           {[["5 Lakh+","Vehicles Financed"],["₹8,000 Cr+","Loans Disbursed"],["8.49%","Starting Rate"],["24 Hrs","Approval Time"],["4.9/5","Customer Rating"]].map(([v,l])=>(
@@ -221,8 +222,8 @@ export default function VehicleLoanHome() {
         </div>
       </section>
 
-      {/* Loan Types */}
-      <section className="vl-section" style={{marginTop:60,marginBottom:60}}>
+      {/* ── Loan Types ── FIX 1: auto-fill grid, centered orphan cards ── */}
+      <section className="vl-section vl-section--padded">
         <div className="vl-section-head">
           <div className="vl-chip">LOAN OPTIONS</div>
           <h2>Explore Vehicle Loan Options</h2>
@@ -246,7 +247,7 @@ export default function VehicleLoanHome() {
         </div>
       </section>
 
-      {/* Benefits */}
+      {/* ── Benefits ── */}
       <section className="vl-section">
         <div className="vl-benefits-section">
           <div className="vl-section-head">
@@ -266,13 +267,13 @@ export default function VehicleLoanHome() {
         </div>
       </section>
 
-      {/* EMI Calculator */}
-      <section className="vl-section" style={{marginTop:60}}>
+      {/* ── EMI Calculator ── */}
+      <section className="vl-section vl-section--padded">
         <HomeEmiCalculator />
       </section>
 
-      {/* Required Documents */}
-      <section className="vl-section vl-docs-section">
+      {/* ── Required Documents ── FIX 2: properly centered, no left shift ── */}
+      <section className="vl-section vl-section--padded">
         <div className="vl-section-head">
           <div className="vl-chip">DOCUMENTS</div>
           <h2>Required Documents</h2>
@@ -294,31 +295,31 @@ export default function VehicleLoanHome() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="vl-section" style={{marginTop:60,marginBottom:56}}>
+      {/* ── How It Works ── FIX 4: uses CSS class instead of inline grid ── */}
+      <section className="vl-section vl-section--padded">
         <div className="vl-section-head">
           <div className="vl-chip">PROCESS</div>
           <h2>How to Apply in 4 Simple Steps</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:20}}>
+        <div className="vl-steps-grid">
           {[
             {n:"1",icon:"📋",t:"Check Eligibility",d:"Fill basic details and verify your eligibility in seconds"},
             {n:"2",icon:"📝",t:"Apply Online",d:"Complete the 4-step application form with your details"},
             {n:"3",icon:"📤",t:"Upload Documents",d:"Upload required documents securely through our portal"},
             {n:"4",icon:"✅",t:"Get Disbursed",d:"Approved amount disbursed to dealer within 24-48 hours"},
-          ].map((s,i)=>(
-            <div key={s.n} style={{background:"#fff",borderRadius:18,padding:24,border:"1px solid #e6edff",textAlign:"center",boxShadow:"0 2px 12px rgba(15,28,63,.05)"}}>
-              <div style={{width:48,height:48,borderRadius:"50%",background:"#eef3ff",color:"#1A56DB",fontWeight:800,fontSize:18,display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 14px"}}>{s.n}</div>
-              <div style={{fontSize:26,marginBottom:10}}>{s.icon}</div>
-              <h5 style={{fontWeight:800,color:"#0F1C3F",marginBottom:6}}>{s.t}</h5>
-              <p style={{fontSize:13,color:"#6b7280",lineHeight:1.6}}>{s.d}</p>
+          ].map(s=>(
+            <div key={s.n} className="vl-step-card">
+              <div className="vl-step-card-num">{s.n}</div>
+              <div className="vl-step-card-icon">{s.icon}</div>
+              <h5>{s.t}</h5>
+              <p>{s.d}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="vl-section" style={{marginBottom:60}}>
+      {/* ── FAQ ── */}
+      <section className="vl-section vl-section--padded">
         <div className="vl-section-head">
           <div className="vl-chip">FAQ</div>
           <h2>Frequently Asked Questions</h2>
@@ -335,7 +336,7 @@ export default function VehicleLoanHome() {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* ── CTA ── FIX 3: last child, no extra bottom padding on .vl-page ── */}
       <section className="vl-cta">
         <div className="vl-chip" style={{margin:"0 auto 16px",background:"rgba(255,255,255,.12)",color:"#fff"}}>GET STARTED</div>
         <h2>Ready to Drive Home Your Dream Vehicle?</h2>
