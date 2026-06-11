@@ -289,13 +289,13 @@ export default function BusinessLoan() {
                   <li key={e}><span className="check">✓</span>{e}</li>
                 ))}
               </ul>
-              <button className="btn btn-primary" style={{ marginTop: 24 }}
+              <button className="btn btn-primary" style={{ marginTop: 16 }}
                 onClick={() => navigate("/business-loan/eligibility")}>
                 Check My Eligibility →
               </button>
 
               {/* ── Quick eligibility summary cards ── */}
-              <div style={{ marginTop: 32 }}>
+              <div style={{ marginTop: 20 }}>
                 <div style={{
                   fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase",
                   letterSpacing: "0.08em", color: "var(--color-primary)",
@@ -343,57 +343,7 @@ export default function BusinessLoan() {
               </div>
 
               {/* ── Quick loan comparison strip ── */}
-              <div style={{ marginTop: 24 }}>
-                <div style={{
-                  fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase",
-                  letterSpacing: "0.08em", color: "var(--color-primary)",
-                  marginBottom: 14, paddingBottom: 6,
-                  borderBottom: "1px solid var(--color-border)",
-                }}>
-                  Interest Rates by Loan Type
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {[
-                    { name: "Secured Business Loan",   rate: "10% – 16%", icon: "🏛️" },
-                    { name: "Unsecured Business Loan",  rate: "12% – 22%", icon: "⚡" },
-                    { name: "Working Capital Loan",     rate: "11% – 18%", icon: "🔄" },
-                    { name: "Business Expansion Loan",  rate: "10.5% – 18%", icon: "📈" },
-                  ].map(lt => (
-                    <div key={lt.name} style={{
-                      display: "flex", alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "10px 14px",
-                      background: "var(--color-white)",
-                      border: "1px solid var(--color-border)",
-                      borderRadius: 8,
-                      cursor: "pointer",
-                      transition: "border-color 0.18s",
-                    }}
-                      onClick={() => navigate(`/business-loan/compare`)}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span style={{ fontSize: "1rem" }}>{lt.icon}</span>
-                        <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--color-navy)" }}>
-                          {lt.name}
-                        </span>
-                      </div>
-                      <span style={{
-                        fontSize: "0.82rem", fontWeight: 700,
-                        color: "#00C853", whiteSpace: "nowrap",
-                      }}>
-                        {lt.rate} p.a.
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  className="btn btn-outline"
-                  style={{ marginTop: 14, width: "100%", justifyContent: "center", fontSize: "0.85rem" }}
-                  onClick={() => navigate("/business-loan/compare")}
-                >
-                  Compare All Loan Types →
-                </button>
-              </div>
+              
 
             </div>
             <div>

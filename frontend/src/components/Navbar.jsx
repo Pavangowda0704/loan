@@ -8,13 +8,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { NAV_LINKS } from '../data/loanCategories'
 import MegaLoanMenu from './MegaLoanMenu'
 import MobileMenu from './MobileMenu'
-import { useAuth } from '../context/AuthContext.jsx'   // ✅ NEW
+import { useAuth } from '../context/AuthContext.jsx'
 import '../styles/navbar.css'
 
 export default function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, logout } = useAuth()                  // ✅ NEW
+  const { user, logout } = useAuth()
 
   const [scrolled, setScrolled] = useState(false)
   const [isDropdownOpen, setDropdownOpen] = useState(false)
@@ -46,22 +46,19 @@ export default function Navbar() {
     }
   }
 
+  // Close on scroll
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Close dropdown on any route change
   useEffect(() => {
-    const handler = (e) => {
-      if (navbarRef.current && !navbarRef.current.contains(e.target)) {
-        setDropdownOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', handler)
-    return () => document.removeEventListener('mousedown', handler)
-  }, [])
+    setDropdownOpen(false)
+  }, [location.pathname])
 
+  // Close on Escape key
   useEffect(() => {
     const handler = (e) => {
       if (e.key === 'Escape') {
@@ -73,12 +70,12 @@ export default function Navbar() {
     return () => document.removeEventListener('keydown', handler)
   }, [])
 
+  // Lock body scroll when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = isMobileMenuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [isMobileMenuOpen])
 
-  // ✅ Handle logout
   const handleLogout = () => {
     logout()
     navigate('/')
@@ -89,7 +86,7 @@ export default function Navbar() {
       <header ref={navbarRef} className={`navbar${scrolled ? ' navbar--scrolled' : ''}`} role="banner">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo" aria-label="Plumzo Capital Services — home" onClick={() => setDropdownOpen(false)}>
-            <img src="/plumzo_logo.jpg" alt="Plumzo Capital Services" height="44" style={{height:'44px', width:'auto'}} />
+            <img src="/plumzo_logo.jpg" alt="Plumzo Capital Services" height="44" style={{ height: '44px', width: 'auto' }} />
           </Link>
 
           <nav className="navbar__nav" aria-label="Main navigation">
@@ -126,8 +123,7 @@ export default function Navbar() {
           </nav>
 
           <div className="navbar__right">
-
-            {/* ✅ Auth buttons — logged out */}
+            {/* Auth buttons — logged out */}
             {!user && (
               <button
                 type="button"
@@ -138,7 +134,7 @@ export default function Navbar() {
               </button>
             )}
 
-            {/* ✅ Auth buttons — logged in */}
+            {/* Auth buttons — logged in */}
             {user && (
               <div className="navbar__user">
                 <button
@@ -158,7 +154,15 @@ export default function Navbar() {
               </div>
             )}
 
-            <button type="button" className="navbar__cta-btn" onClick={() => { setDropdownOpen(false); navigate('/loans/personal') }}>
+            <button
+              type="button"
+              className="navbar__cta-btn"
+              onClick={() => {
+                setDropdownOpen(false)
+                navigate('/')
+                setTimeout(() => document.getElementById('loans')?.scrollIntoView({ behavior: 'smooth' }), 100)
+              }}
+            >
               Apply Now
               <svg viewBox="0 0 16 16" width="13" height="13" fill="none" aria-hidden="true">
                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -182,6 +186,15 @@ export default function Navbar() {
           <MegaLoanMenu visible={isDropdownOpen} onClose={() => setDropdownOpen(false)} />
         </div>
       </header>
+
+      {/* Backdrop — lives outside <header> so clicks are never inside navbarRef */}
+      {isDropdownOpen && (
+        <div
+          style={{ position: 'fixed', inset: 0, zIndex: 99 }}
+          onClick={() => setDropdownOpen(false)}
+          aria-hidden="true"
+        />
+      )}
 
       <MobileMenu isOpen={isMobileMenuOpen} onClose={() => setMobileOpen(false)} />
     </>

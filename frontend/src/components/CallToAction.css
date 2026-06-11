@@ -1,7 +1,7 @@
 .cta {
   /* === EDIT: CTA background color === */
   background: linear-gradient(135deg, #003087 0%, #002070 60%, #0F3DAA 100%);
-  padding: 72px 0 80px;
+  padding: 10px 0 10px;
   position: relative;
   overflow: hidden;
   /* Hard bottom edge so footer doesn't visually bleed in */

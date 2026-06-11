@@ -70,7 +70,7 @@
 /* Bottom bar */
 .footer__bottom {
   border-top: 1px solid rgba(255,255,255,0.1);
-  padding: 20px 0;
+  padding: 20px 10px;
 }
 .footer__bottom .container {
   display: flex;

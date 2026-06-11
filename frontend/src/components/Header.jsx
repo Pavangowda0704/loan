@@ -35,7 +35,7 @@ export default function Header() {
               <path d="M16 6L7 13v13h6v-8h6v8h6V13L16 6z" fill="white"/>
             </svg>
           </span>
-          <span className="logo-text">LoanEase</span>
+          <span className="logo-text">Plumzo</span>
         </a>
 
         {/* Desktop Navigation */}
@@ -50,7 +50,7 @@ export default function Header() {
         </nav>
 
         {/* CTA Button */}
-        <a href="#apply" className="btn btn-primary header__cta">Apply Now</a>
+        <a href="#loans" className="btn btn-primary header__cta">Apply Now</a>
 
         {/* Mobile Hamburger */}
         <button
@@ -77,9 +77,9 @@ export default function Header() {
               </li>
             ))}
           </ul>
-          <a href="#apply" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '16px' }}
+          <a href="#loans" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '16px' }}
              onClick={() => setMenuOpen(false)}>
-            Apply Now
+            gowda
           </a>
         </nav>
       </div>

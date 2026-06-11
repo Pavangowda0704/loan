@@ -62,8 +62,8 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div className="hero__buttons">
-            <Link to="/loans/personal" className="btn btn-primary">Apply for Loan</Link>
-            <Link to="/eligibility/personal" className="btn btn-outline">Check Eligibility</Link>
+            <a href="#loans" className="btn btn-primary">Apply for Loan</a>
+            
           </div>
 
           {/* Trust points */}

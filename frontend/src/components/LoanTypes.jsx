@@ -96,7 +96,7 @@ export default function LoanTypes() {
                     aria-label={`Apply for ${loan.title}`}
                     onClick={() => navigate(`/${loan.id}-loan`)}
                   >
-                    Apply →
+                    view →
                   </button>
                 </div>
               </article>

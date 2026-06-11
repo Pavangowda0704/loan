@@ -2,7 +2,6 @@
    CallToAction.jsx
    Edit the heading, subtext, and button below
    ============================================ */
-import { Link } from 'react-router-dom'
 import './CallToAction.css'
 
 export default function CallToAction() {
@@ -15,9 +14,9 @@ export default function CallToAction() {
           <p className="cta__sub">Start your loan application today and take the first step towards your dreams.</p>
         </div>
         {/* === EDIT: button label & link === */}
-        <Link to="/loans/personal" className="btn btn-white cta__btn">
+        <a href="#loans" className="btn btn-white cta__btn">
           Apply Now →
-        </Link>
+        </a>
       </div>
 
       {/* Decorative blobs */}
