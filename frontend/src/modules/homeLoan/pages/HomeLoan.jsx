@@ -184,7 +184,7 @@ const HomeLoan = () => {
   return (
     <div className="hl-module">
       {/* NAV */}
-      <nav className="hl-nav">
+      {/* <nav className="hl-nav">
         <Link to="/home-loan" className="hl-nav__logo">
           Loan<span>Ease</span>
         </Link>
@@ -206,7 +206,7 @@ const HomeLoan = () => {
         <button className="hl-nav__hamburger" onClick={() => setMenuOpen(!menuOpen)}>
           <span /><span /><span />
         </button>
-      </nav>
+      </nav> */}
 
       {/* MOBILE MENU */}
       <div className={`hl-mobile-menu ${menuOpen ? 'open' : ''}`}>

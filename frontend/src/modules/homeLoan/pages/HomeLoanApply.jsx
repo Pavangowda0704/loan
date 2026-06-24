@@ -1,7 +1,8 @@
 // frontend/src/modules/homeLoan/pages/HomeLoanApply.jsx
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import API from '../../../api/axiosInstance.js';
+
+import API from "../../../api/axiosInstance";
 import HomeLoanDocUpload from '../components/HomeLoanDocUpload';
 import { LOAN_TYPES } from './HomeLoan';
 import '../homeLoan.css';

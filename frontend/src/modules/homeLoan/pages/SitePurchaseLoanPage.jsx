@@ -22,25 +22,25 @@ const PROCESS_STEPS = [
   { step: '05', title: 'Sanction & Disbursement', desc: 'Loan sanctioned and disbursed within 7 days.' },
 ];
 
-const MixedUsagePropertyPage = () => {
+const SitePurchaseLoanPage = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const loan = {
-  slug: 'mixed-usage',
-  name: 'Mixed Usage Property Loan',
-  icon: '🏢',
+ const loan = {
+  slug: 'site-purchase',
+  name: 'Site Purchase Loan',
+  icon: '🏞️',
   description:
-    'Finance properties used for both residential and commercial purposes with flexible loan options.',
-  rate: '9.10',
-  maxAmount: '₹15 Crore',
+    'Purchase a residential plot or site with attractive interest rates and flexible repayment options.',
+  rate: '8.85',
+  maxAmount: '₹5 Crore',
   tenure: 'Up to 20 years',
   processing: '1% of loan amount',
   eligibility: [
     'Age 21–65 years',
-    'Stable income source',
-    'Good credit score',
-    'Residential + commercial property usage',
+    'Monthly income ≥ ₹25,000',
+    'Good credit history',
+    'Stable employment or business income',
   ],
 };
 
@@ -140,54 +140,55 @@ const MixedUsagePropertyPage = () => {
           <div className="hl-detail-layout">
             {/* LEFT MAIN */}
             <div><div style={{ marginBottom: '40px' }}>
-  <div className="hl-section-label">MIXED USAGE PROPERTY LOAN</div>
+  <div className="hl-section-label">
+  SITE PURCHASE LOAN
+</div>
 
 <h2
   className="hl-section-title"
   style={{ fontSize: '26px', marginBottom: '20px' }}
 >
-  About Mixed Usage Property Loan
+  About Site Purchase Loan
 </h2>
-
-<ul className="hl-checklist">
+ <ul className="hl-checklist">
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Finance properties that combine residential and commercial usage under one roof.
+    Site Purchase Loans help individuals buy residential plots or sites for future home construction.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Suitable for shop-cum-residence, office-cum-home, and similar mixed-use properties.
+    Finance up to 80% of the plot value based on eligibility and lender policies.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Loan amounts are based on property valuation and borrower eligibility.
+    Suitable for purchasing approved residential sites and plots in urban and semi-urban areas.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Competitive interest rates with repayment tenure up to 20 years.
+    Enjoy competitive interest rates with flexible repayment tenure of up to 20 years.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Available for salaried employees, professionals, self-employed individuals, and business owners.
+    Available for salaried employees, self-employed professionals, and business owners.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Flexible repayment options with transparent charges.
+    Quick approval process with minimal documentation requirements.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Minimal documentation and quick loan approval process.
+    Opportunity to construct your dream home at a later stage with financial flexibility.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Dedicated support to help you maximize the value of your mixed-use property.
+    Transparent charges and dedicated support throughout the loan journey.
   </li>
 </ul>
 </div>
@@ -388,4 +389,4 @@ const MixedUsagePropertyPage = () => {
   );
 };
 
-export default MixedUsagePropertyPage;
+export default SitePurchaseLoanPage;

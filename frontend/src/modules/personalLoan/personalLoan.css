@@ -7,7 +7,7 @@
 .pl-page,
 .pl-new-page {
   min-height: 100vh;
-  padding: 90px 0 70px;
+  
   background: #f8fbff;
   overflow-x: hidden;
 }

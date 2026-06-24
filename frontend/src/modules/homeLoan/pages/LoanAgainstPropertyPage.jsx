@@ -22,27 +22,27 @@ const PROCESS_STEPS = [
   { step: '05', title: 'Sanction & Disbursement', desc: 'Loan sanctioned and disbursed within 7 days.' },
 ];
 
-const MixedUsagePropertyPage = () => {
+const LoanAgainstPropertyPage = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const loan = {
-  slug: 'mixed-usage',
-  name: 'Mixed Usage Property Loan',
-  icon: '🏢',
-  description:
-    'Finance properties used for both residential and commercial purposes with flexible loan options.',
-  rate: '9.10',
-  maxAmount: '₹15 Crore',
-  tenure: 'Up to 20 years',
-  processing: '1% of loan amount',
-  eligibility: [
-    'Age 21–65 years',
-    'Stable income source',
-    'Good credit score',
-    'Residential + commercial property usage',
-  ],
-};
+    slug: 'lap',
+    name: 'Loan Against Property',
+    icon: '🏢',
+    description:
+      'Unlock the equity in your existing property to meet business or personal financial needs.',
+    rate: '9.00',
+    maxAmount: '₹10 Crore',
+    tenure: 'Up to 20 years',
+    processing: '1% of loan amount',
+    eligibility: [
+      'Age 21–65 years',
+      'Clear property ownership',
+      'Monthly income ≥ ₹30,000',
+      'Good repayment history',
+    ],
+  };
 
 //   if (!loan) {
 //     return (
@@ -57,8 +57,8 @@ const MixedUsagePropertyPage = () => {
 
   return (
     <div className="hl-module">
-      
-      {/* <nav className="hl-nav">
+      {/* NAV
+      <nav className="hl-nav">
         <Link to="/home-loan" className="hl-nav__logo">Loan<span>Ease</span></Link>
         <ul className="hl-nav__links">
           <li><Link to="/home-loan">Home Loans</Link></li>
@@ -140,56 +140,66 @@ const MixedUsagePropertyPage = () => {
           <div className="hl-detail-layout">
             {/* LEFT MAIN */}
             <div><div style={{ marginBottom: '40px' }}>
-  <div className="hl-section-label">MIXED USAGE PROPERTY LOAN</div>
+  <div className="hl-section-label">LOAN AGAINST PROPERTY</div>
 
-<h2
-  className="hl-section-title"
-  style={{ fontSize: '26px', marginBottom: '20px' }}
->
-  About Mixed Usage Property Loan
-</h2>
+  <h2
+    className="hl-section-title"
+    style={{ fontSize: '26px', marginBottom: '20px' }}
+  >
+    About Loan Against Property
+  </h2>
 
-<ul className="hl-checklist">
-  <li>
-    <div className="hl-checklist__icon">✓</div>
-    Finance properties that combine residential and commercial usage under one roof.
-  </li>
+  <ul className="hl-checklist">
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Loan Against Property allows you to leverage the value of your residential, commercial, or industrial property without selling it.
+    </li>
 
-  <li>
-    <div className="hl-checklist__icon">✓</div>
-    Suitable for shop-cum-residence, office-cum-home, and similar mixed-use properties.
-  </li>
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Obtain funds for business expansion, education, medical emergencies, debt consolidation, or other financial requirements.
+    </li>
 
-  <li>
-    <div className="hl-checklist__icon">✓</div>
-    Loan amounts are based on property valuation and borrower eligibility.
-  </li>
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Borrow up to 70%–80% of the property's market value based on eligibility and lender policies.
+    </li>
 
-  <li>
-    <div className="hl-checklist__icon">✓</div>
-    Competitive interest rates with repayment tenure up to 20 years.
-  </li>
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Benefit from lower interest rates compared to unsecured loans since the property acts as collateral.
+    </li>
 
-  <li>
-    <div className="hl-checklist__icon">✓</div>
-    Available for salaried employees, professionals, self-employed individuals, and business owners.
-  </li>
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Flexible repayment tenure of up to 15–20 years helps reduce EMI burden.
+    </li>
 
-  <li>
-    <div className="hl-checklist__icon">✓</div>
-    Flexible repayment options with transparent charges.
-  </li>
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Available for salaried individuals, self-employed professionals, business owners, and eligible entrepreneurs.
+    </li>
 
-  <li>
-    <div className="hl-checklist__icon">✓</div>
-    Minimal documentation and quick loan approval process.
-  </li>
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Continue using and owning your property throughout the loan tenure while accessing substantial funds.
+    </li>
 
-  <li>
-    <div className="hl-checklist__icon">✓</div>
-    Dedicated support to help you maximize the value of your mixed-use property.
-  </li>
-</ul>
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Simple documentation, quick approval process, and dedicated support ensure a smooth borrowing experience.
+    </li>
+
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Transparent charges and flexible repayment options make Loan Against Property an ideal financing solution.
+    </li>
+
+    <li>
+      <div className="hl-checklist__icon">✓</div>
+      Suitable for both personal and business requirements with higher loan eligibility and competitive interest rates.
+    </li>
+  </ul>
 </div>
               {/* Eligibility */}
               <div style={{ marginBottom: '40px' }}>
@@ -388,4 +398,4 @@ const MixedUsagePropertyPage = () => {
   );
 };
 
-export default MixedUsagePropertyPage;
+export default LoanAgainstPropertyPage;

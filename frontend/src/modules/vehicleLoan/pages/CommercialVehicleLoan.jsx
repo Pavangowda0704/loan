@@ -9,7 +9,7 @@ export default function CommercialVehicleLoan() {
       applyRoute="/vehicle-loan/commercial/apply"
       chip="COMMERCIAL LOAN"
       chipClass=""
-      accentColor="#8b5cf6"
+      accentColor="#5cf664"
       highlights={[
         {val:"Up to ₹1.5 Crore",label:"Loan Amount"},
         {val:"11%* Onwards",label:"Interest Rate"},

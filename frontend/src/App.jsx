@@ -33,11 +33,19 @@ import VehicleDocumentsNew      from "./modules/vehicleLoan/pages/VehicleDocumen
 import VehicleLoanSuccessNew    from "./modules/vehicleLoan/pages/VehicleLoanSuccessNew";
 import VehicleLoanAdminNew      from "./modules/vehicleLoan/pages/VehicleLoanAdminNew";
 
-import HomeLoan            from "./modules/homeLoan/pages/HomeLoan";
-import HomeLoanApply       from "./modules/homeLoan/pages/HomeLoanApply";
-import HomeLoanDetail      from "./modules/homeLoan/pages/HomeLoanDetail";
+import HomeLoan from "./modules/homeLoan/pages/HomeLoan";
+import HomeLoanApply from "./modules/homeLoan/pages/HomeLoanApply";
+import HomeLoanDetail from "./modules/homeLoan/pages/HomeLoanDetail";
 import HomeLoanEligibility from "./modules/homeLoan/pages/HomeLoanEligibility";
-import HomeLoanSuccess     from "./modules/homeLoan/pages/HomeLoanSuccess";
+import HomeLoanSuccess from "./modules/homeLoan/pages/HomeLoanSuccess";
+import LoanAgainstPropertyPage from "./modules/homeLoan/pages/LoanAgainstPropertyPage";
+import MortgageLoanPage from "./modules/homeLoan/pages/MortgageLoanPage";
+import SitePurchaseLoanPage from "./modules/homeLoan/pages/SitePurchaseLoanPage";
+import BalanceTransferPage from "./modules/homeLoan/pages/BalanceTransferPage";
+import NewHouseRefinancePage from "./modules/homeLoan/pages/NewHouseRefinancePage";
+import HousePurchaseLoanPage from "./modules/homeLoan/pages/HousePurchaseLoanPage";
+import ConstructionLoanPage from "./modules/homeLoan/pages/ConstructionLoanPage";
+import MixedUsagePropertyPage from "./modules/homeLoan/pages/MixedUsagePropertyPage";
 
 import BusinessLoan            from "./modules/businessLoan/pages/BusinessLoan";
 import BusinessLoanApply       from "./modules/businessLoan/pages/BusinessLoanApply";
@@ -121,13 +129,51 @@ function App() {
             <Route path="/vehicle-loan/success/:applicationId"       element={<VehicleLoanSuccessNew />} />
 
             {/* Home Loan — apply routes now protected */}
-            <Route path="/home-loan"                         element={<HomeLoan />} />
-            <Route path="/home-loan/:loanType"               element={<HomeLoanDetail />} />
-            <Route path="/home-loan/eligibility"             element={<HomeLoanEligibility />} />
-            <Route path="/home-loan/apply"                   element={<Protected element={<HomeLoanApply />} />} />
-            <Route path="/home-loan/apply/:loanType"         element={<Protected element={<HomeLoanApply />} />} />
-            <Route path="/home-loan/success"                 element={<HomeLoanSuccess />} />
-            <Route path="/home-loan/success/:applicationId"  element={<HomeLoanSuccess />} />
+            <Route path="/" element={<HomeLoan />} />
+        <Route path="/home-loan" element={<HomeLoan />} />
+
+        {/* Loan Against Property */}
+        <Route
+          path="/loan-against-property"
+          element={<LoanAgainstPropertyPage />}
+        />
+
+        {/* Mortgage Loan */}
+        <Route
+          path="/mortgage-loan"
+          element={<MortgageLoanPage />}
+        /><Route
+  path="/site-purchase-loan"
+  element={<SitePurchaseLoanPage />}
+/><Route
+  path="/new-house-refinance"
+  element={<NewHouseRefinancePage />}
+/>
+<Route
+  path="/house-purchase-loan"
+  element={<HousePurchaseLoanPage />}
+/>
+<Route
+
+  path="/balance-transfer"
+  element={<BalanceTransferPage />}
+/>
+<Route
+  path="/construction-loan"
+  element={<ConstructionLoanPage />}
+/>
+<Route
+  path="/mixed-usage-property"
+  element={<MixedUsagePropertyPage />}
+/>
+
+        <Route path="/home-loan/:loanType" element={<HomeLoanDetail />} />
+        <Route path="/home-loan/apply" element={<Protected element={<HomeLoanApply />} />} />
+        <Route path="/home-loan/eligibility" element={<HomeLoanEligibility />} />
+        <Route
+          path="/home-loan/success/:applicationId"
+          element={<HomeLoanSuccess />}
+        />
 
             {/* Business Loan — apply routes now protected */}
             <Route path="/business-loan"                          element={<BusinessLoan />} />

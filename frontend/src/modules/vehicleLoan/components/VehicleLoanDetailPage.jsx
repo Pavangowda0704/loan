@@ -15,10 +15,10 @@ import "../vehicleLoan.css";
 // ── Vehicle emoji map for hero visuals ──────────────────────
 const HERO_EMOJI = {
   "New Car Loan":               { emoji: "🚗", bg: "linear-gradient(135deg,#0F1C3F 0%,#003087 100%)" },
-  "Used Car Loan":              { emoji: "🚙", bg: "linear-gradient(135deg,#7c2d12 0%,#ea580c 100%)" },
+  "Used Car Loan":              { emoji: "🚙", bg: "linear-gradient(135deg,#0f1c3f 0%,#003087 100%)" },
   "Two-Wheeler Loan":           { emoji: "🏍️", bg: "linear-gradient(135deg,#064e3b 0%,#10b981 100%)" },
   "Used Bike Loan":             { emoji: "🛵", bg: "linear-gradient(135deg,#064e3b 0%,#059669 100%)" },
-  "Commercial Vehicle Loan":    { emoji: "🚚", bg: "linear-gradient(135deg,#3b0764 0%,#7c3aed 100%)" },
+  "Commercial Vehicle Loan":    { emoji: "🚚", bg: "linear-gradient(135deg,#00b050 0%,#00b050 100%)" },
   "Agriculture Equipment Loan": { emoji: "🚜", bg: "linear-gradient(135deg,#14532d 0%,#16a34a 100%)" },
 };
 
@@ -402,9 +402,10 @@ export default function VehicleLoanDetailPage({
               {title} — EMI Calculator
             </h3>
             <VehicleEmiWidget {...emiConfig} accentColor={accentColor} />
-            <div style={{ textAlign: "center", marginTop: 22 }}>
-              <Link to={applyRoute} className="vl-btn-primary">Apply Now →</Link>
-            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 22 }}>
+  <Link to={applyRoute} className="vl-btn-primary" style={{ justifyContent: "center" }}>Apply Now →</Link>
+  <Link to="/vehicle-loan/eligibility" className="vl-btn-outline" style={{ justifyContent: "center" }}>Check Eligibility</Link>
+</div>
           </div>
         )}
 

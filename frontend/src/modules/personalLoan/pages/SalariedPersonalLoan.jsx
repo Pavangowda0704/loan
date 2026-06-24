@@ -37,6 +37,7 @@ const faqs = [
 
 export default function SalariedPersonalLoan() {
   const [activeTab, setActiveTab] = useState("Overview");
+const [openFaq, setOpenFaq] = useState(null);
 
   return (
     <div className="pl-new-page">
@@ -77,6 +78,39 @@ export default function SalariedPersonalLoan() {
         {activeTab === "Overview" && (
           <div className="pl-tab-layout">
             <div className="pl-tab-main">
+              <section className="pl-info-section">
+  <h3>Salaried Personal Loan Overview</h3>
+
+  <div className="pl-benefits-grid">
+
+    <div className="pl-benefit-card">
+      <h4>✔ High Loan Amount</h4>
+      <p>
+        Avail personal loans ranging from ₹50,000 up to ₹40 Lakhs
+        based on your income, employment profile, and credit history.
+      </p>
+    </div>
+
+    <div className="pl-benefit-card">
+      <h4>✔ Quick Approval & Disbursal</h4>
+      <p>
+        Complete your application online and receive approval with
+        fast disbursal, often within 24–48 hours of verification.
+      </p>
+    </div>
+
+    <div className="pl-benefit-card">
+      <h4>✔ No Collateral Required</h4>
+      <p>
+        Enjoy completely unsecured financing without pledging
+        property, gold, fixed deposits, or any other assets.
+      </p>
+    </div>
+
+   
+
+  </div>
+</section>
               <h3>Why Choose Salaried Personal Loan?</h3>
               <div className="pl-overview-grid">
                 {[
@@ -94,6 +128,7 @@ export default function SalariedPersonalLoan() {
                   </div>
                 ))}
               </div>
+              
               <h3 style={{marginTop:28}}>Why Choose Salaried Personal Loan?</h3>
               <div className="pl-why-grid">
                 {["Competitive Interest Rates", "Low Processing Fees", "Transparent Process", "Trusted by Thousands"].map(w => (
@@ -186,24 +221,43 @@ export default function SalariedPersonalLoan() {
 
         {/* FAQs */}
         {activeTab === "FAQs" && (
-          <div className="pl-tab-single">
-            <h3>Frequently Asked Questions</h3>
-            <div className="pl-faq-list">
-              {faqs.map((f, i) => {
-                const [open, setOpen] = useState(false);
-                return (
-                  <div key={i} className={`pl-faq-item${open ? " open" : ""}`}>
-                    <button className="pl-faq-q" onClick={() => setOpen(!open)}>
-                      <span>{f.q}</span>
-                      <span className="pl-faq-arrow">{open ? "▲" : "▼"}</span>
-                    </button>
-                    {open && <div className="pl-faq-a">{f.a}</div>}
-                  </div>
-                );
-              })}
+  <div className="pl-tab-single">
+    <h3>Frequently Asked Questions</h3>
+
+    <div className="pl-faq-list">
+      {faqs.map((faq, index) => (
+        <div
+          key={index}
+          className={`pl-faq-item ${
+            openFaq === index ? "open" : ""
+          }`}
+        >
+          <button
+            className="pl-faq-q"
+            onClick={() =>
+              setOpenFaq(
+                openFaq === index ? null : index
+              )
+            }
+          >
+            <span>{faq.q}</span>
+
+            <span className="pl-faq-arrow">
+              {openFaq === index ? "−" : "+"}
+            </span>
+          </button>
+
+          {openFaq === index && (
+            <div className="pl-faq-a">
+              {faq.a}
             </div>
-          </div>
-        )}
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+        
       </div>
 
       {/* Bottom CTA */}

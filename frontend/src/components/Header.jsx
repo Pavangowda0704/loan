@@ -79,7 +79,7 @@ export default function Header() {
           </ul>
           <a href="#loans" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '16px' }}
              onClick={() => setMenuOpen(false)}>
-            gowda
+            Apply Now
           </a>
         </nav>
       </div>

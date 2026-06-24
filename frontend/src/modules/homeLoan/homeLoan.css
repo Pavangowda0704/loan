@@ -1403,3 +1403,106 @@
 .hl-mt-24 { margin-top: 24px; }
 .hl-mb-0 { margin-bottom: 0; }
 .hl-fw-700 { font-weight: 700; }
+@media (max-width: 768px) {
+
+  /* Prevent sticky button from covering content */
+  .hl-section {
+    padding-bottom: 100px !important;
+  }
+
+  /* Sticky button */
+  .hl-sticky-apply {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    padding: 14px 16px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,.08);
+    z-index: 999;
+  }
+
+  .hl-sticky-apply .hl-btn {
+    width: 100%;
+  }
+}
+/* ===== Hero Bubble Graphics ===== */
+.hl-detail-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.hl-detail-hero::before,
+.hl-detail-hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.hl-detail-hero::before {
+  width: 260px;
+  height: 260px;
+  background: rgba(0, 255, 140, 0.08);
+  top: -80px;
+  left: -80px;
+}
+
+.hl-detail-hero::after {
+  width: 180px;
+  height: 180px;
+  background: rgba(255,255,255,0.05);
+  bottom: -50px;
+  right: -50px;
+}
+
+/* Additional bubbles */
+.hl-bubble1,
+.hl-bubble2,
+.hl-bubble3 {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hl-bubble1 {
+  width: 80px;
+  height: 80px;
+  background: rgba(0,255,140,.08);
+  top: 100px;
+  right: 120px;
+}
+
+.hl-bubble2 {
+  width: 40px;
+  height: 40px;
+  background: rgba(255,255,255,.06);
+  bottom: 120px;
+  left: 80px;
+}
+
+.hl-bubble3 {
+  width: 25px;
+  height: 25px;
+  background: rgba(0,255,140,.12);
+  top: 220px;
+  left: 40%;
+}
+
+/* Keep content above bubbles */
+.hl-detail-hero__inner {
+  position: relative;
+  z-index: 2;
+}@media (max-width: 768px) {
+
+  .hl-btn--lg,
+  .hl-btn--primary {
+    width: 100%;
+    font-size: 18px;
+    padding: 16px 20px;
+    white-space: normal;      /* allow text to wrap */
+    text-align: center;
+    line-height: 1.4;
+  }
+
+}

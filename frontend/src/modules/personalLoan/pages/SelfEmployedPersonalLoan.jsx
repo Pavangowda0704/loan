@@ -38,7 +38,7 @@ const faqs = [
 
 export default function SelfEmployedPersonalLoan() {
   const [activeTab, setActiveTab] = useState("Overview");
-
+const [openFaq, setOpenFaq] = useState(null);
   return (
     <div className="pl-new-page">
       {/* Breadcrumb */}
@@ -77,6 +77,42 @@ export default function SelfEmployedPersonalLoan() {
         {activeTab === "Overview" && (
           <div className="pl-tab-layout">
             <div className="pl-tab-main">
+              <section className="pl-info-section">
+  <h3>Self-Employed Personal Loan Overview</h3>
+
+  <div className="pl-benefits-grid">
+
+    <div className="pl-benefit-card">
+      <h4>✔ Designed for Business Owners</h4>
+      <p>
+        Specially created for self-employed professionals,
+        entrepreneurs, freelancers, consultants, and business
+        owners who require quick access to funds.
+      </p>
+    </div>
+
+    <div className="pl-benefit-card">
+      <h4>✔ Loan Amount up to ₹50 Lakhs</h4>
+      <p>
+        Get financing based on your business turnover,
+        profitability, and repayment capacity to support
+        personal or business-related financial needs.
+      </p>
+    </div>
+
+    <div className="pl-benefit-card">
+      <h4>✔ Minimal Documentation</h4>
+      <p>
+        Apply with basic KYC documents, bank statements,
+        income tax returns, and business proof for a
+        simplified loan approval process.
+      </p>
+    </div>
+
+   
+
+  </div>
+</section>
               <h3>Why Choose Self-Employed Personal Loan?</h3>
               <div className="pl-overview-grid">
                 {[
@@ -177,25 +213,43 @@ export default function SelfEmployedPersonalLoan() {
           </div>
         )}
 
-        {activeTab === "FAQs" && (
-          <div className="pl-tab-single">
-            <h3>Frequently Asked Questions</h3>
-            <div className="pl-faq-list">
-              {faqs.map((f, i) => {
-                const [open, setOpen] = useState(false);
-                return (
-                  <div key={i} className={`pl-faq-item${open ? " open" : ""}`}>
-                    <button className="pl-faq-q" onClick={() => setOpen(!open)}>
-                      <span>{f.q}</span>
-                      <span className="pl-faq-arrow">{open ? "▲" : "▼"}</span>
-                    </button>
-                    {open && <div className="pl-faq-a">{f.a}</div>}
-                  </div>
-                );
-              })}
+       {activeTab === "FAQs" && (
+  <div className="pl-tab-single">
+    <h3>Frequently Asked Questions</h3>
+
+    <div className="pl-faq-list">
+      {faqs.map((faq, index) => (
+        <div
+          key={index}
+          className={`pl-faq-item ${
+            openFaq === index ? "open" : ""
+          }`}
+        >
+          <button
+            className="pl-faq-q"
+            onClick={() =>
+              setOpenFaq(
+                openFaq === index ? null : index
+              )
+            }
+          >
+            <span>{faq.q}</span>
+
+            <span className="pl-faq-arrow">
+              {openFaq === index ? "−" : "+"}
+            </span>
+          </button>
+
+          {openFaq === index && (
+            <div className="pl-faq-a">
+              {faq.a}
             </div>
-          </div>
-        )}
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
       </div>
 
       {/* Bottom CTA */}

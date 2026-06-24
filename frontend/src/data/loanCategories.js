@@ -14,16 +14,52 @@ export const LOAN_CATEGORIES = [
       'Loan up to ₹10 Crore with flexible tenure',
     ],
     subLoans: [
-      { label: 'Home Loan',                 href: '/home-loan/home-loan',       desc: 'Buy your dream home' },
-      { label: 'Loan Against Property',     href: '/home-loan/lap',             desc: 'Unlock your property value' },
-      { label: 'Mortgage Loan',             href: '/home-loan/mortgage-loan',   desc: 'Secured long-term finance' },
-      { label: 'Site Purchase Loan',        href: '/home-loan/site-purchase',   desc: 'Buy a plot to build on' },
-      { label: 'Balance Transfer & Top-Up', href: '/home-loan/balance-transfer',desc: 'Switch & save on interest' },
-      { label: 'New House Refinance',       href: '/home-loan/refinance',       desc: 'Refinance at better rates' },
-      { label: 'House Purchase Loan',       href: '/home-loan/house-purchase',  desc: 'Ready-to-move homes' },
-      { label: 'Construction Loan',         href: '/home-loan/construction',    desc: 'Build stage by stage' },
-      { label: 'Mixed Usage Property Loan', href: '/home-loan/mixed-usage',     desc: 'Commercial + residential' },
-    ],
+  {
+    label: 'Home Loan',
+    href: '/home-loan',
+    desc: 'Buy your dream home',
+  },
+  {
+    label: 'Loan Against Property',
+    href: '/loan-against-property',
+    desc: 'Unlock your property value',
+  },
+  {
+    label: 'Mortgage Loan',
+    href: '/mortgage-loan',
+    desc: 'Secured long-term finance',
+  },
+  {
+    label: 'Site Purchase Loan',
+    href: '/site-purchase-loan',
+    desc: 'Buy a plot to build on',
+  },
+  {
+    label: 'Balance Transfer & Top-Up',
+    href: '/balance-transfer',
+    desc: 'Switch & save on interest',
+  },
+  {
+    label: 'New House Refinance',
+    href: '/new-house-refinance',
+    desc: 'Refinance at better rates',
+  },
+  {
+    label: 'House Purchase Loan',
+    href: '/house-purchase-loan',
+    desc: 'Ready-to-move homes',
+  },
+  {
+    label: 'Construction Loan',
+    href: '/construction-loan',
+    desc: 'Build stage by stage',
+  },
+  {
+    label: 'Mixed Usage Property Loan',
+    href: '/mixed-usage-property',
+    desc: 'Commercial + residential',
+  },
+],
     calculators: [
       { label: 'Home Loan EMI Calculator',         href: '#emi' },
       { label: 'Home Loan Eligibility Calculator', href: '#emi' },

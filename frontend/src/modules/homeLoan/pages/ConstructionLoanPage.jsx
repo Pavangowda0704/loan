@@ -21,26 +21,22 @@ const PROCESS_STEPS = [
   { step: '04', title: 'Property Verification', desc: 'Our team verifies the property and legal docs.' },
   { step: '05', title: 'Sanction & Disbursement', desc: 'Loan sanctioned and disbursed within 7 days.' },
 ];
-
-const MixedUsagePropertyPage = () => {
-  const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const loan = {
-  slug: 'mixed-usage',
-  name: 'Mixed Usage Property Loan',
-  icon: '🏢',
+const ConstructionLoanPage = () => {
+const loan = {
+  slug: 'construction',
+  name: 'Construction Loan',
+  icon: '🏗️',
   description:
-    'Finance properties used for both residential and commercial purposes with flexible loan options.',
-  rate: '9.10',
-  maxAmount: '₹15 Crore',
-  tenure: 'Up to 20 years',
-  processing: '1% of loan amount',
+    'Build your dream home with flexible financing and stage-wise fund disbursement.',
+  rate: '8.60',
+  maxAmount: '₹10 Crore',
+  tenure: 'Up to 30 years',
+  processing: '0.5% of loan amount',
   eligibility: [
     'Age 21–65 years',
     'Stable income source',
     'Good credit score',
-    'Residential + commercial property usage',
+    'Salaried and self-employed applicants eligible',
   ],
 };
 
@@ -140,54 +136,54 @@ const MixedUsagePropertyPage = () => {
           <div className="hl-detail-layout">
             {/* LEFT MAIN */}
             <div><div style={{ marginBottom: '40px' }}>
-  <div className="hl-section-label">MIXED USAGE PROPERTY LOAN</div>
+  <div className="hl-section-label">NEW HOUSE PURCHASE LOAN</div>
 
 <h2
   className="hl-section-title"
   style={{ fontSize: '26px', marginBottom: '20px' }}
 >
-  About Mixed Usage Property Loan
+  About New House Purchase Loan
 </h2>
 
 <ul className="hl-checklist">
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Finance properties that combine residential and commercial usage under one roof.
+    Finance the purchase of a new residential property with competitive interest rates.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Suitable for shop-cum-residence, office-cum-home, and similar mixed-use properties.
+    Loan amount up to 80%–90% of the property value, based on eligibility.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Loan amounts are based on property valuation and borrower eligibility.
+    Suitable for apartments, villas, row houses, and independent homes.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Competitive interest rates with repayment tenure up to 20 years.
+    Flexible repayment tenure of up to 30 years.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Available for salaried employees, professionals, self-employed individuals, and business owners.
+    Available for salaried employees, self-employed professionals, and business owners.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Flexible repayment options with transparent charges.
+    Quick approval process with minimal documentation.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Minimal documentation and quick loan approval process.
+    Tax benefits available on principal and interest payments as per applicable laws.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Dedicated support to help you maximize the value of your mixed-use property.
+    Dedicated support throughout your home-buying journey.
   </li>
 </ul>
 </div>
@@ -388,4 +384,4 @@ const MixedUsagePropertyPage = () => {
   );
 };
 
-export default MixedUsagePropertyPage;
+export default ConstructionLoanPage;

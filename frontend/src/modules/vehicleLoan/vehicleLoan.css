@@ -342,9 +342,9 @@
 
 /* Tab layout */
 .vl-tab-content { max-width: 1180px; margin: 0 auto; padding: 36px 24px; }
-.vl-tab-layout { display: grid; grid-template-columns: 1fr 340px; gap: 28px; align-items: start; }
+.vl-tab-layout { display: flex; flex-direction: column; gap: 28px; }
 .vl-tab-main h3 { font-size: 18px; font-weight: 800; color: #0F1C3F; margin-bottom: 18px; }
-.vl-tab-side { position: sticky; top: 130px; display: flex; flex-direction: column; gap: 14px; }
+.vl-tab-side { display: flex; flex-direction: column; gap: 14px; }
 
 /* Overview grid */
 .vl-overview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
@@ -389,6 +389,25 @@
 .vl-side-result-row { display: flex; justify-content: space-between; padding: 7px 0; border-top: 1px solid #d8e4ff; font-size: 12.5px; }
 .vl-side-result-row span { color: #6b7280; }
 .vl-side-result-row strong { color: #0F1C3F; font-weight: 700; }
+
+
+/* ── EMI Widget 2-column layout ── */
+.vl-emi-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.vl-emi-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+@media (max-width: 600px) {
+  .vl-emi-two-col {
+    grid-template-columns: 1fr;
+  }
+}
 
 /* ═══════════════════════════════════════════════════════════
    APPLY FORM

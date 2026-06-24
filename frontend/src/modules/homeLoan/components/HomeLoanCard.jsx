@@ -7,7 +7,44 @@ const HomeLoanCard = ({ loan }) => {
   return (
     <div
       className="hl-loan-card"
-      onClick={() => navigate(`/home-loan/${loan.slug}`)}
+      onClick={() => {
+  switch (loan.slug) {
+    case "lap":
+      navigate("/loan-against-property");
+      break;
+
+    case "mortgage-loan":
+      navigate("/mortgage-loan");
+      break;
+
+    case "site-purchase":
+      navigate("/site-purchase-loan");
+      break;
+
+    case "balance-transfer":
+      navigate("/balance-transfer");
+      break;
+
+    case "refinance":
+      navigate("/new-house-refinance");
+      break;
+
+    case "house-purchase":
+      navigate("/house-purchase-loan");
+      break;
+
+    case "construction":
+      navigate("/construction-loan");
+      break;
+
+    case "mixed-usage":
+      navigate("/mixed-usage-property");
+      break;
+
+    default:
+      navigate(`/home-loan/${loan.slug}`);
+  }
+}}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/home-loan/${loan.slug}`); }}

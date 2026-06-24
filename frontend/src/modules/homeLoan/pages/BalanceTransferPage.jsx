@@ -22,25 +22,25 @@ const PROCESS_STEPS = [
   { step: '05', title: 'Sanction & Disbursement', desc: 'Loan sanctioned and disbursed within 7 days.' },
 ];
 
-const MixedUsagePropertyPage = () => {
+const BalanceTransferPage = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const loan = {
-  slug: 'mixed-usage',
-  name: 'Mixed Usage Property Loan',
-  icon: '🏢',
+ const loan = {
+  slug: 'balance-transfer',
+  name: 'Balance Transfer + Top Up Loan',
+  icon: '🔄',
   description:
-    'Finance properties used for both residential and commercial purposes with flexible loan options.',
-  rate: '9.10',
-  maxAmount: '₹15 Crore',
-  tenure: 'Up to 20 years',
-  processing: '1% of loan amount',
+    'Transfer your existing home loan to enjoy lower interest rates and avail additional funds with a top-up loan.',
+  rate: '8.50',
+  maxAmount: '₹10 Crore',
+  tenure: 'Up to 30 years',
+  processing: '0.5% of loan amount',
   eligibility: [
     'Age 21–65 years',
-    'Stable income source',
-    'Good credit score',
-    'Residential + commercial property usage',
+    'Existing home loan with another lender',
+    'Good repayment track record',
+    'Stable income and credit profile',
   ],
 };
 
@@ -139,55 +139,56 @@ const MixedUsagePropertyPage = () => {
         <div className="hl-container">
           <div className="hl-detail-layout">
             {/* LEFT MAIN */}
-            <div><div style={{ marginBottom: '40px' }}>
-  <div className="hl-section-label">MIXED USAGE PROPERTY LOAN</div>
+            <div>
+                <div style={{ marginBottom: '40px' }}>
+  <div className="hl-section-label">BALANCE TRANSFER + TOP UP</div>
 
 <h2
   className="hl-section-title"
   style={{ fontSize: '26px', marginBottom: '20px' }}
 >
-  About Mixed Usage Property Loan
+  About Balance Transfer + Top Up Loan
 </h2>
 
 <ul className="hl-checklist">
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Finance properties that combine residential and commercial usage under one roof.
+    Transfer your existing home loan to benefit from lower interest rates and reduced EMIs.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Suitable for shop-cum-residence, office-cum-home, and similar mixed-use properties.
+    Avail additional top-up funds for personal or business requirements.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Loan amounts are based on property valuation and borrower eligibility.
+    Use top-up amount for home renovation, education, medical expenses, or debt consolidation.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Competitive interest rates with repayment tenure up to 20 years.
+    Enjoy repayment tenures of up to 30 years with flexible EMI options.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Available for salaried employees, professionals, self-employed individuals, and business owners.
+    Minimal documentation and quick approval process.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Flexible repayment options with transparent charges.
+    Available for salaried individuals, self-employed professionals, and business owners.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Minimal documentation and quick loan approval process.
+    Save significantly on interest costs over the remaining loan tenure.
   </li>
 
   <li>
     <div className="hl-checklist__icon">✓</div>
-    Dedicated support to help you maximize the value of your mixed-use property.
+    Dedicated support and transparent charges ensure a hassle-free transfer process.
   </li>
 </ul>
 </div>
@@ -388,4 +389,4 @@ const MixedUsagePropertyPage = () => {
   );
 };
 
-export default MixedUsagePropertyPage;
+export default BalanceTransferPage;
